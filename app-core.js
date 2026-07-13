@@ -1335,9 +1335,11 @@
     const p=document.querySelector('[data-panel="shop"]');
     const view=state.shopView||"recipe";
     let html=`<div class="kk-actions-row">
-      <button class="kk-btn" id="gen">Generuj z planu tygodnia</button>
+      <button class="kk-btn" id="gen">↻ Generuj z planu tygodnia</button>
       <button class="kk-btn sec" id="clr">Usuń odhaczone</button>
+      <button class="kk-btn sec" id="wipe" style="background:var(--mute);box-shadow:none;">Wyczyść całą listę</button>
     </div>
+    <div class="kk-note" style="margin:0 0 12px;">„Generuj" <b>odświeża</b> pozycje z planu tygodnia (stare dania znikają). Rzeczy dopisane ręcznie zostają nietknięte.</div>
     ${batchPanel()}
     <div class="kk-filters" style="margin-bottom:12px;">
       <div class="kk-fbtn ${view==="recipe"?"active":""}" id="v-recipe">Widok: wg przepisów</div>
@@ -1383,16 +1385,35 @@
     p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const id=e.target.closest(".kk-sitem").dataset.id; const it=state.shopping.find(x=>x.id===id); if(it){it.checked=e.target.checked; queueSave(); renderShop();}}));
     p.querySelectorAll(".sd").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-sitem").dataset.id; state.shopping=state.shopping.filter(x=>x.id!==id); queueSave(); renderShop(); }));
     document.getElementById("gen").addEventListener("click",()=>{
-      const ids=new Set(); DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0) ids.add(id); }));
-      const keys=new Set(state.shopping.map(x=>(x.group+"::"+x.name).toLowerCase())); const add=[];
-      ids.forEach(id=>{ const r=findR(id); if(!r) return; const mult=totalMult(id); const ex=getExtra(id);
+      const ids=[]; DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0&&ids.indexOf(id)<0) ids.push(id); }));
+      // zapamiętaj odhaczenia (po nazwie produktu)
+      const wasChecked={}; (state.shopping||[]).forEach(it=>{ if(it.auto&&it.checked) wasChecked[it.name.toLowerCase()]=true; });
+      // usuń stare pozycje z planu, zostaw ręcznie dodane
+      state.shopping=(state.shopping||[]).filter(it=>!it.auto);
+      const keys=new Set(state.shopping.map(x=>(x.group+"::"+x.name).toLowerCase()));
+      const add=[];
+      ids.forEach(id=>{ const r=findR(id); if(!r) return;
+        const mult=totalMult(id), ex=getExtra(id);
         const gname = mult>1 ? r.name+" (×"+mult+(ex>0?", w tym "+ex+" na zapas":"")+")" : r.name;
         const ml=recipeMealLabel(r);
-        r.ingredients.forEach(ing=>{ const scaled=scaleIng(ing,mult); const key=(gname+"::"+scaled).toLowerCase(); if(!keys.has(key)){ keys.add(key); add.push({id:uid("i"),name:scaled,group:gname,meal:ml,cat:prodCat(ing),checked:false}); }}); });
-      state.shopping=state.shopping.concat(add); queueSave(); renderShop();
+        r.ingredients.forEach(ing=>{
+          const scaled=scaleIng(ing,mult);
+          const key=(gname+"::"+scaled).toLowerCase();
+          if(!keys.has(key)){ keys.add(key);
+            add.push({id:uid("i"),name:scaled,group:gname,meal:ml,cat:prodCat(ing),auto:true,checked:!!wasChecked[scaled.toLowerCase()]});
+          }
+        });
+      });
+      state.shopping=state.shopping.concat(add);
+      queueSave(); renderShop();
+      if(add.length===0) alert("Nie ma czego wygenerować — najpierw wybierz dania w Planie tygodnia.");
+    });
+    document.getElementById("wipe").addEventListener("click",()=>{
+      if(!confirm("Wyczyścić całą listę zakupów (łącznie z ręcznie dodanymi)?")) return;
+      state.shopping=[]; queueSave(); renderShop();
     });
     document.getElementById("clr").addEventListener("click",()=>{ state.shopping=state.shopping.filter(x=>!x.checked); queueSave(); renderShop(); });
-    document.getElementById("ai").addEventListener("click",()=>{ const i=document.getElementById("ni"); if(i.value.trim()){ state.shopping.push({id:uid("i"),name:i.value.trim(),group:"Dodane ręcznie",meal:"",cat:prodCat(i.value.trim()),checked:false}); i.value=""; queueSave(); renderShop(); }});
+    document.getElementById("ai").addEventListener("click",()=>{ const i=document.getElementById("ni"); if(i.value.trim()){ state.shopping.push({id:uid("i"),name:i.value.trim(),group:"Dodane ręcznie",meal:"",cat:prodCat(i.value.trim()),auto:false,checked:false}); i.value=""; queueSave(); renderShop(); }});
   }
 
   function renderWeeksLib(){
@@ -1545,7 +1566,7 @@
     p.innerHTML=html;
     document.getElementById("surv-add").addEventListener("click",()=>{
       const keys=new Set(state.shopping.map(x=>x.name.toLowerCase()));
-      SURVIVAL_STAPLES.forEach(s=>{ if(!keys.has(s.toLowerCase())){ state.shopping.push({id:uid("i"),name:s,group:"Przetrwanie",meal:"",cat:prodCat(s),checked:false}); }});
+      SURVIVAL_STAPLES.forEach(s=>{ if(!keys.has(s.toLowerCase())){ state.shopping.push({id:uid("i"),name:s,group:"Przetrwanie",meal:"",cat:prodCat(s),auto:false,checked:false}); }});
       queueSave(); tab="shop"; renderShop(); refreshTabs();
     });
   }
