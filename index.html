@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nasza Kuchnia</title>
+
+<!-- PWA: żeby dało się dodać do ekranu głównego jak apkę -->
+<meta name="theme-color" content="#23281F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kuchnia">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<style>
+  html,body{ margin:0; padding:0; background:#1c201a; }
+  body{ font-family:'Work Sans','Segoe UI',sans-serif; }
+  #app-wrap{ display:none; max-width:1400px; margin:0 auto; padding:12px; }
+  #topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:8px 12px; color:#E9DEC6; font-size:12px; flex-wrap:wrap;
+  }
+  #topbar .right{ display:flex; align-items:center; gap:12px; }
+  #saveflag{ color:#C0902A; opacity:0; transition:opacity .3s; font-size:11px; }
+  #logout{
+    background:none; border:1px solid #4a5140; color:#E9DEC6; border-radius:5px;
+    padding:5px 10px; cursor:pointer; font-size:11px; font-family:'Oswald',sans-serif;
+    letter-spacing:.5px; text-transform:uppercase;
+  }
+  #logout:hover{ background:#33392F; }
+
+  /* Ekran logowania */
+  #auth{
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+    box-sizing:border-box;
+  }
+  .au-card{
+    background:#F3EBD9; border-radius:12px; padding:28px 26px; width:100%; max-width:380px;
+    box-shadow:0 10px 40px rgba(0,0,0,.35); box-sizing:border-box;
+  }
+  .au-eyebrow{
+    font-family:'Oswald',sans-serif; letter-spacing:3px; font-size:10px; text-transform:uppercase;
+    color:#C0902A; margin-bottom:4px;
+  }
+  .au-title{
+    font-family:'Oswald',sans-serif; font-size:26px; text-transform:uppercase; letter-spacing:1px;
+    margin:0 0 4px; color:#282219;
+  }
+  .au-sub{ font-size:12.5px; color:#7a7156; margin-bottom:18px; line-height:1.45; }
+  .au-card label{
+    display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
+    color:#7a7156; margin:12px 0 4px;
+  }
+  .au-card input{
+    width:100%; padding:10px; border:1px solid #C9BC9C; border-radius:6px; font-size:14px;
+    font-family:inherit; box-sizing:border-box; background:#fff;
+  }
+  .au-card input:focus{ outline:none; border-color:#A8402F; }
+  .au-btns{ display:flex; gap:8px; margin-top:18px; }
+  .au-btns button{
+    flex:1; font-family:'Oswald',sans-serif; letter-spacing:.5px; text-transform:uppercase;
+    font-size:12px; border:none; padding:11px; border-radius:6px; cursor:pointer;
+  }
+  #au-login{ background:#A8402F; color:#fff; }
+  #au-signup{ background:none; color:#5C7A52; border:1px solid #5C7A52; }
+  #au-login:hover{ filter:brightness(1.08); }
+  #au-signup:hover{ background:#eee7d5; }
+  .au-msg{ font-size:12px; margin-top:12px; min-height:16px; line-height:1.4; }
+  .au-msg.err{ color:#A8402F; }
+  .au-msg.ok{ color:#4A6442; }
+  .au-hint{ font-size:11px; color:#a99c78; margin-top:14px; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ EKRAN LOGOWANIA ══════════ -->
+<div id="auth">
+  <div class="au-card">
+    <div class="au-eyebrow">Wspólna kuchnia</div>
+    <h1 class="au-title">Nasza Kuchnia</h1>
+    <div class="au-sub">Zaloguj się, żeby zobaczyć plan tygodnia, listę zakupów i bazę przepisów.</div>
+
+    <label>E-mail</label>
+    <input id="au-email" type="email" autocomplete="email" placeholder="twoj@email.pl">
+
+    <label>Hasło</label>
+    <input id="au-pass" type="password" autocomplete="current-password" placeholder="min. 6 znaków">
+
+    <div class="au-btns">
+      <button id="au-login">Zaloguj</button>
+      <button id="au-signup">Załóż konto</button>
+    </div>
+
+    <div id="au-msg" class="au-msg"></div>
+    <div class="au-hint">Pierwszy raz? Kliknij „Załóż konto". Ty i Magda zakładacie osobne konta — dane widzicie te same.</div>
+  </div>
+</div>
+
+<!-- ══════════ APLIKACJA ══════════ -->
+<div id="app-wrap">
+  <div id="topbar">
+    <span>Zalogowany: <b id="who"></b></span>
+    <div class="right">
+      <span id="saveflag"></span>
+      <button id="logout">Wyloguj</button>
+    </div>
+  </div>
+
+  <div id="kk-root"><div class="kk-loading">Wczytywanie programu…</div></div>
+  <div id="kk-print" style="display:none;"></div>
+</div>
+
+<!-- ══════════ SKRYPTY ══════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app-core.js"></script>
+<script src="sync.js"></script>
+</body>
+</html>

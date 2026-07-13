@@ -1,0 +1,12 @@
+{
+  "name": "Nasza Kuchnia",
+  "short_name": "Kuchnia",
+  "description": "Plan tygodnia, przepisy i lista zakupów",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#23281F",
+  "theme_color": "#23281F",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,123 @@
+
+  :root{
+    --slate:#23281F; --slate-2:#313a2b; --paper:#F3EBD9; --paper-2:#E9DEC6;
+    --meat:#A8402F; --meat-2:#C25239; --herb:#5C7A52; --herb-2:#46613d;
+    --mustard:#C0902A; --teal:#3E7A73; --plum:#7a5c8f; --ink:#282219; --line:#C9BC9C;
+  }
+  #kk-root{ font-family:'Work Sans','Segoe UI',sans-serif; background:var(--paper); color:var(--ink);
+    border-radius:10px; max-width:100%; box-sizing:border-box; overflow:hidden; }
+  #kk-root *{ box-sizing:border-box; }
+  .kk-header{ background:var(--slate); color:var(--paper); padding:22px 24px 18px; border-bottom:6px solid var(--mustard); }
+  .kk-eyebrow{ font-family:'Oswald','Arial Narrow',sans-serif; letter-spacing:3px; font-size:11px; text-transform:uppercase; color:var(--mustard); margin-bottom:4px; }
+  .kk-title{ font-family:'Oswald','Arial Narrow',sans-serif; font-size:27px; letter-spacing:1px; text-transform:uppercase; margin:0; }
+  .kk-sub{ font-size:12.5px; opacity:.78; margin-top:5px; max-width:640px; line-height:1.45; }
+  .kk-targets{ display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
+  .kk-tcard{ background:var(--slate-2); border:1px solid #4a5140; border-radius:6px; padding:7px 11px; display:flex; align-items:center; gap:7px; }
+  .kk-tcard label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; opacity:.7; }
+  .kk-tcard input{ width:46px; background:transparent; border:none; border-bottom:1px solid var(--mustard); color:var(--paper); font-size:15px; font-family:'Oswald',sans-serif; text-align:right; padding:2px 0; }
+  .kk-tcard input:focus{ outline:none; border-bottom-color:var(--meat-2); }
+  .kk-tabs{ display:flex; background:var(--paper-2); border-bottom:1px solid var(--line); overflow-x:auto; }
+  .kk-tab{ font-family:'Oswald','Arial Narrow',sans-serif; padding:11px 17px; cursor:pointer; font-size:12.5px; letter-spacing:1px; text-transform:uppercase; color:#7a7156; border-bottom:3px solid transparent; white-space:nowrap; user-select:none; }
+  .kk-tab.active{ color:var(--ink); border-bottom-color:var(--meat); background:var(--paper); }
+  .kk-body{ padding:20px; }
+  .kk-panel{ display:none; } .kk-panel.active{ display:block; }
+  .kk-note{ font-size:12px; color:#7a7156; margin-top:10px; line-height:1.55; }
+  .kk-sync{ font-size:11px; color:var(--mustard); margin-top:10px; }
+  .kk-loading{ padding:40px; text-align:center; color:#7a7156; font-family:'Oswald',sans-serif; }
+
+  /* rules */
+  .kk-rules h3{ font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:15px; color:var(--meat); margin:18px 0 8px; }
+  .kk-rules h3:first-child{ margin-top:0; }
+  .kk-rule{ background:#fff; border:1px solid var(--line); border-left:4px solid var(--herb); border-radius:6px; padding:11px 14px; margin-bottom:9px; }
+  .kk-rule b{ font-family:'Oswald',sans-serif; letter-spacing:.3px; }
+  .kk-rule p{ margin:4px 0 0; font-size:13px; line-height:1.5; }
+  .kk-pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .kk-pill{ font-size:11px; background:var(--paper-2); border-radius:20px; padding:3px 10px; }
+
+  /* recipe bank */
+  .kk-filters{ display:flex; gap:7px; margin-bottom:14px; flex-wrap:wrap; }
+  .kk-fbtn{ font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.4px; text-transform:uppercase; padding:6px 11px; border-radius:20px; border:1px solid var(--line); background:#fff; color:#7a7156; cursor:pointer; }
+  .kk-fbtn.active{ background:var(--meat); color:#fff; border-color:var(--meat); }
+  .kk-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; }
+  .kk-card{ background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden; display:flex; flex-direction:column; }
+  .kk-chead{ padding:12px 14px 8px; }
+  .kk-cuis{ font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--mustard); }
+  .kk-cname{ font-family:'Oswald',sans-serif; font-size:16px; margin:2px 0 7px; line-height:1.15; }
+  .kk-meta{ display:flex; gap:6px; font-size:10.5px; flex-wrap:wrap; }
+  .kk-meta span{ background:var(--paper); padding:2px 7px; border-radius:4px; color:#6f6647; }
+  .kk-badge{ font-size:10px; font-family:'Oswald',sans-serif; letter-spacing:.4px; text-transform:uppercase; padding:2px 7px; border-radius:4px; color:#fff; }
+  .kk-b-mar{ background:var(--plum); } .kk-b-freeze{ background:var(--herb); } .kk-b-fresh{ background:var(--teal); }
+  .kk-cbody{ padding:0 14px 12px; flex:1; }
+  .kk-cbody details{ margin-top:8px; font-size:12.5px; }
+  .kk-cbody summary{ cursor:pointer; color:var(--meat); font-weight:600; font-size:12px; }
+  .kk-cbody ul,.kk-cbody ol{ margin:6px 0; padding-left:18px; }
+  .kk-cbody li{ margin-bottom:2px; }
+  .kk-storenote{ font-size:11.5px; background:#f4f0e2; border-left:3px solid var(--herb); padding:5px 8px; margin-top:8px; border-radius:3px; line-height:1.4; }
+  .kk-cedit{ display:flex; gap:6px; margin-top:8px; }
+  .kk-cedit button{ font-size:11px; background:none; border:1px solid var(--line); border-radius:4px; padding:4px 8px; cursor:pointer; color:#7a7156; }
+  .kk-cedit button:hover{ background:var(--paper); }
+  .kk-multrow{ display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .kk-multlabel{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:#7a7156; }
+  .kk-multrow button{ width:24px; height:24px; border:1px solid var(--line); background:#fff; border-radius:5px; cursor:pointer; font-size:15px; line-height:1; color:var(--meat); }
+  .kk-multrow button:hover{ background:var(--paper); }
+  .kk-multval{ font-family:'Oswald',sans-serif; font-size:14px; min-width:26px; text-align:center; }
+  .kk-multhint{ font-size:10.5px; color:var(--herb-2); }
+
+  .kk-form{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px; margin-top:14px; }
+  .kk-form label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:#7a7156; margin:10px 0 3px; }
+  .kk-form input,.kk-form select,.kk-form textarea{ width:100%; padding:7px; border:1px solid var(--line); border-radius:5px; font-size:13px; font-family:inherit; }
+  .kk-form textarea{ min-height:64px; }
+  .kk-row{ display:flex; gap:10px; flex-wrap:wrap; } .kk-row>div{ flex:1; min-width:120px; }
+  .kk-actions{ margin-top:14px; display:flex; gap:8px; }
+
+  /* week */
+  .kk-wtable{ width:100%; border-collapse:collapse; font-size:12px; }
+  .kk-wtable th{ font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.4px; background:var(--slate); color:var(--paper); padding:6px 4px; font-size:10.5px; }
+  .kk-wtable td{ border:1px solid var(--line); padding:5px; vertical-align:top; background:#fff; min-width:130px; }
+  .kk-mcell select{ width:100%; font-size:11px; padding:3px; border:1px solid #ddd; border-radius:3px; background:#fdfaf2; }
+  .kk-mprot{ font-size:10.5px; color:var(--meat); font-weight:600; margin-top:3px; }
+  .kk-daymode{ width:100%; font-size:10px; padding:2px; border:1px solid #e2d9bf; border-radius:3px; margin-bottom:4px; background:#f6f2e4; color:#6f6647; }
+  .kk-dtotal{ font-family:'Oswald',sans-serif; font-size:10px; padding:4px; text-align:center; }
+  .kk-hit{ color:var(--herb-2); } .kk-miss{ color:var(--meat); }
+  .kk-addrow{ display:flex; align-items:center; gap:4px; margin-bottom:3px; }
+  .kk-addrow span{ font-size:10px; color:#7a7156; width:18px; }
+  .kk-addinp{ width:100%; font-size:11px; padding:2px 4px; border:1px solid #ddd; border-radius:3px; background:#fdfaf2; }
+
+  .kk-actions-row{ display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .kk-btn{ font-family:'Oswald',sans-serif; letter-spacing:.5px; text-transform:uppercase; font-size:12px; background:var(--meat); color:#fff; border:none; padding:9px 16px; border-radius:5px; cursor:pointer; }
+  .kk-btn.sec{ background:var(--herb); } .kk-btn:hover{ filter:brightness(1.08); }
+
+  .kk-sgroup{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:10px; }
+  .kk-sgroup h4{ margin:0 0 6px; font-family:'Oswald',sans-serif; font-size:12px; text-transform:uppercase; color:var(--meat); }
+  .kk-sitem{ display:flex; align-items:center; gap:6px; padding:3px 0; font-size:13px; }
+  .kk-sitem.checked span{ text-decoration:line-through; opacity:.4; }
+  .kk-sitem input[type=checkbox]{ accent-color:var(--meat); } .kk-sitem span{ flex:1; }
+  .kk-sitem button{ background:none; border:none; color:#c9bc9c; cursor:pointer; }
+  .kk-additem{ display:flex; gap:6px; margin-top:14px; }
+  .kk-additem input{ flex:1; padding:8px; border:1px solid var(--line); border-radius:5px; font-size:13px; }
+
+  .kk-plist{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; }
+  .kk-pitem{ display:flex; align-items:flex-start; gap:8px; padding:7px 4px; border-bottom:1px solid #f0e9d5; }
+  .kk-pitem input[type=checkbox]{ width:16px; height:16px; margin-top:2px; accent-color:var(--herb); }
+  .kk-pitem span{ flex:1; font-size:13px; }
+  .kk-pitem .kk-psub{ display:block; font-size:11px; color:#7a7156; margin-top:2px; }
+  .kk-pitem.checked span{ text-decoration:line-through; opacity:.45; }
+  .kk-pitem button{ background:none; border:none; color:#c9bc9c; cursor:pointer; }
+  .kk-pitem .pf{ color:var(--herb); font-weight:600; font-size:13px; }
+  .kk-pitem .pf:hover{ color:var(--herb-2); }
+  .kk-mealtag{ font-size:9.5px; font-family:'Oswald',sans-serif; letter-spacing:.4px; text-transform:uppercase; background:var(--mustard); color:#fff; padding:1px 6px; border-radius:4px; vertical-align:middle; }
+  .kk-fromtag{ font-size:10px; color:#a99c78; font-style:italic; }
+  .kk-frzitem{ display:flex; align-items:center; gap:8px; padding:7px 4px; border-bottom:1px solid #f0e9d5; flex-wrap:wrap; }
+  .kk-frzname{ flex:1; font-size:13px; min-width:140px; }
+  .kk-frzmeta{ font-size:11px; color:#7a7156; }
+  .kk-frzport{ font-size:12px; display:flex; align-items:center; gap:5px; }
+  .kk-frzport button{ width:22px; height:22px; border:1px solid var(--line); background:#fff; border-radius:4px; cursor:pointer; color:var(--meat); }
+  .kk-frzitem .fz-del{ background:none; border:none; color:#c9bc9c; cursor:pointer; font-size:16px; }
+  .kk-weekrow{ display:flex; align-items:center; gap:8px; padding:9px 4px; border-bottom:1px solid #f0e9d5; flex-wrap:wrap; }
+  .kk-weekrow .wk-del{ background:none; border:none; color:#c9bc9c; cursor:pointer; font-size:16px; }
+  .kk-weekrow .kk-btn{ padding:6px 10px; font-size:11px; }
+  .kk-repeat{ font-size:9.5px; color:var(--meat); font-weight:600; margin-top:2px; }
+  @media print{
+    body.kk-printing #kk-root{ display:none !important; }
+    body.kk-printing #kk-print{ display:block !important; }
+  }
