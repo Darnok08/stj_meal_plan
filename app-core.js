@@ -2,7 +2,7 @@
 (function(){
   const DAYS=["Pon","Wt","Śr","Czw","Pt","Sob","Nd"];
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
-  const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska/Europejska","Roślinna","Shake"];
+  const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
@@ -520,30 +520,41 @@
     b3:"Tofu/roślinne", b16:"Ryby i owoce morza"
   };
   const BREAKFAST_CATS=["Jajka","Nabiał","Tofu/roślinne","Ryby i owoce morza"];
-  // orientacyjne kcal na 2 porcje (heurystyka ze składników) — użytkownik może nadpisać
-  function estimateKcal(r){
+  // Kuchnia polska wydzielona z dawnej "Polska/Europejska"
+  const POLSKIE=["p1","p2","p3","b2","b11","b12"];
+  // orientacyjne MAKRO na 2 porcje (heurystyka ze składników) — użytkownik może nadpisać
+  function estimateMacros(r){
     const txt=(r.ingredients||[]).join(" ").toLowerCase();
     const has=arr=>arr.some(w=>txt.includes(w));
-    let kcal = (r.proteinTotal||0)*4; // białko
-    // węglowodany
-    if(has(["ryż","ryz","makaron","spaghetti","ziemniak","batat","kasza","bulgur","naan","frytki","tortill","pinsy","pinsa"])) kcal+=380;
-    else if(has(["chleb","pieczywo","bułk","bulk","pita","płatki","platki","owsian","granola","kromk","tost"])) kcal+=240;
-    else if(has(["ciecierzyc","fasol","soczewic","kukurydz"])) kcal+=200;
-    // tłuszcze
-    if(has(["mleko kokos","kokos"])) kcal+=300;
-    if(has(["oliw","olej","masło","maslo"])) kcal+=180;
-    if(has(["ser","feta","mozzarell","halloumi","parmezan","camembert"])) kcal+=160;
-    if(has(["awokado","orzech","masło orzech","tahini","sezam"])) kcal+=140;
-    if(has(["boczek","mielon","łopatk","karków","antrykot","łosoś","losos"])) kcal+=120;
-    kcal+=60; // warzywa/baza
-    return Math.round(kcal/10)*10;
+    const P = +(r.proteinTotal||0);
+    let C = 0, F = 0;
+    // WĘGLOWODANY (g na 2 porcje)
+    if(has(["ryż","ryz","makaron","spaghetti","linguine","ziemniak","batat","kasza","bulgur","naan","frytki","tortill","pinsy","pinsa","bułk","bulk","pita"])) C+=140;
+    else if(has(["chleb","pieczywo","płatki","platki","owsian","granola","kromk","tost","muffin","chałk","chalk"])) C+=95;
+    if(has(["ciecierzyc","fasol","soczewic","kukurydz","groszek","edamame"])) C+=55;
+    if(has(["banan","mango","jagod","malin","truskaw","owoc","jabłk","jablk","miód","miod","cukier","syrop"])) C+=25;
+    if(has(["mleko kokos"])) C+=12;
+    if(has(["mleko","jogurt","kefir","skyr"])) C+=15;
+    // TŁUSZCZE (g na 2 porcje)
+    if(has(["mleko kokos"])) F+=38;
+    if(has(["oliw","olej","masło","maslo"])) F+=26;
+    if(has(["ser","feta","mozzarell","halloumi","parmezan","camembert","paneer","śmietan","smietan"])) F+=22;
+    if(has(["awokado","orzech","tahini","sezam","chia","migdał","migdal"])) F+=18;
+    if(has(["boczek","mielon","łopatk","lopatk","karków","karkow","antrykot","łosoś","losos","kiełbas","kielbas","majonez"])) F+=20;
+    if(has(["jajk","jaj"])) F+=10;
+    F+=6; // baza
+    const kcal = Math.round((P*4 + C*4 + F*9)/10)*10;
+    return { kcal, carbs:Math.round(C), fat:Math.round(F) };
   }
+  function estimateKcal(r){ return estimateMacros(r).kcal; }
+
   function seed(){
     const rs=seedRaw();
     rs.forEach(r=>{
+      if(r.cuisine==="Polska/Europejska") r.cuisine = POLSKIE.indexOf(r.id)>=0 ? "Polska" : "Europejska";
       r.season = SEASON_MAP[r.id] || "all";
       if(r.mealTypes.includes("breakfast") && BREAKFAST_PTYPE[r.id]) r.ptype=BREAKFAST_PTYPE[r.id];
-      if(r.kcal==null) r.kcal=estimateKcal(r);
+      if(r.kcal==null || r.carbs==null || r.fat==null){ const mm=estimateMacros(r); if(r.kcal==null) r.kcal=mm.kcal; if(r.carbs==null) r.carbs=mm.carbs; if(r.fat==null) r.fat=mm.fat; }
       if(r.unotes==null) r.unotes="";
     });
     return rs;
@@ -588,7 +599,7 @@
     ];
   }
   function defaultState(){
-    return { targets:{ p1:100, p2:160, splitM:62, kcal1:1700, kcal2:2200 }, recipes:seed(), week:seedWeek(), shopping:[], prep:[], mult:{ fr1:2 }, freezer:[], shopView:"recipe", shopSum:false, season:"all", savedWeeks:seedSavedWeeks(), prevWeekIds:[], genTempo:"mix" };
+    return { targets:{ p1:100, p2:160, splitM:62, kcal1:1700, kcal2:2200 }, recipes:seed(), week:seedWeek(), shopping:[], prep:[], mult:{ fr1:2 }, freezer:[], shopView:"recipe", shopSum:false, season:"all", savedWeeks:seedSavedWeeks(), prevWeekIds:[], genTempo:"mix", batchExtra:{} };
   }
 
   let state=null, saveTimer=null, tab="rules", editing=null;
@@ -602,7 +613,8 @@
     if(!state.savedWeeks) state.savedWeeks=seedSavedWeeks();
     if(state.shopSum==null) state.shopSum=false;
     if(!state.season) state.season="all";
-    (state.recipes||[]).forEach(r=>{ if(!r.season) r.season="all"; if(r.kcal==null) r.kcal=estimateKcal(r); if(r.unotes==null) r.unotes=""; });
+    (state.recipes||[]).forEach(r=>{ if(r.cuisine==="Polska/Europejska") r.cuisine = POLSKIE.indexOf(r.id)>=0 ? "Polska" : "Europejska"; if(!r.season) r.season="all"; if(r.kcal==null||r.carbs==null||r.fat==null){ const mm=estimateMacros(r); if(r.kcal==null) r.kcal=mm.kcal; if(r.carbs==null) r.carbs=mm.carbs; if(r.fat==null) r.fat=mm.fat; } if(r.unotes==null) r.unotes=""; });
+    if(!state.batchExtra) state.batchExtra={};
     if(!state.prevWeekIds) state.prevWeekIds=[];
     if(!state.genTempo) state.genTempo="mix";
     if(!state.targets.splitM) state.targets.splitM=62;
@@ -616,6 +628,9 @@
   function uid(p){ return p+Math.random().toString(36).slice(2,8); }
   function findR(id){ return state.recipes.find(r=>r.id===id); }
   function getMult(id){ return (state.mult && state.mult[id]) ? state.mult[id] : 1; }
+  function getExtra(id){ return (state.batchExtra && state.batchExtra[id]) ? state.batchExtra[id] : 0; }
+  function setExtra(id,v){ if(!state.batchExtra) state.batchExtra={}; state.batchExtra[id]=Math.max(0,Math.min(6,v)); queueSave(); }
+  function totalMult(id){ return getMult(id)+getExtra(id); }
   function setMult(id,v){ if(!state.mult) state.mult={}; state.mult[id]=Math.max(1,Math.min(6,v)); queueSave(); }
   function esc(s){ return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
   function split(){ const m=(state.targets.splitM||62)/100; return {m,k:1-m}; }
@@ -684,6 +699,8 @@
   function refreshTabs(){
     document.querySelectorAll(".kk-tab").forEach(t=> t.classList.toggle("active", t.dataset.tab===tab));
     document.querySelectorAll(".kk-panel").forEach(p=> p.classList.toggle("active", p.dataset.panel===tab));
+    // zwiń rozwinięte przepisy, żeby po powrocie widok był czysty
+    document.querySelectorAll(".kk-panel details[open]").forEach(d=> d.open=false);
   }
 
   function renderRules(){
@@ -787,7 +804,7 @@
             <span>⏱ ${r.prepTime} min</span>
             <span>Białko: ${r.proteinTotal} g</span>
             <span>Ty ${Math.round(r.proteinTotal*m)} · M ${Math.round(r.proteinTotal*k)}</span>
-            ${r.kcal?`<span>≈ ${r.kcal} kcal / 2 porcje</span>`:""}
+            ${r.kcal?`<span>≈ ${r.kcal} kcal · W ${r.carbs||0} · T ${r.fat||0}</span>`:""}
             <span class="kk-badge ${pl[1]}">${pl[0]}</span>
             ${r.season&&r.season!=="all"?`<span class="kk-badge" style="background:var(--mustard);">${r.season==="lato"?"Wiosna/Lato":"Jesień/Zima"}</span>`:""}
           </div>
@@ -815,7 +832,12 @@
         </div>
       </div>`;
     });
-    html+=`</div><button class="kk-btn addr" style="margin-top:16px;">+ Dodaj własny ${meal==="shake"?"shake":"przepis"} (${meal==="breakfast"?"śniadanie":meal==="lunch"?"obiad":meal==="dinner"?"kolacja":"shake"})</button><div class="edslot"></div>`;
+    html+=`</div>
+      <div class="kk-actions-row" style="margin-top:16px;">
+        <button class="kk-btn addr">+ Dodaj własny ${meal==="shake"?"shake":"przepis"}</button>
+        <button class="kk-btn sec pastr">📋 Wklej przepis z czatu</button>
+      </div>
+      <div class="pasteslot"></div><div class="edslot"></div>`;
     p.innerHTML=html;
 
     p.querySelectorAll(".kk-fs").forEach(b=> b.addEventListener("click",()=>{ state.season=b.dataset.s; queueSave(); renderMealTab("breakfast"); renderMealTab("lunch"); renderMealTab("dinner"); }));
@@ -826,6 +848,7 @@
     p.querySelectorAll(".ed").forEach(b=> b.addEventListener("click",e=>{ editing=e.target.closest(".kk-card").dataset.id; renderEdit(meal); }));
     p.querySelectorAll(".del").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-card").dataset.id; if(confirm("Usunąć przepis?")){ state.recipes=state.recipes.filter(r=>r.id!==id); queueSave(); renderMealTab(meal); }}));
     p.querySelector(".addr").addEventListener("click",()=>{ editing="__new__"; renderEdit(meal); });
+    p.querySelector(".pastr").addEventListener("click",()=>{ renderPasteBox(meal); });
   }
 
   // skalowanie o dowolny współczynnik (podział na osobę)
@@ -864,6 +887,70 @@
     });
   }
 
+  // ——— Import przepisu z tekstu (np. z czatu z Claude) ———
+  function parseRecipeText(t){
+    const lines=(t||"").split("\n").map(x=>x.replace(/\r/g,"").trim());
+    const out={name:"",ingredients:[],steps:[],protein:0,time:0};
+    let mode="head";
+    const clean=x=> x.replace(/^([-*\u2022\u00b7\u2013\u2014]|\d+[.)])\s*/,"").replace(/\*\*/g,"").trim();
+    const isMeta=L=>{
+      const low=L.toLowerCase();
+      return /^(bia[lł]k\w*|kalor\w*|kcal|czas\w*|makro\w*|w[eę]glowod\w*|t[lł]uszcz\w*|porcj\w*|kuchnia|sezon|autor|\u017ar[oó]d[lł]o)\b/.test(low.replace(/[*#:]/g,"").trim());
+    };
+    const grabMeta=L=>{
+      // "Białko: 110 g"  albo "110 g białka"
+      let mp=L.match(/bia[lł]k\w*\s*[:\-]?\s*(\d+)/i) || L.match(/(\d+)\s*g\s*bia[lł]k/i);
+      if(mp && !out.protein) out.protein=parseInt(mp[1]);
+      // czas tylko z wyraźnej etykiety
+      let mt=L.match(/czas\w*\s*[:\-]?\s*(\d+)/i) || L.match(/^\s*(\d+)\s*(?:min|minut)\b/i);
+      if(mt && !out.time) out.time=parseInt(mt[1]);
+    };
+    for(const raw of lines){
+      const L=raw.trim(); if(!L) continue;
+      const low=L.toLowerCase().replace(/[#*:]/g,"").trim();
+      if(/^(sk[lł]adniki|ingredients)\b/.test(low)){ mode="ing"; continue; }
+      if(/^(przygotowanie|spos[oó]b przygotowania|kroki|wykonanie|instrukcje|steps|instructions)\b/.test(low)){ mode="steps"; continue; }
+      if(isMeta(L)){ grabMeta(L); continue; }
+      grabMeta(L);
+      if(mode==="head"){ if(!out.name) out.name=L.replace(/^#+\s*/,"").replace(/\*\*/g,"").trim(); continue; }
+      if(mode==="ing"){ const c=clean(L); if(c) out.ingredients.push(c); continue; }
+      if(mode==="steps"){ const c=clean(L); if(c) out.steps.push(c); continue; }
+    }
+    // brak nagłówków → heurystyka
+    if(out.ingredients.length===0 && out.steps.length===0){
+      lines.filter(Boolean).forEach((L,i)=>{
+        if(isMeta(L)){ grabMeta(L); return; }
+        if(i===0){ if(!out.name) out.name=L.replace(/^#+\s*/,"").trim(); return; }
+        const c=clean(L); if(!c) return;
+        if(/^\d+[.,]?\d*\s*(g|kg|ml|l|[lł]y[zż]k|[lł]y[zż]eczk|szt|z[aą]b|puszk|gar[sś][cć]|kromk)/i.test(c)) out.ingredients.push(c);
+        else out.steps.push(c);
+      });
+    }
+    return out;
+  }
+
+  function renderPasteBox(meal){
+    const slot=document.querySelector('[data-panel="'+meal+'"] .pasteslot');
+    slot.innerHTML=`<div class="kk-form">
+      <label>Wklej przepis (np. skopiowany z czatu)</label>
+      <textarea id="pz-text" style="min-height:180px;" placeholder="Wklej cały tekst przepisu — nazwę, składniki i kroki.\n\nNajlepiej działa, gdy w tekście są nagłówki „Składniki" i „Przygotowanie"."></textarea>
+      <div class="kk-note">Rozpoznam nazwę, składniki i kroki, a potem otworzę formularz, w którym wszystko poprawisz i uzupełnisz (kuchnia, białko, sezon).</div>
+      <div class="kk-actions">
+        <button class="kk-btn" id="pz-go">Rozpoznaj i otwórz formularz</button>
+        <button class="kk-btn sec" id="pz-cancel">Anuluj</button>
+      </div>
+    </div>`;
+    document.getElementById("pz-cancel").addEventListener("click",()=>{ slot.innerHTML=""; });
+    document.getElementById("pz-go").addEventListener("click",()=>{
+      const parsed=parseRecipeText(document.getElementById("pz-text").value);
+      if(!parsed.name && parsed.ingredients.length===0){ alert("Nie udało się nic rozpoznać — wklej tekst z nazwą, składnikami i krokami."); return; }
+      slot.innerHTML="";
+      editing="__new__"; pendingPaste=parsed; renderEdit(meal);
+    });
+    slot.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
+  let pendingPaste=null;
+
   function renderEdit(meal){
     const slot=document.querySelector('[data-panel="'+meal+'"] .edslot');
     const isNew=editing==="__new__";
@@ -888,8 +975,10 @@
       <label>Notatka o przechowywaniu</label><input id="f-note" value="${esc(r.note||"")}">
       <label>Sezon</label><select id="f-season"><option value="all" ${(r.season||"all")==="all"?"selected":""}>Cały rok</option><option value="lato" ${r.season==="lato"?"selected":""}>Wiosna / Lato</option><option value="zima" ${r.season==="zima"?"selected":""}>Jesień / Zima</option></select>
       <div class="kk-row">
-        <div><label>Kcal orientacyjnie (2 porcje)</label><input id="f-kcal" type="number" value="${r.kcal||0}"></div>
-        <div style="flex:0 0 auto; display:flex; align-items:flex-end;"><button class="kk-btn sec" id="f-kcalest" style="padding:7px 12px;">≈ oszacuj ze składników</button></div>
+        <div><label>Węglowodany (2 porcje, g)</label><input id="f-carbs" type="number" value="${r.carbs||0}"></div>
+        <div><label>Tłuszcz (2 porcje, g)</label><input id="f-fat" type="number" value="${r.fat||0}"></div>
+        <div><label>Kcal (2 porcje)</label><input id="f-kcal" type="number" value="${r.kcal||0}"></div>
+        <div style="flex:0 0 auto; display:flex; align-items:flex-end;"><button class="kk-btn sec" id="f-kcalest" style="padding:7px 12px; white-space:nowrap;">≈ oszacuj</button></div>
       </div>
       <label>Twoje notatki (modyfikacje, tipy)</label><textarea id="f-unotes" placeholder="np. dodać więcej chili, udka lepsze niż pierś...">${esc(r.unotes||"")}</textarea>
       <label>Sk\u0142adniki (linia = pozycja)</label><textarea id="f-ing">${esc((r.ingredients||[]).join("\n"))}</textarea>
@@ -907,6 +996,8 @@
         note:document.getElementById("f-note").value.trim(),
         season:document.getElementById("f-season").value,
         kcal:+document.getElementById("f-kcal").value||0,
+        carbs:+document.getElementById("f-carbs").value||0,
+        fat:+document.getElementById("f-fat").value||0,
         unotes:document.getElementById("f-unotes").value.trim(),
         ingredients:document.getElementById("f-ing").value.split("\n").map(s=>s.trim()).filter(Boolean),
         steps:document.getElementById("f-steps").value.split("\n").map(s=>s.trim()).filter(Boolean) };
@@ -915,7 +1006,10 @@
     });
     document.getElementById("f-kcalest").addEventListener("click",()=>{
       const tmp={ proteinTotal:+document.getElementById("f-prot").value||0, ingredients:document.getElementById("f-ing").value.split("\n").map(s=>s.trim()).filter(Boolean) };
-      document.getElementById("f-kcal").value=estimateKcal(tmp);
+      const mm=estimateMacros(tmp);
+      document.getElementById("f-kcal").value=mm.kcal;
+      document.getElementById("f-carbs").value=mm.carbs;
+      document.getElementById("f-fat").value=mm.fat;
     });
     document.getElementById("canr").addEventListener("click",()=>{ editing=null; renderMealTab(meal); });
     slot.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -946,14 +1040,18 @@
         const specialOpts = mk==="breakfast" ? "" : Object.keys(SPECIAL).map(sk=>`<option value="${sk}" ${meal.recipeId===sk?"selected":""}>${esc(SPECIAL[sk].name)}</option>`).join("");
         const frzOpts = (state.freezer||[]).filter(x=>(+x.portions||0)>0 || meal.recipeId==="frz_"+x.id).map(x=>`<option value="frz_${x.id}" ${meal.recipeId==="frz_"+x.id?"selected":""}>❄ ${esc(x.name)} (${x.portions||0} porc.)</option>`).join("");
         const isRepeat = meal.recipeId && prev.has(meal.recipeId);
+        const rNow=findR(meal.recipeId);
+        const plNow=rNow?(PREP_LABEL[rNow.prepStyle]||PREP_LABEL.fresh):null;
         html+=`<td class="kk-mcell" data-day="${d}" data-meal="${mk}">
-          <select>
+          <select class="kk-msel">
             <option value="">— wybierz —</option>
             ${pool.map(r=>`<option value="${r.id}" ${r.id===meal.recipeId?"selected":""}>${esc(r.name)}</option>`).join("")}
             ${frzOpts?`<optgroup label="Z zamrażalnika">${frzOpts}</optgroup>`:""}
             ${specialOpts?`<optgroup label="Tryb dnia">${specialOpts}</optgroup>`:""}
           </select>
-          ${meal.recipeId?`<div class="kk-mprot">${(SPECIAL[meal.recipeId]||(meal.recipeId+"").indexOf("frz_")===0)?"~":""}Ty ${Math.round(mealProt(meal)*(SPECIAL[meal.recipeId]?1:m))} · M ${Math.round(mealProt(meal)*(SPECIAL[meal.recipeId]?1:k))}</div>`:""}
+          ${meal.recipeId?`<div class="kk-mname">${esc(mealName(meal))}</div>`:""}
+          ${plNow?`<span class="kk-badge ${plNow[1]}" style="font-size:9px;">${plNow[0]}</span>`:""}
+          ${meal.recipeId?`<div class="kk-mprot">${(SPECIAL[meal.recipeId]||(meal.recipeId+"").indexOf("frz_")===0)?"~":""}Ty ${Math.round(mealProt(meal)*(SPECIAL[meal.recipeId]?1:m))} · M ${Math.round(mealProt(meal)*(SPECIAL[meal.recipeId]?1:k))} g</div>`:""}
           ${isRepeat?`<div class="kk-repeat">↺ w zesz. tyg.</div>`:""}
         </td>`;
       });
@@ -970,7 +1068,7 @@
           <option value="">— shake —</option>
           ${shakes.map(r=>`<option value="${r.id}" ${r.id===sid?"selected":""}>${esc(r.name)} (${r.proteinTotal}g)</option>`).join("")}
         </select>
-        ${sh?`<div class="kk-mprot">Ty ${Math.round(sh.proteinTotal*m)} · M ${Math.round(sh.proteinTotal*k)}</div>`:""}
+        <div class="kk-mprot">${sh?`Ty ${Math.round(sh.proteinTotal*m)} · M ${Math.round(sh.proteinTotal*k)} g`:`Ty 0 · M 0 g`}</div>
         <div class="kk-addrow"><span>+Ty</span><input type="number" class="kk-addinp" data-who="addP2" value="${state.week[d].addP2||0}"></div>
         <div class="kk-addrow"><span>+M</span><input type="number" class="kk-addinp" data-who="addP1" value="${state.week[d].addP1||0}"></div>
       </td>`;
@@ -978,16 +1076,41 @@
     html+=`</tr>`;
     html+=`<tr><th style="background:var(--slate-2);">Suma / cel</th>`;
     DAYS.forEach(d=>{
-      let tM=0,tK=0,kc=0;
-      MEALS.forEach(([mk])=>{ const meal=state.week[d][mk]; if(SPECIAL[meal.recipeId]){ tM+=mealProt(meal); tK+=mealProt(meal);} else { tM+=mealProt(meal)*m; tK+=mealProt(meal)*k; } const rr=findR(meal.recipeId); if(rr&&rr.kcal) kc+=rr.kcal; });
-      const sh=findR(state.week[d].shakeId||""); if(sh){ tM+=sh.proteinTotal*m; tK+=sh.proteinTotal*k; if(sh.kcal) kc+=sh.kcal; }
-      tM+=(+state.week[d].addP2||0); tK+=(+state.week[d].addP1||0);
-      const hitM=tM>=state.targets.p2*0.9, hitK=tK>=state.targets.p1*0.9;
-      const kcM=Math.round(kc*m), kcK=Math.round(kc*k);
-      html+=`<td class="kk-dtotal"><span class="${hitM?'kk-hit':'kk-miss'}">Ty ${Math.round(tM)}/${state.targets.p2}g</span><br><span class="${hitK?'kk-hit':'kk-miss'}">M ${Math.round(tK)}/${state.targets.p1}g</span>${kc?`<br><span style="color:#8a7f5f;">≈${kcM}/${kcK} kcal</span>`:""}</td>`;
+      let pM=0,pK=0,cAll=0,fAll=0,kcAll=0;
+      MEALS.forEach(([mk])=>{ const meal=state.week[d][mk];
+        if(SPECIAL[meal.recipeId]){ pM+=mealProt(meal); pK+=mealProt(meal); }
+        else { pM+=mealProt(meal)*m; pK+=mealProt(meal)*k; }
+        const rr=findR(meal.recipeId);
+        if(rr){ cAll+=(+rr.carbs||0); fAll+=(+rr.fat||0); kcAll+=(+rr.kcal||0); }
+      });
+      const sh=findR(state.week[d].shakeId||"");
+      if(sh){ pM+=sh.proteinTotal*m; pK+=sh.proteinTotal*k; cAll+=(+sh.carbs||0); fAll+=(+sh.fat||0); kcAll+=(+sh.kcal||0); }
+      const aM=(+state.week[d].addP2||0), aK=(+state.week[d].addP1||0);
+      pM+=aM; pK+=aK;
+      // makro dzielone proporcją porcji; ręczne dodatki białkowe doliczamy do kcal (4 kcal/g)
+      const cM=Math.round(cAll*m), cK=Math.round(cAll*k);
+      const fM=Math.round(fAll*m), fK=Math.round(fAll*k);
+      const kM=Math.round(kcAll*m + aM*4), kK=Math.round(kcAll*k + aK*4);
+      const hitM=pM>=state.targets.p2*0.9, hitK=pK>=state.targets.p1*0.9;
+      const kcOkM = state.targets.kcal2 ? (kM<=state.targets.kcal2*1.1) : true;
+      const kcOkK = state.targets.kcal1 ? (kK<=state.targets.kcal1*1.1) : true;
+      html+=`<td class="kk-dtotal">
+        <div class="kk-tot-person">
+          <b>Ty</b>
+          <span class="${hitM?'kk-hit':'kk-miss'}">B ${Math.round(pM)}/${state.targets.p2}</span>
+          <span class="kk-tot-macro">W ${cM} · T ${fM}</span>
+          <span class="${kcOkM?'kk-hit':'kk-miss'}">${kM} kcal</span>
+        </div>
+        <div class="kk-tot-person">
+          <b>M</b>
+          <span class="${hitK?'kk-hit':'kk-miss'}">B ${Math.round(pK)}/${state.targets.p1}</span>
+          <span class="kk-tot-macro">W ${cK} · T ${fK}</span>
+          <span class="${kcOkK?'kk-hit':'kk-miss'}">${kK} kcal</span>
+        </div>
+      </td>`;
     });
     html+=`</tr></tbody></table></div>
-    <div class="kk-note">Zielone = trafiacie w cel (±10%). Czerwone = poniżej — jeśli to dzień zupy/mieście, w porządku; jeśli nie, wybierz shake albo dopisz gramy. Shake dzieli się ${state.targets.splitM}/${100-state.targets.splitM} (Ty/Magda); pola „+Ty / +M" to ręczny dodatek indywidualny (np. kefir, skyr). Podział dań ${state.targets.splitM}/${100-state.targets.splitM} — zmień w nagłówku.</div>`;
+    <div class="kk-note"><b>B</b> = białko, <b>W</b> = węglowodany, <b>T</b> = tłuszcz (g). Zielone = w celu; czerwone białko = poniżej celu, czerwone kcal = powyżej celu. Makro poza białkiem jest <i>orientacyjne</i> (szacowane ze składników). Shake dzieli się ${state.targets.splitM}/${100-state.targets.splitM} (Ty/Magda); pola „+Ty / +M" to ręczny dodatek indywidualny (np. kefir, skyr). Podział dań ${state.targets.splitM}/${100-state.targets.splitM} — zmień w nagłówku.</div>`;
     // balans białka
     const tc={};
     DAYS.forEach(d=> ["lunch","dinner"].forEach(mk=>{ const r=findR(state.week[d][mk].recipeId); if(r&&r.ptype&&r.ptype!=="—"){ tc[r.ptype]=(tc[r.ptype]||0)+1; }}));
@@ -1082,7 +1205,7 @@
     h+=`<tr><td><b>Shake</b></td>`;
     DAYS.forEach(d=>{ const sh=findR(state.week[d].shakeId||""); h+=`<td>${sh?esc(sh.name):"—"}</td>`; });
     h+=`</tr></table>`;
-    // shopping list (category, summed)
+    // lista zakupów (kategorie, zsumowana)
     if((state.shopping||[]).length){
       h+=`<h2>Lista zakupów</h2>`;
       const byC={}; state.shopping.forEach(it=>{ const c=it.cat||prodCat(it.name); (byC[c]=byC[c]||[]).push(it); });
@@ -1090,9 +1213,27 @@
       catOrder.forEach(c=>{ if(!byC[c])return; h+=`<h3>${c}</h3><ul>`;
         aggregateItems(byC[c]).forEach(g=> h+=`<li>${esc(g.label)}</li>`); h+=`</ul>`; });
     }
+    // PRZEPISY z tego tygodnia (pełne)
+    const rids=[]; DAYS.forEach(d=>{ MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0&&rids.indexOf(id)<0) rids.push(id); });
+      const sid=state.week[d].shakeId; if(sid&&rids.indexOf(sid)<0) rids.push(sid); });
+    if(rids.length){
+      h+=`<h2 style="page-break-before:always;">Przepisy na ten tydzień</h2>`;
+      rids.forEach(id=>{ const r=findR(id); if(!r) return; const tot=totalMult(id);
+        h+=`<div class="rec">
+          <h3>${esc(r.name)}</h3>
+          <div class="meta">${esc(r.cuisine)}${r.ptype&&r.ptype!=="—"?" · "+esc(r.ptype):""} · ${r.prepTime} min · ${r.proteinTotal} g białka${r.kcal?` · ok. ${r.kcal} kcal`:""} · ${(PREP_LABEL[r.prepStyle]||PREP_LABEL.fresh)[0]}${tot>1?` · gotujesz ×${tot}`:""}</div>
+          <b>Składniki${tot>1?` (×${tot} → ${2*tot} porcji)`:" (2 porcje)"}:</b>
+          <ul>${r.ingredients.map(i=>`<li>${esc(scaleIng(i,tot))}</li>`).join("")}</ul>
+          <b>Przygotowanie:</b>
+          <ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+          ${r.unotes?`<div class="note"><b>Moje notatki:</b> ${esc(r.unotes)}</div>`:""}
+          ${r.note?`<div class="note">${esc(r.note)}</div>`:""}
+        </div>`;
+      });
+    }
     const win=window.open("","_blank");
     if(win){
-      win.document.write(`<html><head><title>Plan tygodnia</title><style>body{font-family:sans-serif;padding:20px;color:#222;} h1{font-size:20px;} h2{font-size:16px;margin-top:20px;} h3{font-size:13px;margin:10px 0 4px;} ul{margin:4px 0 8px;} th{background:#eee;}</style></head><body>${h}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+      win.document.write(`<html><head><meta charset="utf-8"><title>Plan tygodnia</title><style>body{font-family:system-ui,sans-serif;padding:24px;color:#222;line-height:1.45;} h1{font-size:22px;margin:0 0 12px;} h2{font-size:17px;margin-top:24px;border-bottom:2px solid #ddd;padding-bottom:4px;} h3{font-size:14px;margin:12px 0 4px;} ul,ol{margin:4px 0 8px;padding-left:20px;} th{background:#eee;text-align:left;} td,th{font-size:11px;} .rec{page-break-inside:avoid;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #eee;} .rec .meta{font-size:11px;color:#666;margin-bottom:6px;} .rec .note{font-size:11px;color:#555;background:#f7f7f7;padding:4px 8px;border-radius:4px;margin-top:4px;} @page{margin:14mm;}</style></head><body>${h}<script>window.onload=function(){window.print();}<\/script></body></html>`);
       win.document.close();
     } else {
       // fallback: druk bieżącej strony przez sekcję printable
@@ -1167,6 +1308,29 @@
     });
   }
 
+  // Panel "gotowanie na zapas": dodatkowe porcje wchodzą do listy zakupów
+  function batchPanel(){
+    const ids=[]; DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0 && ids.indexOf(id)<0) ids.push(id); }));
+    const batchable=ids.map(findR).filter(r=>r && (r.prepStyle==="mar"||r.prepStyle==="freeze"));
+    if(batchable.length===0) return `<div class="kk-note" style="margin-bottom:12px;">Brak dań „na zapas" w planie tygodnia — dodaj jakieś (tag <b>Marynuj+zamroź</b> lub <b>Gotuj+zamroź</b>), a pojawi się tu opcja ugotowania większej partii.</div>`;
+    let h=`<div class="kk-sgroup" style="margin-bottom:14px;"><h4>Gotowanie na zapas (zwiększa listę zakupów)</h4>
+      <div class="kk-note" style="margin:0 0 8px;">Ile <b>dodatkowych</b> porcji chcesz ugotować/zamarynować do zamrażalnika? Składniki doliczą się do listy zakupów. 1 porcja = danie na 2 osoby.</div>`;
+    batchable.forEach(r=>{
+      const ex=getExtra(r.id), mult=getMult(r.id), tot=mult+ex;
+      const pl=PREP_LABEL[r.prepStyle]||PREP_LABEL.fresh;
+      h+=`<div class="kk-batchrow" data-id="${r.id}">
+        <span class="kk-batchname">${esc(r.name)} <span class="kk-badge ${pl[1]}">${pl[0]}</span></span>
+        <span class="kk-multrow" style="margin:0;">
+          <span class="kk-multlabel">na zapas:</span>
+          <button class="bx-minus">−</button><span class="kk-multval">+${ex}</span><button class="bx-plus">+</button>
+          <span class="kk-multhint">razem ${tot} × (2 os.)</span>
+        </span>
+      </div>`;
+    });
+    h+=`</div>`;
+    return h;
+  }
+
   function renderShop(){
     const p=document.querySelector('[data-panel="shop"]');
     const view=state.shopView||"recipe";
@@ -1174,6 +1338,7 @@
       <button class="kk-btn" id="gen">Generuj z planu tygodnia</button>
       <button class="kk-btn sec" id="clr">Usuń odhaczone</button>
     </div>
+    ${batchPanel()}
     <div class="kk-filters" style="margin-bottom:12px;">
       <div class="kk-fbtn ${view==="recipe"?"active":""}" id="v-recipe">Widok: wg przepisów</div>
       <div class="kk-fbtn ${view==="cat"?"active":""}" id="v-cat">Widok: wg kategorii produktów</div>
@@ -1212,14 +1377,16 @@
     document.getElementById("v-recipe").addEventListener("click",()=>{ state.shopView="recipe"; queueSave(); renderShop(); });
     document.getElementById("v-cat").addEventListener("click",()=>{ state.shopView="cat"; queueSave(); renderShop(); });
     const vsum=document.getElementById("v-sum"); if(vsum) vsum.addEventListener("click",()=>{ state.shopSum=!state.shopSum; queueSave(); renderShop(); });
+    p.querySelectorAll(".bx-minus").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-batchrow").dataset.id; setExtra(id,getExtra(id)-1); renderShop(); renderPrep(); }));
+    p.querySelectorAll(".bx-plus").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-batchrow").dataset.id; setExtra(id,getExtra(id)+1); renderShop(); renderPrep(); }));
     p.querySelectorAll(".sum-cb").forEach(cb=> cb.addEventListener("change",e=>{ const ids=(e.target.closest(".kk-sitem").dataset.ids||"").split(","); const val=e.target.checked; ids.forEach(id=>{ const it=state.shopping.find(x=>x.id===id); if(it) it.checked=val; }); queueSave(); renderShop(); }));
     p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const id=e.target.closest(".kk-sitem").dataset.id; const it=state.shopping.find(x=>x.id===id); if(it){it.checked=e.target.checked; queueSave(); renderShop();}}));
     p.querySelectorAll(".sd").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-sitem").dataset.id; state.shopping=state.shopping.filter(x=>x.id!==id); queueSave(); renderShop(); }));
     document.getElementById("gen").addEventListener("click",()=>{
       const ids=new Set(); DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0) ids.add(id); }));
       const keys=new Set(state.shopping.map(x=>(x.group+"::"+x.name).toLowerCase())); const add=[];
-      ids.forEach(id=>{ const r=findR(id); if(!r) return; const mult=getMult(id);
-        const gname = mult>1 ? r.name+" (×"+mult+")" : r.name;
+      ids.forEach(id=>{ const r=findR(id); if(!r) return; const mult=totalMult(id); const ex=getExtra(id);
+        const gname = mult>1 ? r.name+" (×"+mult+(ex>0?", w tym "+ex+" na zapas":"")+")" : r.name;
         const ml=recipeMealLabel(r);
         r.ingredients.forEach(ing=>{ const scaled=scaleIng(ing,mult); const key=(gname+"::"+scaled).toLowerCase(); if(!keys.has(key)){ keys.add(key); add.push({id:uid("i"),name:scaled,group:gname,meal:ml,cat:prodCat(ing),checked:false}); }}); });
       state.shopping=state.shopping.concat(add); queueSave(); renderShop();
@@ -1245,11 +1412,20 @@
       const cset={};
       DAYS.forEach(d=>["lunch","dinner"].forEach(mk=>{ const r=(w.week[d]&&w.week[d][mk])?findR(w.week[d][mk].recipeId):null; if(r) cset[r.cuisine]=(cset[r.cuisine]||0)+1; }));
       const top=Object.keys(cset).sort((a,b)=>cset[b]-cset[a]).slice(0,3).join(", ");
+      let prev=`<table class="kk-wtable kk-preview"><tr><th></th>${DAYS.map(d=>`<th>${d}</th>`).join("")}</tr>`;
+      MEALS.forEach(([mk,ml])=>{
+        prev+=`<tr><th>${ml}</th>`;
+        DAYS.forEach(d=>{ const cell=(w.week[d]&&w.week[d][mk])?w.week[d][mk].recipeId:""; const rr=findR(cell); const sp=SPECIAL[cell];
+          prev+=`<td>${rr?esc(rr.name):(sp?esc(sp.name):"—")}</td>`; });
+        prev+=`</tr>`;
+      });
+      prev+=`<tr><th>Shake</th>${DAYS.map(d=>{ const sh=findR((w.week[d]||{}).shakeId||""); return `<td>${sh?esc(sh.name):"—"}</td>`; }).join("")}</tr></table>`;
       html+=`<div class="kk-weekrow" data-id="${w.id}">
-        <div style="flex:1;"><b>${esc(w.name)}</b>${top?`<div class="kk-note" style="margin:2px 0 0;">${esc(top)}</div>`:""}</div>
+        <div style="flex:1; min-width:180px;"><b>${esc(w.name)}</b>${top?`<div class="kk-note" style="margin:2px 0 0;">${esc(top)}</div>`:""}</div>
         <button class="kk-btn wk-load">Wczytaj do planu</button>
         <button class="kk-btn sec wk-rename">Zmień nazwę</button>
         <button class="wk-del" title="usuń">×</button>
+        <details class="kk-wkprev"><summary>Podgląd tygodnia</summary><div style="overflow-x:auto;">${prev}</div></details>
       </div>`;
     });
     html+=`</div>`;
@@ -1311,11 +1487,12 @@
       html+=`<div class="kk-sgroup"><h4>W zamrażalniku (${fz.length})</h4>`;
       fz.forEach(x=>{
         const days = x.date ? Math.floor((Date.now()-new Date(x.date).getTime())/86400000) : null;
-        const age = days==null?"":(days===0?"dziś":days+" dni temu");
-        const warn = (days!=null&&days>90)?' style="color:var(--meat);"':'';
+        const age = days==null?"":(days===0?"dziś":days===1?"wczoraj":days+" dni temu");
+        const dstr = x.date ? new Date(x.date).toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit",yyyy:"numeric",year:"numeric"}) : "—";
+        const warn = (days!=null&&days>90)?' style="color:var(--meat);font-weight:600;"':'';
         html+=`<div class="kk-frzitem" data-id="${x.id}">
-          <span class="kk-frzname">❄ ${esc(x.name)}</span>
-          <span class="kk-frzmeta"${warn}>${x.protein||0} g biał. · ${age}</span>
+          <span class="kk-frzname">❄ ${esc(x.name)}<span class="kk-frzdate">Zamrożone: ${dstr}${age?` · ${age}`:""}${(days!=null&&days>90)?" · ⚠ długo leży":""}</span></span>
+          <span class="kk-frzmeta"${warn}>${x.protein||0} g biał.</span>
           <span class="kk-frzport"><button class="fz-minus">−</button> ${x.portions||0} porc. <button class="fz-plus">+</button></span>
           <button class="fz-del">×</button>
         </div>`;
@@ -1388,16 +1565,24 @@
       alert("Dodano do zamrażalnika: "+r.name+" ("+port+" porcji). Pojawi się w Planie tygodnia w grupie „Z zamrażalnika.");
     }));
     document.getElementById("gp").addEventListener("click",()=>{
-      const ids=new Set(); DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]) ids.add(id); }));
-      const seen=new Set(state.prep.map(x=>x.text.toLowerCase())); const add=[];
-      const marTasks=[], freezeTasks=[], freshTasks=[];
+      const ids=new Set(); DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0) ids.add(id); }));
+      // zapamiętaj odhaczenia starych auto-zadań (po treści)
+      const wasChecked={}; (state.prep||[]).forEach(t=>{ if(t.auto&&t.checked) wasChecked[t.text]=true; });
+      // usuń stare auto-zadania, zostaw ręcznie dodane
+      state.prep=(state.prep||[]).filter(t=>!t.auto);
+      const add=[]; const marT=[], frzT=[], freshT=[];
       ids.forEach(id=>{ const r=findR(id); if(!r) return;
-        if(r.prepStyle==="mar") marTasks.push(r); else if(r.prepStyle==="freeze") freezeTasks.push(r); else freshTasks.push(r);
-      });
-      marTasks.forEach(r=>{ const mult=getMult(r.id); const suf=mult>1?` (×${mult} → ${2*mult} porcji)`:""; const txt="Zamarynuj i zamroź (vacuum): "+r.name+suf; if(!seen.has(txt.toLowerCase())){ seen.add(txt.toLowerCase()); add.push({id:uid("t"),text:txt,sub:r.note,srcId:r.id,mult:2*mult,checked:false}); }});
-      freezeTasks.forEach(r=>{ const mult=getMult(r.id); const suf=mult>1?` (×${mult} → ${2*mult} porcji)`:""; const txt="Ugotuj na zapas i zamroź: "+r.name+suf; if(!seen.has(txt.toLowerCase())){ seen.add(txt.toLowerCase()); add.push({id:uid("t"),text:txt,sub:r.note,srcId:r.id,mult:2*mult,checked:false}); }});
-      freshTasks.forEach(r=>{ const mult=getMult(r.id); const suf=mult>1?` (×${mult})`:""; const txt="Świeżo w dniu podania: "+r.name+suf; if(!seen.has(txt.toLowerCase())){ seen.add(txt.toLowerCase()); add.push({id:uid("t"),text:txt,sub:r.note,checked:false}); }});
-      if(add.length) add.push({id:uid("t"),text:"Rozłóż porcje do pojemników i podpisz datą",checked:false});
+        if(r.prepStyle==="mar") marT.push(r); else if(r.prepStyle==="freeze") frzT.push(r); else freshT.push(r); });
+      const push=(r,prefix)=>{
+        const tot=totalMult(r.id); const extra=getExtra(r.id);
+        const suf = tot>1 ? ` (${tot} porcje po 2 os.${extra>0?`, w tym ${extra} na zamrażalnik`:""})` : "";
+        const txt=prefix+r.name+suf;
+        add.push({id:uid("t"),text:txt,sub:r.note,srcId:r.id,mult:tot,extra:extra,auto:true,checked:!!wasChecked[txt]});
+      };
+      marT.forEach(r=>push(r,"Zamarynuj i zamroź (vacuum): "));
+      frzT.forEach(r=>push(r,"Ugotuj na zapas i zamroź: "));
+      freshT.forEach(r=>push(r,"Świeżo w dniu podania: "));
+      if(add.length) add.push({id:uid("t"),text:"Rozłóż porcje do pojemników i podpisz datą",auto:true,checked:!!wasChecked["Rozłóż porcje do pojemników i podpisz datą"]});
       state.prep=state.prep.concat(add); queueSave(); renderPrep();
     });
     document.getElementById("cp").addEventListener("click",()=>{ state.prep=state.prep.filter(x=>!x.checked); queueSave(); renderPrep(); });

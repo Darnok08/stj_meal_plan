@@ -6,7 +6,7 @@
 <title>Nasza Kuchnia</title>
 
 <!-- PWA: żeby dało się dodać do ekranu głównego jak apkę -->
-<meta name="theme-color" content="#23281F">
+<meta name="theme-color" content="#17181C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kuchnia">
@@ -15,66 +15,81 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 <style>
-  html,body{ margin:0; padding:0; background:#1c201a; }
-  body{ font-family:'Work Sans','Segoe UI',sans-serif; }
-  #app-wrap{ display:none; max-width:1400px; margin:0 auto; padding:12px; }
+  html,body{ margin:0; padding:0; background:#F0EDE8; }
+  body{ font-family:'Inter','Work Sans',sans-serif; -webkit-font-smoothing:antialiased; }
+  #app-wrap{ display:none; max-width:1400px; margin:0 auto; padding:14px; }
+
   #topbar{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:8px 12px; color:#E9DEC6; font-size:12px; flex-wrap:wrap;
+    padding:6px 4px 12px; color:#4A4E57; font-size:12px; flex-wrap:wrap;
   }
   #topbar .right{ display:flex; align-items:center; gap:12px; }
-  #saveflag{ color:#C0902A; opacity:0; transition:opacity .3s; font-size:11px; }
+  #topbar b{ color:#17181C; }
+  #saveflag{ color:#1F8A6D; opacity:0; transition:opacity .3s; font-size:11.5px; font-weight:600; }
   #logout{
-    background:none; border:1px solid #4a5140; color:#E9DEC6; border-radius:5px;
-    padding:5px 10px; cursor:pointer; font-size:11px; font-family:'Oswald',sans-serif;
-    letter-spacing:.5px; text-transform:uppercase;
+    background:#fff; border:1px solid #E6E1D8; color:#4A4E57; border-radius:9px;
+    padding:6px 12px; cursor:pointer; font-size:11.5px; font-weight:600;
+    font-family:inherit; transition:all .15s;
   }
-  #logout:hover{ background:#33392F; }
+  #logout:hover{ background:#F0563F; color:#fff; border-color:#F0563F; }
 
-  /* Ekran logowania */
+  /* ─── Ekran logowania ─── */
   #auth{
     display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
     box-sizing:border-box;
+    background:
+      radial-gradient(700px 400px at 80% 10%, rgba(245,165,36,.20), transparent 60%),
+      radial-gradient(600px 380px at 15% 85%, rgba(240,86,63,.18), transparent 60%),
+      #F0EDE8;
   }
   .au-card{
-    background:#F3EBD9; border-radius:12px; padding:28px 26px; width:100%; max-width:380px;
-    box-shadow:0 10px 40px rgba(0,0,0,.35); box-sizing:border-box;
+    background:#fff; border-radius:18px; padding:32px 30px; width:100%; max-width:400px;
+    box-shadow:0 2px 6px rgba(23,24,28,.05), 0 24px 60px rgba(23,24,28,.12);
+    box-sizing:border-box; position:relative; overflow:hidden;
+  }
+  .au-card::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:4px;
+    background:linear-gradient(90deg,#F0563F,#F5A524 50%,#1F8A6D);
   }
   .au-eyebrow{
-    font-family:'Oswald',sans-serif; letter-spacing:3px; font-size:10px; text-transform:uppercase;
-    color:#C0902A; margin-bottom:4px;
+    font-weight:600; letter-spacing:2.2px; font-size:10px; text-transform:uppercase;
+    color:#F5A524; margin-bottom:6px;
   }
   .au-title{
-    font-family:'Oswald',sans-serif; font-size:26px; text-transform:uppercase; letter-spacing:1px;
-    margin:0 0 4px; color:#282219;
+    font-family:'Bricolage Grotesque','Inter',sans-serif; font-weight:700;
+    font-size:30px; letter-spacing:-.7px; margin:0 0 6px; color:#17181C;
   }
-  .au-sub{ font-size:12.5px; color:#7a7156; margin-bottom:18px; line-height:1.45; }
+  .au-sub{ font-size:13px; color:#8A8F9A; margin-bottom:20px; line-height:1.55; }
   .au-card label{
-    display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
-    color:#7a7156; margin:12px 0 4px;
+    display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
+    color:#8A8F9A; margin:14px 0 5px; font-weight:600;
   }
   .au-card input{
-    width:100%; padding:10px; border:1px solid #C9BC9C; border-radius:6px; font-size:14px;
-    font-family:inherit; box-sizing:border-box; background:#fff;
+    width:100%; padding:11px 13px; border:1px solid #E6E1D8; border-radius:10px;
+    font-size:14px; font-family:inherit; box-sizing:border-box; background:#FBF9F6;
+    color:#17181C; transition:border-color .15s, background .15s;
   }
-  .au-card input:focus{ outline:none; border-color:#A8402F; }
-  .au-btns{ display:flex; gap:8px; margin-top:18px; }
+  .au-card input:focus{ outline:none; border-color:#F0563F; background:#fff; }
+  .au-btns{ display:flex; gap:9px; margin-top:22px; }
   .au-btns button{
-    flex:1; font-family:'Oswald',sans-serif; letter-spacing:.5px; text-transform:uppercase;
-    font-size:12px; border:none; padding:11px; border-radius:6px; cursor:pointer;
+    flex:1; font-family:inherit; font-weight:600; font-size:13px;
+    border:none; padding:12px; border-radius:10px; cursor:pointer; transition:all .15s;
   }
-  #au-login{ background:#A8402F; color:#fff; }
-  #au-signup{ background:none; color:#5C7A52; border:1px solid #5C7A52; }
-  #au-login:hover{ filter:brightness(1.08); }
-  #au-signup:hover{ background:#eee7d5; }
-  .au-msg{ font-size:12px; margin-top:12px; min-height:16px; line-height:1.4; }
-  .au-msg.err{ color:#A8402F; }
-  .au-msg.ok{ color:#4A6442; }
-  .au-hint{ font-size:11px; color:#a99c78; margin-top:14px; line-height:1.5; }
+  #au-login{ background:#F0563F; color:#fff; box-shadow:0 2px 10px rgba(240,86,63,.28); }
+  #au-login:hover{ background:#D8432D; transform:translateY(-1px); }
+  #au-signup, #cf-save{ background:#fff; color:#1F8A6D; border:1px solid #1F8A6D; }
+  #au-signup:hover{ background:#1F8A6D; color:#fff; }
+  #cf-save{ background:#F0563F; color:#fff; border:none; box-shadow:0 2px 10px rgba(240,86,63,.28); }
+  #cf-save:hover{ background:#D8432D; }
+  .au-msg{ font-size:12.5px; margin-top:14px; min-height:16px; line-height:1.5; }
+  .au-msg.err{ color:#D8432D; }
+  .au-msg.ok{ color:#1F8A6D; }
+  .au-msg a{ color:#F0563F; font-weight:600; }
+  .au-hint{ font-size:11.5px; color:#8A8F9A; margin-top:16px; line-height:1.55; }
 </style>
 </head>
 <body>
