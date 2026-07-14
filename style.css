@@ -371,9 +371,20 @@
 
 .kk-mealtag{
   font-size:9.5px; font-weight:600; letter-spacing:.4px; text-transform:uppercase;
-  background:var(--amber); color:#fff; padding:2px 8px; border-radius:999px;
-  vertical-align:middle;
+  background:var(--mute); color:#fff; padding:2px 8px; border-radius:999px;
+  vertical-align:middle; display:inline-block;
 }
+.kk-mealtag.mt-b{ background:var(--amber); }   /* Śniadanie — bursztyn */
+.kk-mealtag.mt-l{ background:var(--flame); }   /* Obiad — koral */
+.kk-mealtag.mt-d{ background:var(--sky); }     /* Kolacja — błękit */
+.kk-mealtag.mt-s{ background:var(--plum); }    /* Shake — fiolet */
+.kk-daytag{
+  font-size:9.5px; font-weight:600; background:var(--surface-2); color:var(--ink-soft);
+  border:1px solid var(--line); padding:2px 8px; border-radius:999px;
+  vertical-align:middle; display:inline-block;
+}
+.kk-itemmeta{ display:inline-flex; gap:5px; flex-wrap:wrap; align-items:center; margin-left:6px; }
+.kk-dayf{ min-width:44px; text-align:center; }
 .kk-fromtag{ font-size:10.5px; color:var(--mute); font-style:italic; }
 
 /* gotowanie na zapas */
