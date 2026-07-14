@@ -301,6 +301,11 @@
 }
 .kk-mprot{ font-size:10.5px; color:var(--flame); font-weight:600; margin-top:5px; }
 .kk-repeat{ font-size:9.5px; color:var(--amber); font-weight:600; margin-top:3px; }
+.kk-carbhint{
+  font-size:9.5px; color:var(--basil); font-weight:600; margin-top:4px;
+  background:rgba(31,138,109,.08); border-left:2px solid var(--basil);
+  padding:3px 5px; border-radius:0 5px 5px 0; line-height:1.4;
+}
 
 .kk-dtotal{ padding:8px 6px !important; background:var(--surface-2) !important; }
 .kk-tot-person{
@@ -442,3 +447,41 @@
   .kk-grid{ grid-template-columns:1fr; }
   .kk-tab{ padding:12px 12px; font-size:12px; }
 }
+
+/* ─── Oceny i historia ─── */
+.kk-ratingrow{ display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.kk-stars{ display:inline-flex; gap:2px; }
+.kk-star{
+  cursor:pointer; font-size:17px; line-height:1; color:var(--line);
+  transition:color .12s, transform .12s;
+}
+.kk-star:hover{ transform:scale(1.15); color:var(--amber); }
+.kk-star.on{ color:var(--amber); }
+.kk-stars.sm .kk-star{ font-size:14px; }
+.kk-cookcount{
+  font-size:10.5px; font-weight:600; color:var(--basil);
+  background:rgba(31,138,109,.10); padding:2px 8px; border-radius:999px;
+}
+.kk-cookbtn{
+  margin-top:6px; width:100%; font-size:10px; font-weight:600; font-family:inherit;
+  padding:4px 6px; border-radius:7px; cursor:pointer;
+  border:1px dashed var(--line); background:transparent; color:var(--mute);
+  transition:all .15s;
+}
+.kk-cookbtn:hover{ border-color:var(--basil); color:var(--basil); }
+.kk-cookbtn.done{
+  background:var(--basil); color:#fff; border:1px solid var(--basil); border-style:solid;
+}
+.kk-statgrid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px; margin-bottom:16px;
+}
+.kk-stat{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-s);
+  padding:16px 14px; text-align:center; box-shadow:var(--shadow);
+}
+.kk-statnum{
+  font-family:'Bricolage Grotesque','Inter',sans-serif; font-weight:700;
+  font-size:30px; line-height:1; color:var(--flame); letter-spacing:-1px;
+}
+.kk-statlab{ font-size:11px; color:var(--mute); margin-top:6px; line-height:1.35; font-weight:500; }
