@@ -4,7 +4,7 @@
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
   const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
-  const RECIPES_VERSION=3;   // podbij, gdy zmienią się wbudowane przepisy lub cele
+  const RECIPES_VERSION=4;   // podbij, gdy zmienią się wbudowane przepisy lub cele
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
     return {id,name,cuisine:cuis,mealTypes:mt,ptype,prepTime:time,proteinTotal:prot,prepStyle:prep,note,ingredients:ing,steps};
@@ -820,6 +820,14 @@
   // pieczywo/kromki (kanapka bez chleba to nie kanapka), tortille (nie ma w co zawinąć),
   // bułki, makaron (jest istotą dania), płatki/owsianka (śniadanie i tak się spali), granola, pinsa.
   const CARB_LOCKED=/(chleb|pieczyw|krom|grzank|tost|tortill|bułk|bule|makaron|spaghetti|linguine|płatk|platk|owsian|granol|pinsy|pinsa|muffin|chałk|chalk)/i;
+  // czy składnik to skrobiowy DODATEK, który nakładacie osobno (a nie sos/warzywo)
+  const CARB_STAPLE=/(ryż|ryz|makaron|spaghetti|linguine|kasz|bulgur|kuskus|ziemniak|batat|frytk|chleb|pieczyw|krom|grzank|tost|tortill|bułk|bule|pit[ay]\b|naan|płatk|platk|owsian|granol|pinsy|pinsa|muffin|chałk|chalk|makaronu ryżowego)/i;
+  function isCarbFood(line){
+    if(!CARB_STAPLE.test(line||"")) return false;   // sosy, pasty i warzywa idą z daniem
+    const f=lookupFood(line);
+    if(!f) return false;
+    return f[1] >= 15;   // faktycznie skrobiowy
+  }
   function isCarbLine(line){
     const n=line||"";
     if(CARB_LOCKED.test(n)) return false;   // nośnik / śniadanie → zostaw w spokoju
@@ -1000,6 +1008,10 @@
       state.targets=Object.assign({}, state.targets||{}, D);
       // 4) wyczyść korekty węgli (odnoszą się do starych gramatur)
       state.carbAdj={};
+      // 5) usuń stare zadania prep bez znacznika (rosły w nieskończoność) i stare pozycje zakupów
+      const AUTO_TXT=/^(Zamarynuj i zamroź|Ugotuj na zapas i zamroź|Świeżo w dniu podania|Rozłóż porcje)/;
+      state.prep=(state.prep||[]).filter(t=> !(t.auto || t.srcId || AUTO_TXT.test(t.text||"")) );
+      state.shopping=(state.shopping||[]).filter(it=> it.auto===false );
       state.recipesVersion=RECIPES_VERSION;
       queueSave();
       console.log("Zmigrowano bazę przepisów do wersji "+RECIPES_VERSION);
@@ -1040,7 +1052,8 @@
   function esc(s){ return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
   function split(){ const m=(state.targets.splitM||62)/100; return {m,k:1-m}; }
   function splitCF(){ const c=(state.targets.splitC||50)/100; return {c,ck:1-c}; }
-  function splitFat(){ const fv=(state.targets.splitF||60)/100; return {f:fv, fk:1-fv}; }
+  // Tłuszcz jest w tym samym garnku co mięso i sos → dzieli się DOKŁADNIE jak białko.
+  function splitFat(){ const fv=(state.targets.splitM||58)/100; return {f:fv, fk:1-fv}; }
   function findFrz(id){ return (state.freezer||[]).find(x=>("frz_"+x.id)===id); }
   function mealProt(meal){
     if(SPECIAL[meal.recipeId]) return SPECIAL[meal.recipeId].prot;
@@ -1074,9 +1087,8 @@
           <div class="kk-tcard"><label>Ty: węgle</label><input id="t-c2" type="number" value="${state.targets.carb2}"></div>
         </div>
         <div class="kk-targets" style="margin-top:8px;">
-          <div class="kk-tcard"><label>Podział: białko %</label><input id="t-split" type="number" value="${state.targets.splitM}"></div>
-          <div class="kk-tcard"><label>Podział: tłuszcz %</label><input id="t-splitf" type="number" value="${state.targets.splitF}"></div>
-          <div class="kk-tcard"><label>Podział: węgle %</label><input id="t-splitc" type="number" value="${state.targets.splitC}"></div>
+          <div class="kk-tcard"><label>Twój podział: mięso, sos, tłuszcz %</label><input id="t-split" type="number" value="${state.targets.splitM}"></div>
+          <div class="kk-tcard"><label>Twój podział: węgle (ryż, ziemniaki) %</label><input id="t-splitc" type="number" value="${state.targets.splitC}"></div>
         </div>
       </div>
       <div class="kk-tabs">
@@ -1117,7 +1129,7 @@
     bindT("t-k1","kcal1"); bindT("t-k2","kcal2");
     bindT("t-f1","fat1"); bindT("t-f2","fat2");
     bindT("t-c1","carb1"); bindT("t-c2","carb2");
-    bindT("t-split","splitM",15,85); bindT("t-splitf","splitF",15,85); bindT("t-splitc","splitC",15,85);
+    bindT("t-split","splitM",15,85); bindT("t-splitc","splitC",15,85);
     renderRules(); renderMealTab("breakfast"); renderMealTab("lunch"); renderMealTab("dinner"); renderMealTab("shake"); renderWeek(); renderWeeksLib(); renderFreezer(); renderShop(); renderPrep(); renderHistory(); renderSurvival(); refreshTabs();
   }
   function refreshTabs(){
@@ -1246,13 +1258,16 @@
         </div>
         <div class="kk-cbody">
           <details><summary>Składniki (${mult>1?`×${mult} → ${2*mult} porcji`:`2 porcje`})</summary><ul>${r.ingredients.map(i=>`<li>${esc(scaleIng(i,mult))}</li>`).join("")}</ul></details>
-          ${meal!=="shake"?`<details><summary>Podział na dwie miski (Ty ${Math.round(m*100)}% / Magda ${Math.round(k*100)}%)</summary>
+          ${meal!=="shake"?(()=>{ const cs=(state.targets.splitC||53)/100;
+            const share=(ing,who)=>{ const carb=isCarbFood(ing); const f = carb ? (who==="ty"?cs:1-cs) : (who==="ty"?m:k); return scalePortion(scaleIng(ing,mult), f); };
+            return `<details><summary>Podział na dwie miski</summary>
+            <div class="kk-note" style="margin:0 0 6px;">Mięso, sos i tłuszcz: <b>${Math.round(m*100)}/${Math.round(k*100)}</b> · Węgle: <b>${Math.round(cs*100)}/${Math.round((1-cs)*100)}</b></div>
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <div style="flex:1; min-width:140px;"><b style="font-size:11px;">Twoja miska</b><ul>${r.ingredients.map(i=>`<li>${esc(scalePortion(scaleIng(i,mult),m))}</li>`).join("")}</ul></div>
-              <div style="flex:1; min-width:140px;"><b style="font-size:11px;">Miska Magdy</b><ul>${r.ingredients.map(i=>`<li>${esc(scalePortion(scaleIng(i,mult),k))}</li>`).join("")}</ul></div>
+              <div style="flex:1; min-width:140px;"><b style="font-size:11px;">Twoja miska</b><ul>${r.ingredients.map(i=>`<li>${esc(share(i,"ty"))}</li>`).join("")}</ul></div>
+              <div style="flex:1; min-width:140px;"><b style="font-size:11px;">Miska Magdy</b><ul>${r.ingredients.map(i=>`<li>${esc(share(i,"m"))}</li>`).join("")}</ul></div>
             </div>
-            <div class="kk-note" style="margin-top:4px;">Przybliżone ilości do rozłożenia od razu na dwa talerze/pojemniki. Przyprawy i rzeczy „do smaku" dziel na oko.</div>
-          </details>`:""}
+            <div class="kk-note" style="margin-top:4px;">Ryż i ziemniaki dzielicie niemal po równo, mięso i sos w Twoją stronę. Przyprawy „do smaku" — na oko.</div>
+          </details>`; })():""}
           <details><summary>Przygotowanie</summary><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol></details>
           ${r.note?`<div class="kk-storenote">${esc(r.note)}</div>`:""}
           ${r.unotes?`<div class="kk-storenote" style="border-left-color:var(--plum); background:#f3eef6;">📝 ${esc(r.unotes)}</div>`:""}
@@ -1562,7 +1577,7 @@
       </td>`;
     });
     html+=`</tr></tbody></table></div>
-    <div class="kk-note"><b>B</b> = białko, <b>W</b> = węglowodany, <b>T</b> = tłuszcz (g). Zielone = w celu, czerwone = poza celem. Podział wspólnego dania: <b>białko ${state.targets.splitM}/${100-state.targets.splitM}</b>, <b>tłuszcz ${state.targets.splitF}/${100-state.targets.splitF}</b>, <b>węgle ${state.targets.splitC}/${100-state.targets.splitC}</b> — Ty bierzesz więcej mięsa i sosu, a ryż/ziemniaki/pieczywo dzielicie mniej więcej po równo (Magda przy swojej masie potrzebuje węgli niemal tyle samo co Ty). Makro liczone ze składników — <i>orientacyjne</i>.</div>`;
+    <div class="kk-note"><b>B</b> = białko, <b>W</b> = węglowodany, <b>T</b> = tłuszcz (g). Zielone = w celu, czerwone = poza celem. Podział wspólnego dania: <b>mięso, sos i tłuszcz ${state.targets.splitM}/${100-state.targets.splitM}</b> (jedna patelnia — tłuszczu nie da się rozdzielić inaczej niż białka), <b>węgle ${state.targets.splitC}/${100-state.targets.splitC}</b> (ryż i ziemniaki nakładacie osobno). Makro liczone ze składników — <i>orientacyjne</i>.</div>`;
     // balans białka
     const tc={};
     DAYS.forEach(d=> ["lunch","dinner"].forEach(mk=>{ const r=findR(state.week[d][mk].recipeId); if(r&&r.ptype&&r.ptype!=="—"){ tc[r.ptype]=(tc[r.ptype]||0)+1; }}));
@@ -2188,7 +2203,8 @@
       // zapamiętaj odhaczenia starych auto-zadań (po treści)
       const wasChecked={}; (state.prep||[]).forEach(t=>{ if(t.auto&&t.checked) wasChecked[t.text]=true; });
       // usuń stare auto-zadania, zostaw ręcznie dodane
-      state.prep=(state.prep||[]).filter(t=>!t.auto);
+      const AUTO_TXT=/^(Zamarynuj i zamroź|Ugotuj na zapas i zamroź|Świeżo w dniu podania|Rozłóż porcje)/;
+      state.prep=(state.prep||[]).filter(t=> !(t.auto || AUTO_TXT.test(t.text||"")) );
       const add=[]; const marT=[], frzT=[], freshT=[];
       ids.forEach(id=>{ const r=findR(id); if(!r) return;
         if(r.prepStyle==="mar") marT.push(r); else if(r.prepStyle==="freeze") frzT.push(r); else freshT.push(r); });
@@ -2205,6 +2221,10 @@
       state.prep=state.prep.concat(add); queueSave(); renderPrep();
     });
     document.getElementById("cp").addEventListener("click",()=>{ state.prep=state.prep.filter(x=>!x.checked); queueSave(); renderPrep(); });
+    document.getElementById("wipep").addEventListener("click",()=>{
+      if(!confirm("Wyczyścić całą listę prep (łącznie z ręcznie dodanymi)?")) return;
+      state.prep=[]; queueSave(); renderPrep();
+    });
     document.getElementById("ap").addEventListener("click",()=>{ const i=document.getElementById("np"); if(i.value.trim()){ state.prep.push({id:uid("t"),text:i.value.trim(),checked:false}); i.value=""; queueSave(); renderPrep(); }});
   }
 
