@@ -4,7 +4,7 @@
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
   const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
-  const RECIPES_VERSION=4;   // podbij, gdy zmienią się wbudowane przepisy lub cele
+  const RECIPES_VERSION=5;   // podbij, gdy zmienią się wbudowane przepisy lub cele
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
     return {id,name,cuisine:cuis,mealTypes:mt,ptype,prepTime:time,proteinTotal:prot,prepStyle:prep,note,ingredients:ing,steps};
@@ -283,19 +283,19 @@
       ["Roztrzep jajka, dopraw.","Wlej na patelnię z masłem, dodaj szynkę, ser i szpinak.","Smaż na średnim ogniu, złóż omlet, podawaj z pieczywem."]),
     // ——— SHAKE'I / BIAŁKO ———
     R("s1","Shake potreningowy — banan i masło orzechowe","Shake",["shake"],"—",5,78,"fresh","Po porannym treningu (siłownia / HIIT / bieganie). Szybki zastrzyk białka + węgli na regenerację.",
-      ["3 miarki odżywki białkowej (ok. 70 g)","2 banany","500 ml mleka lub napoju roślinnego","1 łyżka masła orzechowego (15 g)","kilka kostek lodu"],
+      ["55 g odżywki białkowej (ok. 2 miarki)","1 banan","400 ml mleka lub napoju roślinnego","1 łyżeczka masła orzechowego (10 g)","kilka kostek lodu"],
       ["Wrzuć wszystko do blendera.","Zblenduj na gładko.","Wypij w ciągu 30-60 min po treningu."]),
     R("s2","Szybki shake na mleku (30 sekund)","Shake",["shake"],"—",2,70,"fresh","Najprostszy — na dni, gdy nie ma czasu na nic. Podbija dzienne białko bez wysiłku.",
-      ["3 miarki odżywki białkowej (ok. 70 g)","500 ml mleka lub wody","opcjonalnie: cynamon lub kakao"],
+      ["55 g odżywki białkowej (ok. 2 miarki)","400 ml mleka lub wody","opcjonalnie: cynamon lub kakao"],
       ["Wsyp białko do shakera.","Zalej mlekiem, wstrząśnij 20 sekund.","Gotowe."]),
     R("s3","Shake śniadaniowy na bogato","Shake",["shake"],"—",5,84,"fresh","Zastępuje śniadanie w biegu — owsianka w płynie z pełną porcją białka.",
-      ["3 miarki odżywki białkowej (ok. 70 g)","80 g płatków owsianych","2 banany","500 ml mleka","1 łyżka masła orzechowego (15 g)","miód, cynamon"],
+      ["50 g odżywki białkowej (ok. 2 miarki)","50 g płatków owsianych","1 banan","400 ml mleka","1 łyżeczka masła orzechowego (10 g)","miód, cynamon"],
       ["Zblenduj wszystkie składniki na gładko.","Jeśli za gęsty, dolej mleka."]),
     R("s4","Zielony shake — szpinak i owoce","Shake",["shake"],"—",5,76,"fresh","Białko + porcja warzyw i owoców. Dobry, gdy dzień jest ubogi w warzywa.",
-      ["3 miarki odżywki białkowej (ok. 70 g)","garść szpinaku","2 banany","250 g mrożonych owoców leśnych","500 ml mleka lub wody"],
+      ["50 g odżywki białkowej (ok. 2 miarki)","garść szpinaku","1 banan","200 g mrożonych owoców leśnych","400 ml mleka lub wody"],
       ["Zblenduj szpinak z płynem na gładko.","Dodaj białko, banana i owoce, zblenduj ponownie."]),
     R("s5","Shake na jogurcie greckim (gęsty, na łyżce)","Shake",["shake"],"—",5,80,"fresh","Gęsty jak deser — dobry wieczorem lub jako sycąca przekąska białkowa.",
-      ["2 miarki odżywki białkowej (ok. 45 g)","400 g jogurtu greckiego","250 g owoców (jagody/mango)","odrobina mleka","granola do posypania"],
+      ["40 g odżywki białkowej (ok. 1,5 miarki)","300 g jogurtu greckiego","200 g owoców (jagody/mango)","odrobina mleka","20 g granoli"],
       ["Wymieszaj jogurt z białkiem i odrobiną mleka.","Dodaj owoce, posyp granolą."])
     ,
     // ——— TURECKA ———
@@ -363,7 +363,7 @@
     // ——— SHAKE MANGO ———
     R("s6","Mango lassi proteinowe","Shake",["shake"],"—",5,74,"fresh",
       "Mrożone mango + jogurt = indyjskie lassi z białkiem. Idealne po letnim treningu.",
-      ["250 g mrożonego mango","400 g jogurtu naturalnego lub kefiru","2 miarki odżywki białkowej (ok. 45 g)","szczypta kardamonu","odrobina mleka do konsystencji"],
+      ["200 g mrożonego mango","300 g jogurtu naturalnego lub kefiru","40 g odżywki białkowej (ok. 1,5 miarki)","szczypta kardamonu","odrobina mleka do konsystencji"],
       ["Zblenduj wszystko na gładko.","Dolej mleka, jeśli za gęste."])
     ,
     // ═══════ ROZBUDOWA BIBLIOTEKI ═══════
@@ -480,7 +480,70 @@
     R("cb8","Placuszki bananowo-owsiane (roślinne)","Roślinna",["breakfast"],"Tofu/roślinne",15,24,"fresh",
       "Bez jajek i nabiału — banan i mąka owsiana wiążą ciasto. Dobre na roślinny dzień.",
       ["2 dojrzałe banany","120 g mąki owsianej","150 ml napoju roślinnego","1 łyżeczka proszku do pieczenia","masło orzechowe, owoce, syrop klonowy"],
-      ["Rozgnieć banany, wymieszaj z mąką, napojem i proszkiem.","Smaż małe placki na patelni 2 min z każdej strony.","Podawaj z masłem orzechowym, owocami i syropem."])
+      ["Rozgnieć banany, wymieszaj z mąką, napojem i proszkiem.","Smaż małe placki na patelni 2 min z każdej strony.","Podawaj z masłem orzechowym, owocami i syropem."]),
+
+    // ═══ WZORCOWY TYDZIEŃ — przepisy fit dopasowane do celów (2 porcje) ═══
+    // Śniadania ~70 g B / ~1150 kcal · Obiady ~100 g B / ~1450 kcal · Kolacje ~55 g B / ~1000 kcal
+    R("nb1","Shakshuka z fetą i jajkami","Bliski Wschód",["breakfast"],"Jajka",25,70,"fresh",
+      "Piecze się w jednej patelni, świetnie odgrzewa przez 3-4 dni. Batch na Pon+Śr.",
+      ["6 jajek","60 g fety","150 g passaty pomidorowej","1 papryka czerwona","100 g szpinaku","3 kromki chleba żytniego","1 łyżka oliwy","czosnek, kmin, papryka, sól"],
+      ["Na oliwie podsmaż paprykę i czosnek, dodaj passatę i przyprawy, duś 8 min.","Wmieszaj szpinak, zrób wgłębienia i wbij jajka.","Duś pod przykryciem 6-8 min, posyp fetą.","Podawaj z pieczywem."]),
+    R("nb2","Overnight oats proteinowe ze skyrem","Międzynarodowa",["breakfast"],"Nabiał",5,70,"fresh",
+      "Zero gotowania — wieczorem mieszasz, rano gotowe. Trzyma 4 dni w lodówce. Batch na Wt+Czw.",
+      ["90 g płatków owsianych","250 g skyr","30 g odżywki białkowej (1 miarka)","1 banan","30 g masła orzechowego","150 g jagód","20 g miodu","cynamon"],
+      ["Wymieszaj płatki, skyr, białko, miód i mleko do konsystencji.","Odstaw na noc do lodówki.","Rano dodaj banana, jagody i masło orzechowe."]),
+    R("nb3","Placki twarogowe proteinowe z owocami","Polska",["breakfast"],"Nabiał",15,71,"fresh",
+      "Polskie placki w wersji fit — dużo białka z twarogu. Batch na Pt+Sob (odgrzać lub na zimno).",
+      ["220 g twarogu półtłustego","3 jajka","70 g mąki owsianej","20 g miodu","200 g truskawek","1 łyżeczka oleju","cynamon"],
+      ["Zmiksuj twaróg z jajkami, mąką i cynamonem.","Smaż małe placki 2-3 min z każdej strony.","Podawaj z owocami i miodem."]),
+    R("nb4","Menemen — tureckie jajka z pomidorami i fetą","Turecka",["breakfast"],"Jajka",20,65,"fresh",
+      "Tureckie śniadanie na świeżo — na niedzielę, gdy masz czas.",
+      ["5 jajek","80 g fety","2 pomidory","1 papryka","3 kromki chleba","1 łyżka oliwy","natka, sól, pieprz"],
+      ["Podsmaż paprykę, dodaj pomidory, duś 5 min.","Wbij jajka, mieszaj do lekkiego ścięcia.","Pokrusz fetę, podawaj z pieczywem."]),
+    R("nl1","Kurczak gochujang po koreańsku z ryżem","Koreańska",["lunch"],"Drób",30,106,"fresh",
+      "Ostro-słodki koreański klasyk. Świetnie się odgrzewa. Batch na Pon+Śr.",
+      ["270 g piersi z kurczaka","160 g ryżu (suchy)","40 g gochujang","1 łyżka sosu sojowego","1 łyżka miodu","2 ząbki czosnku","imbir","1 łyżeczka oleju sezamowego","150 g marchewki","sezam, szczypiorek"],
+      ["Wymieszaj gochujang, sos sojowy, miód, czosnek i imbir.","Obsmaż kurczaka, dodaj sos, glazuruj 5 min.","Ugotuj ryż, podsmaż marchewkę.","Podawaj z ryżem, sezamem i szczypiorkiem."]),
+    R("nl2","Grecki cytrynowy kurczak z ziemniakami","Grecka",["lunch"],"Drób",45,99,"fresh",
+      "Udka z cytryną i oregano, ziemniaki z tego samego pieca. Batch na Wt+Czw.",
+      ["300 g udek z kurczaka bez kości","400 g ziemniaków","150 g jogurtu greckiego","1 cytryna","2 łyżki oliwy","czosnek, oregano","ogórek, koperek"],
+      ["Wymieszaj kurczaka i ziemniaki z oliwą, cytryną, czosnkiem i oregano.","Piecz w 200°C ok. 35-40 min.","Zrób tzatziki z jogurtu, ogórka i czosnku.","Podawaj razem."]),
+    R("nl3","Butter chicken z ryżem basmati","Indyjska",["lunch"],"Drób",40,103,"fresh",
+      "Kremowe indyjskie curry w lżejszej wersji. Sos trzyma się i odgrzewa idealnie. Batch na Pt+Sob.",
+      ["270 g piersi z kurczaka","170 g ryżu basmati (suchy)","150 g passaty pomidorowej","100 g jogurtu naturalnego","40 ml śmietanki 30%","1 łyżka masła","2 łyżeczki garam masali","czosnek, imbir, chili"],
+      ["Zamarynuj kurczaka w jogurcie i połowie przypraw.","Obsmaż kurczaka, odłóż.","Na maśle podsmaż przyprawy, dodaj passatę, duś 10 min, wlej śmietankę.","Wróć kurczaka, duś 8 min, podawaj z ryżem."]),
+    R("nl4","Bulgogi wołowe z ryżem i kimchi","Koreańska",["lunch"],"Wołowina",25,99,"fresh",
+      "Marynowana wołowina smażona na dużym ogniu. Na niedzielę lub batch.",
+      ["300 g rostbefu","170 g ryżu (suchy)","2 łyżki sosu sojowego","1 łyżka miodu","1 łyżeczka oleju sezamowego","1 gruszka","czosnek","100 g kimchi","sezam"],
+      ["Zetrzyj gruszkę, wymieszaj z sojowym, miodem, czosnkiem i olejem.","Zamarynuj cienko pokrojoną wołowinę 20 min.","Smaż na dużym ogniu 3-4 min.","Podawaj z ryżem, kimchi i sezamem."]),
+    R("nd1","Pinsa z kurczakiem i mozzarellą","Włoska",["dinner"],"Drób",20,80,"fresh",
+      "Lekki włoski wieczór — gotowy spód pinsy, świeże dodatki.",
+      ["250 g spodu pinsy","100 g mozzarelli","100 g passaty pomidorowej","120 g piersi z kurczaka (grillowanej)","rukola, bazylia","1 łyżka oliwy"],
+      ["Posmaruj spód passatą, ułóż mozzarellę i kurczaka.","Piecz w 230°C 8-10 min.","Po upieczeniu dodaj rukolę i bazylię."]),
+    R("nd2","Wrap z grillowanym kurczakiem","Międzynarodowa",["dinner"],"Drób",15,76,"fresh",
+      "Szybka kolacja — wszystko zawijasz w tortillę.",
+      ["2 tortille pełnoziarniste","150 g piersi z kurczaka","80 g jogurtu greckiego","40 g sera","sałata, pomidor, ogórek"],
+      ["Zgrilluj lub podsmaż kurczaka, pokrój.","Posmaruj tortille jogurtem, ułóż kurczaka, ser i warzywa.","Zawiń ciasno i przekrój."]),
+    R("nd3","Sałatka z tuńczykiem, ciecierzycą i fetą","Śródziemnomorska",["dinner"],"Ryby i owoce morza",10,60,"fresh",
+      "Bez gotowania — sycąca sałatka na świeżo.",
+      ["1 puszka tuńczyka w wodzie","150 g ciecierzycy","150 g pomidorków","100 g ogórka","50 g fety","2 kromki chleba","mix sałat","1 łyżka oliwy","cytryna"],
+      ["Odsącz tuńczyka i ciecierzycę.","Wymieszaj z warzywami i fetą.","Skrop oliwą i cytryną, podawaj z pieczywem."]),
+    R("nd4","Omlet z serem i szynką","Międzynarodowa",["dinner"],"Jajka",10,61,"fresh",
+      "Klasyczny szybki omlet — 10 minut i gotowe.",
+      ["3 jajka","60 g sera żółtego","80 g szynki","2 kromki chleba","pomidor, szczypiorek","1 łyżeczka masła"],
+      ["Roztrzep jajka, wylej na masło.","Gdy się zetną, dodaj ser i szynkę, złóż.","Podawaj z pieczywem i pomidorem."]),
+    R("nd5","Pieczony łosoś z ziemniakami i brokułem","Skandynawska",["dinner"],"Ryby i owoce morza",30,58,"fresh",
+      "Łosoś i warzywa z jednej blachy.",
+      ["250 g łososia","350 g ziemniaków","brokuł","1 łyżka oliwy","cytryna, koperek"],
+      ["Pokrój ziemniaki, wymieszaj z oliwą, piecz 200°C 20 min.","Dołóż łososia i brokuł, piecz kolejne 15 min.","Skrop cytryną, posyp koperkiem."]),
+    R("nd6","Kanapki z wędzonym łososiem i awokado","Skandynawska",["dinner"],"Ryby i owoce morza",10,54,"fresh",
+      "Zimna kolacja bez gotowania — pieczywo, łosoś, awokado.",
+      ["4 kromki chleba żytniego","150 g wędzonego łososia","80 g serka śmietankowego","awokado","rukola, ogórek, cytryna"],
+      ["Posmaruj pieczywo serkiem.","Ułóż łososia, awokado i ogórka.","Skrop cytryną, posyp rukolą."]),
+    R("nd7","Stir-fry z kurczakiem i makaronem ryżowym","Azjatycka",["dinner"],"Drób",20,65,"fresh",
+      "Szybki wok — wszystko smaży się w 15 minut.",
+      ["150 g piersi z kurczaka","150 g makaronu ryżowego","brokuł, papryka, marchew","2 łyżki sosu sojowego","czosnek, imbir","1 łyżeczka oleju sezamowego","sezam"],
+      ["Namocz makaron ryżowy.","Smaż kurczaka na dużym ogniu, dodaj warzywa.","Wrzuć makaron i sos sojowy, wymieszaj.","Posyp sezamem."])
   ];}
 
   // specjalne pseudo-pozycje trybu dnia (wpisywane w komórki planu)
@@ -495,13 +558,13 @@
     // szybkie kolacje, rotacja śniadań, shake w dni treningowe (Pon/Śr/Pt), niedziela = dzień zupy.
     const w={};
     const plan={
-      "Pon":{breakfast:"b5", lunch:"i1",  dinner:"d3",  shake:"s1"},
-      "Wt": {breakfast:"b10",lunch:"tu1", dinner:"j1",  shake:"s2"},
-      "Śr": {breakfast:"b6", lunch:"fi1", dinner:"d8",  shake:"s1"},
-      "Czw":{breakfast:"b12",lunch:"fr1", dinner:"d7",  shake:"s2"},
-      "Pt": {breakfast:"b7", lunch:"no1", dinner:"d9",  shake:"s1"},
-      "Sob":{breakfast:"b8", lunch:"ka1", dinner:"fr2", shake:"s2"},
-      "Nd": {breakfast:"b16",lunch:"p3",  dinner:"no3", shake:"s5"}
+      "Pon":{breakfast:"nb1", lunch:"nl1", dinner:"nd4", shake:"s1"},
+      "Wt": {breakfast:"nb2", lunch:"nl2", dinner:"nd1", shake:"s2"},
+      "Śr": {breakfast:"nb1", lunch:"nl1", dinner:"nd6", shake:"s1"},
+      "Czw":{breakfast:"nb2", lunch:"nl2", dinner:"nd7", shake:"s2"},
+      "Pt": {breakfast:"nb3", lunch:"nl3", dinner:"nd3", shake:"s1"},
+      "Sob":{breakfast:"nb3", lunch:"nl3", dinner:"nd5", shake:"s2"},
+      "Nd": {breakfast:"nb4", lunch:"nl4", dinner:"nd2", shake:"s5"}
     };
     DAYS.forEach(d=>{
       const p=plan[d]||{};
@@ -563,7 +626,10 @@
     [["skyr"],[11,4,1]],
     [["jogurtu","jogurt"],[5,5,3]],
     [["kefir"],[3,4,2]],
-    [["twarogu","twaróg"],[18,3,4]],
+    [["twarogu tłustego","twaróg tłusty","tłusty twaróg"],[16,3,9]],
+    [["twarogu chudego","twaróg chudy","chudy twaróg","chudego twarogu"],[19,1,1]],
+    [["twarogu półtłustego","twaróg półtłusty","twarogu","twaróg"],[18,3,5]],
+    [["serek śmietankowy","serka śmietankowego","biały serek do smarowania","serek do smarowania"],[7,4,25]],
     [["serka wiejskiego","serek wiejski","serek"],[11,3,4]],
     [["mozzarell"],[18,2,20]],
     [["parmezan","pecorino"],[33,0,28]],
@@ -574,6 +640,8 @@
     [["śmietanki","śmietana"],[2,3,30]],
     [["mleka kokosowego","mleko kokosowe"],[2,3,20]],
     [["napoju roślinnego","mleka roślinnego"],[1,3,2]],
+    [["mleka 3,2","mleko 3,2","mleka 3.2","mleko pełne"],[3,5,3.2]],
+    [["mleka 0,5","mleko 0,5","mleka 1,5","mleko 1,5","mleko chude"],[3,5,1]],
     [["mleka","mleko"],[3,5,2]],
     [["masła orzechowego","masło orzechowe"],[25,20,50]],
     [["masła","masło"],[1,1,82]],
@@ -629,7 +697,7 @@
     [["mango","jagod","malin","truskaw","borówk","owoc","jabłk","gruszk"],[1,12,1]],
     [["cytryn","limonk","pomarańcz"],[1,8,1]],
     [["szpinak","rukol","sałat","kolendr","natk","bazyli","mięt","koperek","szczypior","zioł"],[3,2,1]],
-    [["brokuł","cukini","bakłażan","papryk","marchew","cebul","por ","seler","ogór","pomidor","rzodkiew","kiełk","grzyb","pieczark","dyni","kapust"],[2,5,1]],
+    [["brokuł","cukini","bakłażan","papryk","marchew","cebul","por ","seler","ogór","pomidor","rzodkiew","kiełk","grzyb","pieczar","dyni","kapust"],[2,5,1]],
     [["czosnk","czosnek","imbir","chili","trawa cytrynowa","galangal"],[3,10,1]],
     [["groszek"],[5,14,1]],
   ];
@@ -720,10 +788,16 @@
     if(/naan/.test(n)) return 100;
     if(/bułe|bułk/.test(n)) return 140;
     if(/oliw|olej/.test(n)) return 15;
+    if(/masło orzechow|masła orzechow/.test(n)) return 20;
     if(/masł[oa]\b|masło/.test(n)) return 15;
+    if(/jajk|jajo|jaj\b/.test(n)) return 55;              // ~1 jajko, gdy brak liczby (np. panierka)
+    if(/miód|miod|syrop/.test(n)) return 20;
+    if(/granol/.test(n)) return 40;
+    if(/panko|bułka tart|bułką tart|mąk/.test(n)) return 30;
     if(/jogurt|śmietan/.test(n)) return 100;
+    if(/serek|serka|twaróg|twarog/.test(n)) return 60;
     if(/ser |sera|feta|parmezan|mozzarell/.test(n)) return 40;
-    if(/orzech|sezam|migdał/.test(n)) return 20;
+    if(/orzech|orzeszk|sezam|migdał|nasion|pestk|słonecznik/.test(n)) return 20;
     if(/salsa|sos|hummus|majonez|kimchi|kiszon|oliwki/.test(n)) return 30;
     if(/sałat|rukol|szpinak|zioł|natk|kolendr|koperek|szczypior|mięt|bazyli/.test(n)) return 25;
     if(/pomidor|ogór|cebul|papryk|marchew|rzodkiew|warzyw|kiełk/.test(n)) return 80;
@@ -798,17 +872,16 @@
       });
     });
     if(matched===0){
+      // Żaden składnik się nie sparsował — ostatnia deska ratunku z deklarowanego białka.
       const p=+(r.proteinTotal||0);
-      return { kcal: Math.round((p*4+p*3.2+p*1.6*9)/10)*10, carbs: Math.round(p*0.8), fat: Math.round(p*0.4), protein: p, auto:true };
+      return { kcal: Math.round((p*4+p*3.2+p*1.6*9)/10)*10, carbs: Math.round(p*0.8), fat: Math.round(p*0.4), protein: p, auto:true, lowConf:true };
     }
-    const Pdecl = +(r.proteinTotal||0);
-    if(P>0 && Pdecl>0){
-      const fs = Math.max(0.85, Math.min(1.2, Pdecl / P));
-      C *= fs; F *= fs;
-    }
-    const Puse = Pdecl || Math.round(P);
-    const kcal = Math.round((Puse*4 + C*4 + F*9)/10)*10;
-    return { kcal, carbs: Math.round(C), fat: Math.round(F), protein: Puse, auto:true };
+    // Białko, węgle, tłuszcz i kcal liczymy WYŁĄCZNIE ze składników — jedno źródło prawdy.
+    // Deklarowane proteinTotal nie jest już używane do korekty (dawny clamp fs zaniżał kcal).
+    // kcal = dokładnie 4P+4C+9F z zaokrąglonych makr, żeby przepis był wewnętrznie spójny.
+    const Pr = Math.round(P), Cr = Math.round(C), Fr = Math.round(F);
+    const kcal = Pr*4 + Cr*4 + Fr*9;
+    return { kcal, carbs: Cr, fat: Fr, protein: Pr, auto:true };
   }
   function estimateKcal(r){ return estimateMacros(r).kcal; }
 
@@ -937,7 +1010,7 @@
       if(r.cuisine==="Polska/Europejska") r.cuisine = POLSKIE.indexOf(r.id)>=0 ? "Polska" : "Europejska";
       r.season = SEASON_MAP[r.id] || "all";
       if(r.mealTypes.includes("breakfast") && BREAKFAST_PTYPE[r.id]) r.ptype=BREAKFAST_PTYPE[r.id];
-      if(r.kcal==null || r.carbs==null || r.fat==null){ const mm=estimateMacros(r); if(r.kcal==null) r.kcal=mm.kcal; if(r.carbs==null) r.carbs=mm.carbs; if(r.fat==null) r.fat=mm.fat; }
+      { const mm=estimateMacros(r); r.proteinTotal=mm.protein; r.kcal=mm.kcal; r.carbs=mm.carbs; r.fat=mm.fat; }
       if(r.unotes==null) r.unotes="";
     });
     return rs;
@@ -1002,12 +1075,17 @@
       // 2) zachowaj Wasze notatki przy wbudowanych przepisach
       const notes={}; (state.recipes||[]).forEach(r=>{ if(r.unotes) notes[r.id]=r.unotes; });
       fresh.forEach(r=>{ if(notes[r.id]) r.unotes=notes[r.id]; });
+      // przelicz makro własnych przepisów ze składników (nowe, jedno źródło prawdy)
+      mine.forEach(r=>{ const mm=estimateMacros(r); r.proteinTotal=mm.protein; r.kcal=mm.kcal; r.carbs=mm.carbs; r.fat=mm.fat; });
       state.recipes=fresh.concat(mine);
       // 3) zaktualizuj cele do uzgodnionych wartości
       const D=defaultState().targets;
       state.targets=Object.assign({}, state.targets||{}, D);
       // 4) wyczyść korekty węgli (odnoszą się do starych gramatur)
       state.carbAdj={};
+      // 4b) ustaw nowy wzorcowy tydzień (fit-przepisy z powtórzeniami pod batch cooking)
+      state.week=seedWeek();
+      state.mult={};
       // 5) usuń stare zadania prep bez znacznika (rosły w nieskończoność) i stare pozycje zakupów
       const AUTO_TXT=/^(Zamarynuj i zamroź|Ugotuj na zapas i zamroź|Świeżo w dniu podania|Rozłóż porcje)/;
       state.prep=(state.prep||[]).filter(t=> !(t.auto || t.srcId || AUTO_TXT.test(t.text||"")) );
@@ -1457,6 +1535,7 @@
     document.getElementById("f-kcalest").addEventListener("click",()=>{
       const tmp={ proteinTotal:+document.getElementById("f-prot").value||0, ingredients:document.getElementById("f-ing").value.split("\n").map(s=>s.trim()).filter(Boolean) };
       const mm=estimateMacros(tmp);
+      document.getElementById("f-prot").value=mm.protein;
       document.getElementById("f-kcal").value=mm.kcal;
       document.getElementById("f-carbs").value=mm.carbs;
       document.getElementById("f-fat").value=mm.fat;
