@@ -4,7 +4,7 @@
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
   const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
-  const RECIPES_VERSION=6;   // podbij, gdy zmienią się wbudowane przepisy lub cele
+  const RECIPES_VERSION=9;   // podbij, gdy zmienią się wbudowane przepisy lub cele
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
     return {id,name,cuisine:cuis,mealTypes:mt,ptype,prepTime:time,proteinTotal:prot,prepStyle:prep,note,ingredients:ing,steps};
@@ -2155,69 +2155,54 @@
 
   function renderShopPreset(p, modeToggle, wk){
     if(!state.presetChecked) state.presetChecked={};
+    const items=(typeof SHOP_PRESETS!=="undefined" && SHOP_PRESETS[String(wk)])?SHOP_PRESETS[String(wk)]:[];
+    const chk=state.presetChecked[wk]||{};
     const dayView=!!state.shopDayView;
-    const dayToggle=`<div class="kk-filters" style="margin-bottom:10px;"><div class="kk-fbtn ${!dayView?"active":""}" id="sd-week">Cała lista (z pliku)</div><div class="kk-fbtn ${dayView?"active":""}" id="sd-day">Filtr dni</div></div>`;
+    const DAYORD=["Pon","Wt","Śr","Czw","Pt","Sob","Nd"];
+    const DMAP={pn:"Pon",wt:"Wt","śr":"Śr",czw:"Czw",pt:"Pt",sob:"Sob",nd:"Nd"};
+    function useDays(use){ if(!use) return null; const found=new Set();
+      String(use).split(";").forEach(seg=>{ const head=(seg.split(":")[0]||"").toLowerCase();
+        const R=/(pn|wt|śr|czw|pt|sob|nd)\s*[–-]\s*(pn|wt|śr|czw|pt|sob|nd)/g; let m;
+        while((m=R.exec(head))){ const a=DAYORD.indexOf(DMAP[m[1]]),b=DAYORD.indexOf(DMAP[m[2]]); if(a>=0&&b>=0) for(let i=Math.min(a,b);i<=Math.max(a,b);i++) found.add(DAYORD[i]); }
+        head.replace(R," ").split(/[^a-ząćęłńóśźż]+/).forEach(t=>{ if(DMAP[t]) found.add(DMAP[t]); });
+      });
+      return found.size?found:null;
+    }
+    const dayToggle=`<div class="kk-filters" style="margin-bottom:10px;"><div class="kk-fbtn ${!dayView?"active":""}" id="sd-week">Cała lista</div><div class="kk-fbtn ${dayView?"active":""}" id="sd-day">Filtr dni</div></div>`;
     let html=modeToggle+dayToggle;
+    let shown=items.map((it,idx)=>Object.assign({idx},it));
     if(dayView){
-      const sw=(state.savedWeeks||[]).find(w=>w.id==="w_t"+wk); const wkmap=sw?sw.week:null;
       if(!state.presetDaySel) state.presetDaySel={};
-      if(!state.presetDaySel[wk]){ state.presetDaySel[wk]={}; DAYS.forEach(x=>state.presetDaySel[wk][x]=true); }
+      if(!state.presetDaySel[wk]){ state.presetDaySel[wk]={}; DAYORD.forEach(x=>state.presetDaySel[wk][x]=true); }
       const sel=state.presetDaySel[wk];
-      html+=`<div class="kk-note" style="margin:0 0 8px;">Zaznacz dni — lista zsumuje się dla wybranych dni (na 2 osoby). Dni 1–3 gotujecie na 2 dni, więc każdy zaznaczony dzień = jedno gotowanie.</div>`;
-      html+=`<div class="kk-filters" style="margin-bottom:10px;">`+DAYS.map(dy=>`<div class="kk-fbtn ${sel[dy]?"active":""}" data-day="${dy}">${dy}</div>`).join("")+`<div class="kk-fbtn" id="sd-all">Wszystkie</div><div class="kk-fbtn" id="sd-none">Wyczyść</div></div>`;
-      if(!wkmap){ html+=`<div class="kk-note">Brak planu dla tego tygodnia.</div>`; p.innerHTML=html; }
-      else {
-        let items=[]; let c=0;
-        DAYS.forEach(dy=>{ if(!sel[dy]) return; const cell=wkmap[dy]||{};
-          [cell.breakfast&&cell.breakfast.recipeId, cell.lunch&&cell.lunch.recipeId, cell.dinner&&cell.dinner.recipeId].forEach(rid=>{
-            const r=findR(rid); if(!r) return; (r.ingredients||[]).forEach(ing=>{ items.push({id:"x"+(c++), name:ing}); });
-          });
-        });
-        const chk=state.presetChecked["f"+wk]||{};
-        if(items.length===0){ html+=`<div class="kk-note">Wybierz przynajmniej jeden dzień.</div>`; p.innerHTML=html; }
-        else {
-          const agg=aggregateItems(items);
-          const byC={}, ord=[];
-          agg.forEach(a=>{ const cat=prodCat(a.label); if(!byC[cat]){byC[cat]=[];ord.push(cat);} byC[cat].push(a); });
-          const done=agg.reduce((n,a)=>n+(chk[a.label]?1:0),0);
-          html+=`<div class="kk-note" style="margin:0 0 8px;">Odhaczono <b>${done}/${agg.length}</b> · dni: ${DAYS.filter(x=>sel[x]).join(", ")||"—"}.</div>`;
-          ord.forEach(cat=>{ html+=`<div class="kk-sgroup"><h4>${esc(cat)}</h4>`;
-            byC[cat].forEach(a=>{ const on=!!chk[a.label];
-              html+=`<div class="kk-sitem ${on?"checked":""}" data-lab="${esc(a.label)}"><input type="checkbox" ${on?"checked":""}><span>${esc(a.label)}</span></div>`;
-            });
-            html+=`</div>`;
-          });
-          p.innerHTML=html;
-          p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const lab=e.target.closest(".kk-sitem").dataset.lab; const kk="f"+wk; if(!state.presetChecked[kk]) state.presetChecked[kk]={}; state.presetChecked[kk][lab]=e.target.checked; queueSave(); renderShop(); }));
-        }
-      }
+      html+=`<div class="kk-note" style="margin:0 0 8px;">Zaznacz dni — pokażę produkty na wybrane dni (na 2 osoby). Produkty bez dnia (baza/spiżarnia) są zawsze. Odhaczenia są wspólne z „Całą listą".</div>`;
+      html+=`<div class="kk-filters" style="margin-bottom:10px;">`+DAYORD.map(dy=>`<div class="kk-fbtn ${sel[dy]?"active":""}" data-day="${dy}">${dy}</div>`).join("")+`<div class="kk-fbtn" id="sd-all">Wszystkie</div><div class="kk-fbtn" id="sd-none">Wyczyść</div></div>`;
+      shown=shown.filter(it=>{ const d=useDays(it.use); if(!d) return true; return DAYORD.some(dy=>sel[dy]&&d.has(dy)); });
     } else {
-      const items=(typeof SHOP_PRESETS!=="undefined" && SHOP_PRESETS[String(wk)])?SHOP_PRESETS[String(wk)]:[];
-      const chk=state.presetChecked[wk]||{};
       html+=`<div class="kk-note" style="margin:0 0 12px;">Gotowa lista na <b>Tydzień ${wk}</b> (z pliku, na 2 osoby, cały tydzień). Odhaczenia zapisują się i są wspólne.</div>`;
-      if(items.length===0){ html+=`<div class="kk-note">Brak wgranej listy dla tego tygodnia.</div>`; p.innerHTML=html; }
-      else {
-        const byC={}; const ord=[];
-        items.forEach((it,idx)=>{ const c=it.cat||"Inne"; if(!byC[c]){byC[c]=[];ord.push(c);} byC[c].push(Object.assign({idx:idx},it)); });
-        const done=items.reduce((a,it,idx)=>a+(chk["i"+idx]?1:0),0);
-        html+=`<div class="kk-note" style="margin:0 0 8px;">Odhaczono <b>${done}/${items.length}</b>.</div>`;
-        ord.forEach(c=>{ html+=`<div class="kk-sgroup"><h4>${esc(c)}</h4>`;
-          byC[c].forEach(it=>{ const key="i"+it.idx; const on=!!chk[key];
-            html+=`<div class="kk-sitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${esc(it.name)}${it.qty?` — <b>${esc(it.qty)}</b>`:""}${it.use?` <span class="kk-fromtag">${esc(it.use)}</span>`:""}</span></div>`;
-          });
-          html+=`</div>`;
+    }
+    if(shown.length===0){ html+=`<div class="kk-note">Brak pozycji dla wybranych dni.</div>`; p.innerHTML=html; }
+    else {
+      const byC={}, ord=[];
+      shown.forEach(it=>{ const c=it.cat||"Inne"; if(!byC[c]){byC[c]=[];ord.push(c);} byC[c].push(it); });
+      const done=shown.reduce((n,it)=>n+(chk["i"+it.idx]?1:0),0);
+      html+=`<div class="kk-note" style="margin:0 0 8px;">Odhaczono <b>${done}/${shown.length}</b>${dayView?` · dni: ${DAYORD.filter(x=>state.presetDaySel[wk][x]).join(", ")||"—"}`:""}.</div>`;
+      ord.forEach(c=>{ html+=`<div class="kk-sgroup"><h4>${esc(c)}</h4>`;
+        byC[c].forEach(it=>{ const key="i"+it.idx; const on=!!chk[key];
+          html+=`<div class="kk-sitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${esc(it.name)}${it.qty?` — <b>${esc(it.qty)}</b>`:""}${it.use?` <span class="kk-fromtag">${esc(it.use)}</span>`:""}</span></div>`;
         });
-        p.innerHTML=html;
-        p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const key=e.target.closest(".kk-sitem").dataset.key; if(!state.presetChecked[wk]) state.presetChecked[wk]={}; state.presetChecked[wk][key]=e.target.checked; queueSave(); renderShop(); }));
-      }
+        html+=`</div>`;
+      });
+      p.innerHTML=html;
+      p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const key=e.target.closest(".kk-sitem").dataset.key; if(!state.presetChecked[wk]) state.presetChecked[wk]={}; state.presetChecked[wk][key]=e.target.checked; queueSave(); renderShop(); }));
     }
     const smE=document.getElementById("sm-eng"); if(smE) smE.addEventListener("click",()=>{ state.shopMode="engine"; queueSave(); renderShop(); });
     const smW=document.getElementById("sm-week"); if(smW) smW.addEventListener("change",e=>{ state.shopWeek=+e.target.value; queueSave(); renderShop(); });
     const sdW=document.getElementById("sd-week"); if(sdW) sdW.addEventListener("click",()=>{ state.shopDayView=false; queueSave(); renderShop(); });
     const sdD=document.getElementById("sd-day"); if(sdD) sdD.addEventListener("click",()=>{ state.shopDayView=true; queueSave(); renderShop(); });
-    p.querySelectorAll("[data-day]").forEach(el=> el.addEventListener("click",()=>{ const dy=el.dataset.day; if(!state.presetDaySel) state.presetDaySel={}; if(!state.presetDaySel[wk]){ state.presetDaySel[wk]={}; DAYS.forEach(x=>state.presetDaySel[wk][x]=true); } state.presetDaySel[wk][dy]=!state.presetDaySel[wk][dy]; queueSave(); renderShop(); }));
-    const saAll=document.getElementById("sd-all"); if(saAll) saAll.addEventListener("click",()=>{ if(!state.presetDaySel) state.presetDaySel={}; state.presetDaySel[wk]={}; DAYS.forEach(x=>state.presetDaySel[wk][x]=true); queueSave(); renderShop(); });
-    const snNone=document.getElementById("sd-none"); if(snNone) snNone.addEventListener("click",()=>{ if(!state.presetDaySel) state.presetDaySel={}; state.presetDaySel[wk]={}; DAYS.forEach(x=>state.presetDaySel[wk][x]=false); queueSave(); renderShop(); });
+    p.querySelectorAll("[data-day]").forEach(el=> el.addEventListener("click",()=>{ const dy=el.dataset.day; if(!state.presetDaySel) state.presetDaySel={}; if(!state.presetDaySel[wk]){ state.presetDaySel[wk]={}; DAYORD.forEach(x=>state.presetDaySel[wk][x]=true); } state.presetDaySel[wk][dy]=!state.presetDaySel[wk][dy]; queueSave(); renderShop(); }));
+    const saAll=document.getElementById("sd-all"); if(saAll) saAll.addEventListener("click",()=>{ state.presetDaySel[wk]={}; DAYORD.forEach(x=>state.presetDaySel[wk][x]=true); queueSave(); renderShop(); });
+    const snNone=document.getElementById("sd-none"); if(snNone) snNone.addEventListener("click",()=>{ state.presetDaySel[wk]={}; DAYORD.forEach(x=>state.presetDaySel[wk][x]=false); queueSave(); renderShop(); });
   }
     function renderShop(){
     const p=document.querySelector('[data-panel="shop"]');
