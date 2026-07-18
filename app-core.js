@@ -4,7 +4,7 @@
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
   const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
-  const RECIPES_VERSION=10;   // podbij, gdy zmienią się wbudowane przepisy lub cele
+  const RECIPES_VERSION=11;   // podbij, gdy zmienią się wbudowane przepisy lub cele
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
     return {id,name,cuisine:cuis,mealTypes:mt,ptype,prepTime:time,proteinTotal:prot,prepStyle:prep,note,ingredients:ing,steps};
@@ -1018,6 +1018,15 @@
     const sh=findR(state.week[d].shakeId||""); if(sh) C+=(+sh.carbs||0);
     return C;
   }
+  function mealMacro(d, mk){
+    const {m,k}=split(); const {c:cs, ck:cks}=splitCF(); const {f:fs, fk:fks}=splitFat();
+    const meal=state.week[d][mk]; const rr=findR(meal.recipeId); const ca=carbAdjMeal(d,mk);
+    const T={p:0,c:0,f:0,kcal:0,fib:0}, K={p:0,c:0,f:0,kcal:0,fib:0};
+    if(SPECIAL[meal.recipeId]){ const pr=mealProt(meal); T.p=pr;K.p=pr;T.kcal=pr*4;K.kcal=pr*4; }
+    else if(rr && rr.ty && rr.mg){ T.p=+rr.ty.p||0;T.c=(+rr.ty.c||0)*ca;T.f=+rr.ty.f||0;T.kcal=+rr.ty.kcal||0;T.fib=+rr.ty.fib||0; K.p=+rr.mg.p||0;K.c=(+rr.mg.c||0)*ca;K.f=+rr.mg.f||0;K.kcal=+rr.mg.kcal||0;K.fib=+rr.mg.fib||0; }
+    else if(rr){ T.p=rr.proteinTotal*m;K.p=rr.proteinTotal*k;T.c=(+rr.carbs||0)*cs*ca;K.c=(+rr.carbs||0)*cks*ca;T.f=(+rr.fat||0)*fs;K.f=(+rr.fat||0)*fks;T.kcal=(+rr.kcal||0)*m;K.kcal=(+rr.kcal||0)*k; }
+    return {ty:T, mg:K};
+  }
   function dayPersonMacros(d){
     const {m,k}=split(); const {c:cs, ck:cks}=splitCF(); const {f:fs, fk:fks}=splitFat();
     const T={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0}, K={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0};
@@ -1092,25 +1101,27 @@
   function cookedCount(recipeId){
     return (state.cooked||[]).filter(x=>x.recipeId===recipeId).length;
   }
-  function getRating(recipeId){ return (state.ratings||{})[recipeId]||0; }
-  function setRating(recipeId,v){
+  function ratingObj(recipeId){ let v=(state.ratings||{})[recipeId]; if(typeof v==="number") return {ty:v,mg:v}; return v||{}; }
+  function getRatingBy(recipeId,who){ return +ratingObj(recipeId)[who]||0; }
+  function getRating(recipeId){ const o=ratingObj(recipeId); const vs=["ty","mg"].map(w=>+o[w]||0).filter(x=>x>0); return vs.length? Math.round((vs.reduce((a,b)=>a+b,0)/vs.length)*10)/10 : 0; }
+  function setRating(recipeId,who,v){
     state.ratings=state.ratings||{};
-    if(getRating(recipeId)===v) delete state.ratings[recipeId]; // ponowne kliknięcie = kasuj ocenę
-    else state.ratings[recipeId]=v;
+    let o=state.ratings[recipeId]; if(typeof o==="number") o={ty:o,mg:o}; o=o||{};
+    if(+o[who]===v) delete o[who]; else o[who]=v;
+    if(!o.ty && !o.mg) delete state.ratings[recipeId]; else state.ratings[recipeId]=o;
     queueSave();
   }
   function starsHTML(recipeId, cls){
-    const r=getRating(recipeId);
-    let h=`<span class="kk-stars ${cls||""}" data-rid="${recipeId}">`;
-    for(let i=1;i<=5;i++) h+=`<span class="kk-star ${i<=r?"on":""}" data-v="${i}">★</span>`;
-    h+=`</span>`;
+    const row=(who,lab)=>{ const rv=getRatingBy(recipeId,who); let h=`<span class="kk-rlab" style="font-size:11px;color:#6b7280;display:inline-block;min-width:38px;">${lab}</span><span class="kk-stars ${cls||""}" data-rid="${recipeId}" data-who="${who}">`; for(let i=1;i<=5;i++) h+=`<span class="kk-star ${i<=rv?"on":""}" data-v="${i}">★</span>`; h+=`</span>`; return h; };
+    const avg=getRating(recipeId);
+    let h=`<div style="display:flex;flex-direction:column;gap:1px;"><div>${row("ty","Ty")}</div><div>${row("mg","Magda")}</div>${avg>0?`<div style="font-size:11px;color:#6b7280;">średnia ${avg}★</div>`:""}</div>`;
     return h;
   }
   function bindStars(root){
     root.querySelectorAll(".kk-star").forEach(st=> st.addEventListener("click",e=>{
       e.stopPropagation();
       const wrap=e.target.closest(".kk-stars");
-      setRating(wrap.dataset.rid, +e.target.dataset.v);
+      setRating(wrap.dataset.rid, wrap.dataset.who||"ty", +e.target.dataset.v);
       renderMealTab("breakfast"); renderMealTab("lunch"); renderMealTab("dinner"); renderMealTab("shake");
       renderHistory(); renderWeek();
     }));
@@ -1265,7 +1276,7 @@
       const fresh=seed();
       const freshIds=new Set(fresh.map(r=>r.id));
       // 1) zachowaj własne przepisy (dodane przez Was)
-      const mine=(state.recipes||[]).filter(r=>!freshIds.has(r.id));
+      const mine=(state.recipes||[]).filter(r=> r.userAdded===true && !freshIds.has(r.id));
       // 2) zachowaj Wasze notatki przy wbudowanych przepisach
       const notes={}; (state.recipes||[]).forEach(r=>{ if(r.unotes) notes[r.id]=r.unotes; });
       fresh.forEach(r=>{ if(notes[r.id]) r.unotes=notes[r.id]; });
@@ -1320,6 +1331,7 @@
     if(!state.shopMode) state.shopMode="engine";
     if(!state.shopWeek) state.shopWeek=1;
     if(!state.presetChecked) state.presetChecked={};
+    if(!state.eaten) state.eaten={};
     if(!state.prepMode) state.prepMode="engine";
     if(!state.prepWeek) state.prepWeek=1;
     if(!state.prepChecked) state.prepChecked={};
@@ -1507,14 +1519,13 @@
       proteinsHere.forEach(pc=> html+=`<div class="kk-fbtn kk-fp ${fProtein===pc?"active":""}" data-p="${esc(pc)}" style="border-color:var(--herb);">${esc(pc)}</div>`);
       html+=`</div>`;
     }
-    html+=`<div class="kk-grid">`;
-
     let list=inMeal;
     if(showSeason && state.season!=="all") list=list.filter(r=> (r.season||"all")==="all" || r.season===state.season);
     if(cuisinesHere.length>1 && meal!=="shake" && fCuisine!=="Wszystkie") list=list.filter(r=>r.cuisine===fCuisine);
     if(!noProteinFilter && fProtein!=="Wszystkie") list=list.filter(r=>r.ptype===fProtein);
     if(state.onlyFav) list=list.filter(r=>getRating(r.id)>=4);
 
+    html+=`<div class="kk-note" style="margin:2px 0 8px;">Pasujących przepisów: <b>${list.length}</b></div><div class="kk-grid">`;
     const {m,k}=split();
     if(list.length===0) html+=`<div class="kk-note">Brak przepisów dla tego filtra. Zmień filtr albo dodaj własny przepis niżej.</div>`;
     list.forEach(r=>{
@@ -1745,7 +1756,7 @@
         unotes:document.getElementById("f-unotes").value.trim(),
         ingredients:document.getElementById("f-ing").value.split("\n").map(s=>s.trim()).filter(Boolean),
         steps:document.getElementById("f-steps").value.split("\n").map(s=>s.trim()).filter(Boolean) };
-      if(isNew) state.recipes.push(u); else state.recipes=state.recipes.map(x=>x.id===r.id?u:x);
+      if(isNew){ u.userAdded=true; state.recipes.push(u); } else state.recipes=state.recipes.map(x=>x.id===r.id?u:x);
       editing=null; queueSave(); renderMealTab(meal); renderWeek();
     });
     document.getElementById("f-kcalest").addEventListener("click",()=>{
@@ -1890,6 +1901,29 @@
     });
     sumTbl+=`</tbody></table></div><div class="kk-note" style="margin-top:6px;">„suma" = łącznie z 7 dni; „śr./dzień" = suma ÷ 7 porównana z celem dziennym (zielone = ±12%). Błonnik z finalnego jadłospisu.</div></div>`;
     tally+=sumTbl;
+    state.eaten=state.eaten||{};
+    let eHTML=`<div class="kk-sgroup" style="margin-top:12px;"><h4>✅ Faktycznie zjedzone (osobno Ty / Magda)</h4><div class="kk-note" style="margin:0 0 8px;">Domyślnie = wg planu. Odznacz posiłek, którego ktoś nie zjadł (np. lunch na mieście). „Faktyczne makro" liczy tylko zaznaczone. Nie miesza się z planem.</div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:11px;min-width:640px;"><thead><tr><th style="text-align:left;padding:3px 6px;">Dzień</th><th style="padding:3px 6px;">Śniadanie</th><th style="padding:3px 6px;">Obiad</th><th style="padding:3px 6px;">Kolacja</th></tr></thead><tbody>`;
+    DAYS.forEach(d=>{ if(!state.eaten[d]) state.eaten[d]={ty:{breakfast:true,lunch:true,dinner:true},mg:{breakfast:true,lunch:true,dinner:true}};
+      eHTML+=`<tr><td style="text-align:left;padding:3px 6px;font-weight:600;">${d}</td>`;
+      ["breakfast","lunch","dinner"].forEach(mk=>{ const r=findR(state.week[d][mk].recipeId); const nm=r?esc(r.name).slice(0,24):"—";
+        const tOn=state.eaten[d].ty[mk]!==false, mOn=state.eaten[d].mg[mk]!==false;
+        eHTML+=`<td style="padding:3px 6px;text-align:center;"><div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">${nm}</div><span class="kk-eatchip" data-eat="${d}|ty|${mk}" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${tOn?"background:var(--herb);color:#fff;":""}">Ty</span> <span class="kk-eatchip" data-eat="${d}|mg|${mk}" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${mOn?"background:var(--plum);color:#fff;":""}">M</span></td>`;
+      });
+      eHTML+=`</tr>`;
+    });
+    eHTML+=`</tbody></table></div>`;
+    const ET={p:0,c:0,f:0,kcal:0,fib:0}, EM={p:0,c:0,f:0,kcal:0,fib:0};
+    DAYS.forEach(d=>{ ["breakfast","lunch","dinner"].forEach(mk=>{ const mm=mealMacro(d,mk);
+      if(state.eaten[d]&&state.eaten[d].ty[mk]!==false) ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=mm.ty[x]);
+      if(state.eaten[d]&&state.eaten[d].mg[mk]!==false) ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=mm.mg[x]); }); });
+    const cE=(a,t)=> !t?"":(Math.abs(a-t)<=t*0.12?"kk-hit":"kk-miss");
+    const erows=[["Kalorie","kcal","kcal2","kcal1"," kcal"],["Białko","p","p2","p1"," g"],["Tłuszcz","f","fat2","fat1"," g"],["Węgle","c","carb2","carb1"," g"],["Błonnik","fib","fib2","fib1"," g"]];
+    eHTML+=`<div class="kk-note" style="margin:8px 0 4px;"><b>Faktyczne makro (tylko zjedzone)</b></div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:640px;"><thead><tr><th style="text-align:left;padding:4px 8px;"></th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Ty</th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Magda</th></tr><tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th></tr></thead><tbody>`;
+    erows.forEach(row=>{ const g2=Tt[row[2]]||0,g1=Tt[row[3]]||0,u=row[4]; const aT=ET[row[1]]/7,aM=EM[row[1]]/7;
+      eHTML+=`<tr><td style="text-align:left;padding:4px 8px;font-weight:600;">${row[0]}</td><td style="text-align:center;padding:4px 8px;">${Math.round(ET[row[1]])}${u}</td><td style="text-align:center;padding:4px 8px;"><span class="${cE(aT,g2)}"><b>${Math.round(aT)}${u}</b></span> <span style="color:#9ca3af;">· ${g2||"—"}</span></td><td style="text-align:center;padding:4px 8px;">${Math.round(EM[row[1]])}${u}</td><td style="text-align:center;padding:4px 8px;"><span class="${cE(aM,g1)}"><b>${Math.round(aM)}${u}</b></span> <span style="color:#9ca3af;">· ${g1||"—"}</span></td></tr>`;
+    });
+    eHTML+=`</tbody></table></div></div>`;
+    tally+=eHTML;
     p.innerHTML=html; p.insertAdjacentHTML("beforeend",tally);
     p.querySelectorAll(".kk-mcell[data-meal] select").forEach(sel=> sel.addEventListener("change",e=>{
       const c=e.target.closest(".kk-mcell"); state.week[c.dataset.day][c.dataset.meal].recipeId=e.target.value; queueSave(); renderWeek();
@@ -1915,6 +1949,7 @@
     document.getElementById("fitcarbs").addEventListener("click",()=>{ fitCarbsToTarget(); });
     document.getElementById("resetcarbs").addEventListener("click",()=>{ resetCarbs(); });
     document.getElementById("printweek").addEventListener("click",()=>{ printPlan(); });
+    p.querySelectorAll("[data-eat]").forEach(el=> el.addEventListener("click",()=>{ const a=el.dataset.eat.split("|"); const d=a[0],who=a[1],mk=a[2]; state.eaten=state.eaten||{}; if(!state.eaten[d]) state.eaten[d]={ty:{breakfast:true,lunch:true,dinner:true},mg:{breakfast:true,lunch:true,dinner:true}}; state.eaten[d][who][mk]=(state.eaten[d][who][mk]===false); queueSave(); renderWeek(); }));
   }
 
   function generateWeek(tempo){
@@ -2178,6 +2213,12 @@
       return found.size?found:null;
     }
     const dayToggle=`<div class="kk-filters" style="margin-bottom:10px;"><div class="kk-fbtn ${!dayView?"active":""}" id="sd-week">Cała lista</div><div class="kk-fbtn ${dayView?"active":""}" id="sd-day">Filtr dni</div></div>`;
+    const _sw=(state.savedWeeks||[]).find(w=>w.id==="w_t"+wk);
+    let freezeHTML="";
+    if(_sw){ const seenF={}; const fz=[];
+      DAYORD.forEach(dy=>{ const cell=_sw.week[dy]||{}; ["breakfast","lunch","dinner"].forEach(mk=>{ const r=findR(cell[mk]&&cell[mk].recipeId); if(r && (r.prepStyle==="freeze"||r.prepStyle==="mar") && !seenF[r.id]){ seenF[r.id]=1; fz.push(r); } }); });
+      if(fz.length){ freezeHTML=`<div class="kk-sgroup" style="margin-top:14px;"><h4>🧊 Ugotuj na zapas i zamroź</h4><div class="kk-note" style="margin:0 0 6px;">Te dania z tego tygodnia dobrze znoszą mrożenie — zrób podwójną porcję i odłóż rezerwę na gorszy tydzień.</div>`+fz.map(r=>`<div class="kk-sitem"><span>${esc(r.name)} <span class="kk-badge ${(PREP_LABEL[r.prepStyle]||PREP_LABEL.fresh)[1]}">${(PREP_LABEL[r.prepStyle]||PREP_LABEL.fresh)[0]}</span></span></div>`).join("")+`</div>`; }
+    }
     let html=modeToggle+dayToggle;
     let shown=items.map((it,idx)=>Object.assign({idx},it));
     if(dayView){
@@ -2190,7 +2231,7 @@
     } else {
       html+=`<div class="kk-note" style="margin:0 0 12px;">Gotowa lista na <b>Tydzień ${wk}</b> (z pliku, na 2 osoby, cały tydzień). Odhaczenia zapisują się i są wspólne.</div>`;
     }
-    if(shown.length===0){ html+=`<div class="kk-note">Brak pozycji dla wybranych dni.</div>`; p.innerHTML=html; }
+    if(shown.length===0){ html+=`<div class="kk-note">Brak pozycji dla wybranych dni.</div>`; p.innerHTML=html+freezeHTML; }
     else {
       const byC={}, ord=[];
       shown.forEach(it=>{ const c=it.cat||"Inne"; if(!byC[c]){byC[c]=[];ord.push(c);} byC[c].push(it); });
@@ -2202,7 +2243,7 @@
         });
         html+=`</div>`;
       });
-      p.innerHTML=html;
+      p.innerHTML=html+freezeHTML;
       p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const key=e.target.closest(".kk-sitem").dataset.key; if(!state.presetChecked[wk]) state.presetChecked[wk]={}; state.presetChecked[wk][key]=e.target.checked; queueSave(); renderShop(); }));
     }
     const smE=document.getElementById("sm-eng"); if(smE) smE.addEventListener("click",()=>{ state.shopMode="engine"; queueSave(); renderShop(); });
@@ -2496,7 +2537,7 @@
     }
 
     // ranking ocen
-    const rated=Object.entries(state.ratings||{}).map(([rid,v])=>({r:findR(rid),v})).filter(x=>x.r).sort((a,b)=>b.v-a.v);
+    const rated=Object.entries(state.ratings||{}).map(([rid,v])=>({r:findR(rid),v:getRating(rid)})).filter(x=>x.r&&x.v>0).sort((a,b)=>b.v-a.v);
     if(rated.length){
       html+=`<div class="kk-sgroup"><h4>Wasz ranking</h4>`;
       rated.slice(0,12).forEach(({r,v})=> html+=`<div class="kk-sitem"><span>${esc(r.name)} <span class="kk-fromtag">${esc(r.cuisine)}</span></span>${starsHTML(r.id,"sm")}</div>`);
