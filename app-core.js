@@ -4,7 +4,7 @@
   const MEALS=[["breakfast","Śniadanie"],["lunch","Obiad"],["dinner","Kolacja"]];
   const CUISINES=["Japońska","Koreańska","Chińska","Indyjska","Tajska","Wietnamska","Bliski Wschód","Malezyjska","Turecka","Peruwiańska","Filipińska","Karaibska","Gruzińska","Lankijska","Grecka","Włoska","Francuska","Hiszp./Portug.","Nordycka","Meksykańska","Amerykańska","Polska","Europejska","Roślinna","Shake"];
   const STORAGE_KEY="kk_program_v8";
-  const RECIPES_VERSION=9;   // podbij, gdy zmienią się wbudowane przepisy lub cele
+  const RECIPES_VERSION=10;   // podbij, gdy zmienią się wbudowane przepisy lub cele
   // prepStyle: 'mar' marynuj+zamroź | 'freeze' gotuj+zamroź | 'fresh' świeżo
   function R(id,name,cuis,mt,ptype,time,prot,prep,note,ing,steps){
     return {id,name,cuisine:cuis,mealTypes:mt,ptype,prepTime:time,proteinTotal:prot,prepStyle:prep,note,ingredients:ing,steps};
@@ -1249,7 +1249,7 @@
     ];
   }
   function defaultState(){
-    return { targets:{ p1:115, p2:160, splitM:58, splitF:56, splitC:53, kcal1:1800, kcal2:2250, fat1:70, fat2:90, carb1:180, carb2:200 }, recipes:seed(), week:seedWeek(), shopping:[], prep:[], mult:{ fr1:2 }, freezer:[], carbAdj:{}, cooked:[], ratings:{}, recipesVersion:RECIPES_VERSION, shopDays:null, shopView:"recipe", shopSum:false, shopMode:"engine", shopWeek:1, presetChecked:{}, prepMode:"engine", prepWeek:1, prepChecked:{}, season:"all", savedWeeks:seedSavedWeeks(), prevWeekIds:[], genTempo:"mix", batchExtra:{} };
+    return { targets:{ p1:115, p2:160, splitM:58, splitF:56, splitC:53, kcal1:1800, kcal2:2250, fat1:60, fat2:75, carb1:200, carb2:225, fib1:28, fib2:35 }, recipes:seed(), week:seedWeek(), shopping:[], prep:[], mult:{ fr1:2 }, freezer:[], carbAdj:{}, cooked:[], ratings:{}, recipesVersion:RECIPES_VERSION, shopDays:null, shopView:"recipe", shopSum:false, shopMode:"engine", shopWeek:1, presetChecked:{}, prepMode:"engine", prepWeek:1, prepChecked:{}, season:"all", savedWeeks:seedSavedWeeks(), prevWeekIds:[], genTempo:"mix", batchExtra:{} };
   }
 
   let state=null, saveTimer=null, tab="rules", editing=null;
@@ -1287,6 +1287,9 @@
       const AUTO_TXT=/^(Zamarynuj i zamroź|Ugotuj na zapas i zamroź|Świeżo w dniu podania|Rozłóż porcje)/;
       state.prep=(state.prep||[]).filter(t=> !(t.auto || t.srcId || AUTO_TXT.test(t.text||"")) );
       state.shopping=(state.shopping||[]).filter(it=> it.auto===false );
+      state.targets=state.targets||{};
+      state.targets.kcal2=2250; state.targets.p2=160; state.targets.fat2=75; state.targets.carb2=225; state.targets.fib2=35;
+      state.targets.kcal1=1800; state.targets.p1=115; state.targets.fat1=60; state.targets.carb1=200; state.targets.fib1=28;
       state.recipesVersion=RECIPES_VERSION;
       queueSave();
       console.log("Zmigrowano bazę przepisów do wersji "+RECIPES_VERSION);
@@ -1761,7 +1764,9 @@
     const p=document.querySelector('[data-panel="week"]');
     const {m,k}=split();
     const prev=new Set(state.prevWeekIds||[]);
-    let html=`<div class="kk-actions-row" style="align-items:center;">
+    const _T=state.targets;
+    const cele=`<div class="kk-sgroup" style="margin-bottom:10px;"><h4>Cele dzienne (na osobę)</h4><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:440px;"><thead><tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">Kalorie</th><th style="padding:4px 8px;">Białko</th><th style="padding:4px 8px;">Tłuszcz</th><th style="padding:4px 8px;">Węgle</th><th style="padding:4px 8px;">Błonnik</th></tr></thead><tbody><tr><td style="text-align:left;padding:4px 8px;font-weight:700;">Ty</td><td style="padding:4px 8px;text-align:center;"><b>${_T.kcal2}</b> kcal</td><td style="padding:4px 8px;text-align:center;"><b>${_T.p2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fat2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.carb2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fib2!=null?_T.fib2:"—"}</b> g</td></tr><tr><td style="text-align:left;padding:4px 8px;font-weight:700;">Magda</td><td style="padding:4px 8px;text-align:center;"><b>${_T.kcal1}</b> kcal</td><td style="padding:4px 8px;text-align:center;"><b>${_T.p1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fat1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.carb1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fib1!=null?_T.fib1:"—"}</b> g</td></tr></tbody></table></div><div class="kk-note" style="margin-top:4px;">Cele po aktualizacji jadłospisu. Edycja — w nagłówku aplikacji.</div></div>`;
+    let html=cele+`<div class="kk-actions-row" style="align-items:center;">
       <button class="kk-btn" id="gw">✨ Ułóż mi tydzień</button>
       <select id="gw-tempo" style="padding:8px; border:1px solid var(--line); border-radius:5px; font-size:12px;">
         <option value="mix" ${state.genTempo==="mix"?"selected":""}>Tempo: Mix</option>
@@ -1866,21 +1871,25 @@
     order.concat(extra).forEach(t=>{ if(tc[t]) tally+=`<span><b>${tc[t]}×</b> ${esc(t)}</span>`; });
     if(Object.keys(tc).length===0) tally+=`<span style="color:#7a7156;">Wybierzcie dania powyżej, żeby zobaczyć balans.</span>`;
     tally+=`</div></div>`;
-    const WT={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0}, WK={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0};
-    DAYS.forEach(d=>{ const dm=dayPersonMacros(d); ["p","c","f","kcal","fib","sat","unsat"].forEach(x=>{ WT[x]+=dm.ty[x]; WK[x]+=dm.mg[x]; }); });
+    const WT={p:0,c:0,f:0,kcal:0,fib:0}, WK={p:0,c:0,f:0,kcal:0,fib:0};
+    DAYS.forEach(d=>{ const dm=dayPersonMacros(d); ["p","c","f","kcal","fib"].forEach(x=>{ WT[x]+=dm.ty[x]; WK[x]+=dm.mg[x]; }); });
     const Tt=state.targets;
-    const wc=(v,t)=> !t ? "" : (Math.abs(v-t)<=t*0.12 ? "kk-hit":"kk-miss");
-    const wRow=(name,W,kc,pT,cT,fT)=>`<div class="kk-tot-person" style="min-width:250px;"><b>${name} — cały tydzień</b>
-        <span class="${wc(W.kcal,kc*7)}">${Math.round(W.kcal)} / ${kc*7} kcal</span>
-        <span class="${wc(W.p,pT*7)}">B ${Math.round(W.p)} / ${pT*7} g</span>
-        <span class="${wc(W.c,cT*7)}">W ${Math.round(W.c)} / ${cT*7} g</span>
-        <span class="${wc(W.f,fT*7)}">T ${Math.round(W.f)} / ${fT*7} g</span>
-        <span>Błonnik ${Math.round(W.fib)} g</span>
-        <span>Nasycone ${Math.round(W.sat)} g · Nienasycone ${Math.round(W.unsat)} g</span>
-        <div class="kk-tot-macro">śr./dzień ${Math.round(W.kcal/7)} kcal · błonnik ${Math.round(W.fib/7)} g</div></div>`;
-    tally+=`<div class="kk-sgroup" style="margin-top:12px;"><h4>Podsumowanie makro — cały tydzień (osobno)</h4>
-      <div style="display:flex; gap:16px; flex-wrap:wrap;">${wRow("Ty",WT,Tt.kcal2,Tt.p2,Tt.carb2,Tt.fat2)}${wRow("Magda",WK,Tt.kcal1,Tt.p1,Tt.carb1,Tt.fat1)}</div>
-      <div class="kk-note" style="margin-top:6px;">Suma z 7 dni. „Cel" = dzienny cel × 7 (zielone = ±12%). Błonnik i tłuszcze nasycone/nienasycone z finalnego jadłospisu.</div></div>`;
+    const cA=(avg,t)=> !t ? "" : (Math.abs(avg-t)<=t*0.12 ? "kk-hit":"kk-miss");
+    const srows=[["Kalorie","kcal","kcal2","kcal1"," kcal"],["Białko","p","p2","p1"," g"],["Tłuszcz","f","fat2","fat1"," g"],["Węgle","c","carb2","carb1"," g"],["Błonnik","fib","fib2","fib1"," g"]];
+    let sumTbl=`<div class="kk-sgroup" style="margin-top:12px;"><h4>Podsumowanie tygodnia — suma i średnia dzienna vs cel (osobno)</h4>
+      <div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:640px;">
+      <thead><tr><th style="text-align:left;padding:4px 8px;"></th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Ty</th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Magda</th></tr>
+      <tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">suma (7 dni)</th><th style="padding:4px 8px;">śr./dzień · cel</th><th style="padding:4px 8px;">suma (7 dni)</th><th style="padding:4px 8px;">śr./dzień · cel</th></tr></thead><tbody>`;
+    srows.forEach(row=>{ const lab=row[0],key=row[1],gTy=Tt[row[2]]||0,gMg=Tt[row[3]]||0,u=row[4];
+      const aT=WT[key]/7, aM=WK[key]/7;
+      sumTbl+=`<tr><td style="text-align:left;padding:4px 8px;font-weight:600;">${lab}</td>
+        <td style="padding:4px 8px;text-align:center;">${Math.round(WT[key])}${u}</td>
+        <td style="padding:4px 8px;text-align:center;"><span class="${cA(aT,gTy)}"><b>${Math.round(aT)}${u}</b></span> <span style="color:#9ca3af;">· ${gTy||"—"}</span></td>
+        <td style="padding:4px 8px;text-align:center;">${Math.round(WK[key])}${u}</td>
+        <td style="padding:4px 8px;text-align:center;"><span class="${cA(aM,gMg)}"><b>${Math.round(aM)}${u}</b></span> <span style="color:#9ca3af;">· ${gMg||"—"}</span></td></tr>`;
+    });
+    sumTbl+=`</tbody></table></div><div class="kk-note" style="margin-top:6px;">„suma" = łącznie z 7 dni; „śr./dzień" = suma ÷ 7 porównana z celem dziennym (zielone = ±12%). Błonnik z finalnego jadłospisu.</div></div>`;
+    tally+=sumTbl;
     p.innerHTML=html; p.insertAdjacentHTML("beforeend",tally);
     p.querySelectorAll(".kk-mcell[data-meal] select").forEach(sel=> sel.addEventListener("change",e=>{
       const c=e.target.closest(".kk-mcell"); state.week[c.dataset.day][c.dataset.meal].recipeId=e.target.value; queueSave(); renderWeek();
