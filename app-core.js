@@ -2662,49 +2662,50 @@
     const W=(typeof PREP_PRESETS!=="undefined" && PREP_PRESETS[String(wk)])?PREP_PRESETS[String(wk)]:null;
     if(!state.prepChecked) state.prepChecked={};
     const chk=state.prepChecked[wk]||{};
-    // znajdź przepis dla danego dnia+posiłku z zapisanego tygodnia (dokładnie), w razie czego po nazwie
     const swRecipe=(d,mk)=>{ const sw=(state.savedWeeks||[]).find(w=>w.id==="w_t"+wk); const id=sw&&sw.week&&sw.week[d]&&sw.week[d][mk]&&sw.week[d][mk].recipeId; return (id&&findR(id))?id:null; };
     const rByName=(nm)=>{ if(!nm) return null; const t=nm.trim().toLowerCase(); let r=state.recipes.find(x=>x.name&&x.name.trim().toLowerCase()===t); if(!r) r=state.recipes.find(x=>x.name&&t.indexOf(x.name.trim().toLowerCase())===0); return r?r.id:null; };
-    let html=prepToggle+`<div class="kk-note" style="margin:0 0 12px;">Plan meal prep na <b>Tydzień ${wk}</b> — <b>dzień po dniu</b>, wszystkie posiłki. Odhaczaj, co zrobione (zapis wspólny). Kliknij <b>→ przepis</b>, żeby otworzyć kartę dania. „Silnik" wróci do listy generowanej z planu.</div>`;
-    if(!W||!W.meals||!W.meals.length){ html+=`<div class="kk-note">Brak wgranego meal prepu dla tego tygodnia.</div>`; p.innerHTML=html; }
+    let html=prepToggle+`<div class="kk-note" style="margin:0 0 12px;">Gotowy meal prep na <b>Tydzień ${wk}</b> (z pliku): najpierw <b>sesje przygotowań</b> (niedziela i czwartek), potem <b>sekcja „na świeżo"</b> dzień po dniu. Odhaczaj — zapis wspólny. „→ przepis" otwiera kartę dania.</div>`;
+    if(!W || !((W.sessions&&W.sessions.length)||(W.fresh&&W.fresh.length))){ html+=`<div class="kk-note">Brak wgranego meal prepu dla tego tygodnia.</div>`; p.innerHTML=html; }
     else {
-      // ── Podsumowanie sesji przygotowań ──
-      const line=(lab,val)=> val?`<div style="margin:2px 0;"><b>${lab}:</b> ${esc(val)}</div>`:"";
-      html+=`<div class="kk-sgroup"><h4>🗓️ Sesje przygotowań (2× w tygodniu)</h4><div class="kk-note" style="margin:0;line-height:1.55;">`+
-        line("Niedziela (obiady/kolacje Pn–Czw)", W.sun)+
-        line("Czwartek (Pt–Sob)", W.thu)+
-        line("Główny batch", W.batch)+
-        line("Głównie na świeżo", W.freshMain)+
-        line("Zamrażanie", W.freeze)+
-        line("Świeża niedziela", W.sunFresh)+
-        `</div></div>`;
-      // ── Plan dzień po dniu ──
-      const DC=["Pon","Wt","Śr","Czw","Pt","Sob","Nd"];
-      const DL={Pon:"Poniedziałek",Wt:"Wtorek","Śr":"Środa",Czw:"Czwartek",Pt:"Piątek",Sob:"Sobota",Nd:"Niedziela"};
-      const mo={breakfast:0,lunch:1,dinner:2};
-      const total=W.meals.length;
-      const done=W.meals.reduce((n,m)=>n+(chk["m_"+m.d+"_"+m.m]?1:0),0);
-      html+=`<div class="kk-note" style="margin:4px 0 8px;">Odhaczono <b>${done}/${total}</b> posiłków w tym tygodniu.</div>`;
-      DC.forEach(dc=>{
-        const dayMeals=W.meals.filter(x=>x.d===dc).sort((a,b)=>((mo[a.m]==null?9:mo[a.m])-(mo[b.m]==null?9:mo[b.m])));
-        if(!dayMeals.length) return;
-        html+=`<div class="kk-sgroup"><h4>${esc(DL[dc]||dc)}</h4><div class="kk-plist">`;
-        dayMeals.forEach(mm=>{
-          const key="m_"+mm.d+"_"+mm.m; const on=!!chk[key];
-          const rid=swRecipe(mm.d,mm.m)||rByName(mm.dish);
-          const link=rid?gotoLink([rid]):"";
-          const isFresh=(mm.src==="Na świeżo");
-          const srcBadge=mm.src?`<span class="kk-badge" style="font-size:9px;background:${isFresh?"var(--mustard,#F5A524);color:#3a2f00":"var(--herb,#1F8A6D);color:#fff"};">${esc(mm.src)}</span>`:"";
-          const parts=[];
-          if(mm.ahead) parts.push(`<b>Wcześniej:</b> ${esc(mm.ahead)}`);
-          if(mm.fresh) parts.push(`<b>Na świeżo:</b> ${esc(mm.fresh).replace(/\n/g,"<br>")}`);
-          if(mm.store) parts.push(`<b>Przechowywanie:</b> ${esc(mm.store)}`);
-          if(mm.org && mm.org!==mm.store) parts.push(esc(mm.org));
-          const sub=parts.join("<br>");
-          html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span><b>${esc(mm.ml)}:</b> ${esc(mm.dish)}${link} ${srcBadge}${sub?`<span class="kk-psub" style="line-height:1.5;">${sub}</span>`:""}</span></div>`;
+      // krótkie podsumowanie
+      if(W.batch||W.freeze){
+        const line=(l,v)=>v?`<div style="margin:2px 0;"><b>${l}:</b> ${esc(v)}</div>`:"";
+        html+=`<div class="kk-note" style="margin:0 0 10px;line-height:1.55;">`+line("Główny batch",W.batch)+line("Zamrażanie",W.freeze)+`</div>`;
+      }
+      // liczniki
+      let sTot=0,sDone=0; (W.sessions||[]).forEach((se,si)=>se.steps.forEach((st,ei)=>{ sTot++; if(chk["s"+si+"_"+ei]) sDone++; }));
+      let fTot=0,fDone=0; (W.fresh||[]).forEach(dy=>dy.meals.forEach(mm=>{ fTot++; if(chk["f_"+dy.d+"_"+mm.m]) fDone++; }));
+
+      // ── SESJE MEAL PREP ──
+      html+=`<div style="font-weight:700;font-size:13px;margin:6px 0 4px;color:var(--ink,#17181C);">🍳 Sesje meal prep <span style="font-weight:500;color:#8A8F9A;">(odhaczono ${sDone}/${sTot})</span></div>`;
+      (W.sessions||[]).forEach((se,si)=>{
+        const timeTag = si===0 ? (W.sun?` <span class="kk-badge kk-b-fresh">${esc(W.sun)}</span>`:"") : (W.thu?` <span class="kk-badge kk-b-fresh">${esc(W.thu)}</span>`:"");
+        html+=`<div class="kk-sgroup"><h4>${esc(se.title||("Sesja "+(si+1)))}${timeTag}</h4><div class="kk-plist">`;
+        se.steps.forEach((st,ei)=>{ const key="s"+si+"_"+ei; const on=!!chk[key];
+          const sub=[st.dotyczy,st.store?("Przechowywanie: "+st.store):""].filter(Boolean).join(" · ");
+          const link=gotoLink(dotyczyRecipeIds(wk, st.dotyczy));
+          html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${st.etap&&st.etap!=="—"?`<b>${esc(String(st.etap))}.</b> `:""}${esc(st.co)}${link}${st.czas?` <span class="kk-badge kk-b-fresh">${esc(st.czas)}</span>`:""}${sub?`<span class="kk-psub">${esc(sub)}</span>`:""}</span></div>`;
         });
         html+=`</div></div>`;
       });
+
+      // ── NA ŚWIEŻO ──
+      if(W.fresh&&W.fresh.length){
+        html+=`<div style="font-weight:700;font-size:13px;margin:16px 0 4px;color:var(--ink,#17181C);">🥗 Na świeżo — dzień po dniu <span style="font-weight:500;color:#8A8F9A;">(odhaczono ${fDone}/${fTot})</span></div>`;
+        html+=`<div class="kk-note" style="margin:0 0 8px;">Zadania do wykonania bezpośrednio przed jedzeniem, od poniedziałku.</div>`;
+        const mo={breakfast:0,lunch:1,dinner:2};
+        W.fresh.forEach(dy=>{
+          html+=`<div class="kk-sgroup" style="border-left:3px solid var(--mustard,#F5A524);"><h4>${esc(dy.dl||dy.d)}</h4><div class="kk-plist">`;
+          dy.meals.slice().sort((a,b)=>((mo[a.m]==null?9:mo[a.m])-(mo[b.m]==null?9:mo[b.m]))).forEach(mm=>{
+            const key="f_"+dy.d+"_"+mm.m; const on=!!chk[key];
+            const rid=swRecipe(dy.d,mm.m)||rByName(mm.dish);
+            const link=rid?gotoLink([rid]):"";
+            const steps=mm.steps?`<span class="kk-psub" style="line-height:1.5;">${esc(mm.steps).replace(/\n/g,"<br>")}</span>`:"";
+            html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span><b>${esc(mm.ml)}:</b> ${esc(mm.dish)}${link}${steps}</span></div>`;
+          });
+          html+=`</div></div>`;
+        });
+      }
       p.innerHTML=html;
     }
     const pE=document.getElementById("pm-eng"); if(pE) pE.addEventListener("click",()=>{ state.prepMode="engine"; queueSave(); renderPrep(); });
