@@ -1025,6 +1025,18 @@
     else if(rr){ T.p=rr.proteinTotal*m;K.p=rr.proteinTotal*k;T.c=(+rr.carbs||0)*cs*ca;K.c=(+rr.carbs||0)*cks*ca;T.f=(+rr.fat||0)*fs;K.f=(+rr.fat||0)*fks;T.kcal=(+rr.kcal||0)*m;K.kcal=(+rr.kcal||0)*k; }
     return {ty:T, mg:K};
   }
+  // status zjedzenia posiłku: "no" (nie), "y" (wg planu), "out" (na mieście); true=legacy=y
+  function eatStat(v){ return v==="out"?"out":(v==="y"||v===true)?"y":"no"; }
+  // makro samego shake'a + ręcznych dodatków danego dnia (per osoba)
+  function shakeMacroDay(d){
+    const {m,k}=split(); const {c:cs, ck:cks}=splitCF(); const {f:fs, fk:fks}=splitFat();
+    const T={p:0,c:0,f:0,kcal:0,fib:0}, K={p:0,c:0,f:0,kcal:0,fib:0};
+    const sh=findR(state.week[d].shakeId||"");
+    if(sh){ T.p+=sh.proteinTotal*m; K.p+=sh.proteinTotal*k; T.c+=(+sh.carbs||0)*cs; K.c+=(+sh.carbs||0)*cks; T.f+=(+sh.fat||0)*fs; K.f+=(+sh.fat||0)*fks; T.kcal+=(+sh.kcal||0)*m; K.kcal+=(+sh.kcal||0)*k; }
+    const ap2=+state.week[d].addP2||0, ap1=+state.week[d].addP1||0;
+    T.p+=ap2; K.p+=ap1; T.kcal+=ap2*4; K.kcal+=ap1*4;
+    return {ty:T, mg:K, name:(sh?sh.name:""), hasAny: !!sh || ap2>0 || ap1>0};
+  }
   function dayPersonMacros(d){
     const {m,k}=split(); const {c:cs, ck:cks}=splitCF(); const {f:fs, fk:fks}=splitFat();
     const T={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0}, K={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0};
@@ -1261,7 +1273,7 @@
     return { targets:{ p1:115, p2:160, splitM:58, splitF:56, splitC:53, kcal1:1800, kcal2:2250, fat1:60, fat2:75, carb1:200, carb2:225, fib1:28, fib2:35 }, recipes:seed(), week:seedWeek(), shopping:[], prep:[], mult:{ fr1:2 }, freezer:[], carbAdj:{}, cooked:[], ratings:{}, recipesVersion:RECIPES_VERSION, shopDays:null, shopView:"recipe", shopSum:false, shopMode:"engine", shopWeek:1, presetChecked:{}, prepMode:"engine", prepWeek:1, prepChecked:{}, season:"all", savedWeeks:seedSavedWeeks(), prevWeekIds:[], genTempo:"mix", batchExtra:{} };
   }
 
-  let state=null, saveTimer=null, tab="rules", editing=null;
+  let state=null, saveTimer=null, tab="week", editing=null;
   let fCuisine="Wszystkie", fProtein="Wszystkie", recipeMeal="breakfast";
   const PROTEIN_CATS=["Drób","Wołowina","Ryby i owoce morza","Wieprzowina","Roślinne"];
 
@@ -1431,17 +1443,17 @@
         </div>
       </div>
       <div class="kk-tabs">
-        <div class="kk-tab" data-tab="rules">Zasady</div>
+        <div class="kk-tab" data-tab="week">Plan tygodnia</div>
+        <div class="kk-tab" data-tab="shop">Lista zakupów</div>
+        <div class="kk-tab" data-tab="prep">Sesja prep</div>
         <div class="kk-tab" data-tab="breakfast">Śniadania</div>
         <div class="kk-tab" data-tab="lunch">Obiady</div>
         <div class="kk-tab" data-tab="dinner">Kolacje</div>
-        <div class="kk-tab" data-tab="shake">Shake'i</div>
-        <div class="kk-tab" data-tab="week">Plan tygodnia</div>
-        <div class="kk-tab" data-tab="weeks">Biblioteka tygodni</div>
+        <div class="kk-tab" data-tab="shake">Shake</div>
         <div class="kk-tab" data-tab="freezer">Zamrażalnik</div>
-        <div class="kk-tab" data-tab="shop">Lista zakupów</div>
-        <div class="kk-tab" data-tab="prep">Sesja prep</div>
+        <div class="kk-tab" data-tab="weeks">Biblioteka tygodni</div>
         <div class="kk-tab" data-tab="history">Historia</div>
+        <div class="kk-tab" data-tab="rules">Zasady</div>
         <div class="kk-tab" data-tab="survival">Przetrwanie</div>
       </div>
       <div class="kk-body">
@@ -1945,20 +1957,28 @@
     sumTbl+=`</tbody></table></div><div class="kk-note" style="margin-top:6px;">„suma" = łącznie z 7 dni; „śr./dzień" = suma ÷ 7 porównana z celem dziennym (zielone = ±12%). Błonnik z finalnego jadłospisu.</div></div>`;
     tally+=sumTbl;
     state.eaten=state.eaten||{};
-    let eHTML=`<div class="kk-sgroup" style="margin-top:12px;"><h4>✅ Faktycznie zjedzone (osobno Ty / Magda)</h4><div class="kk-note" style="margin:0 0 8px;">Domyślnie = wg planu. Odznacz posiłek, którego ktoś nie zjadł (np. lunch na mieście). „Faktyczne makro" liczy tylko zaznaczone. Nie miesza się z planem.</div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:11px;min-width:640px;"><thead><tr><th style="text-align:left;padding:3px 6px;">Dzień</th><th style="padding:3px 6px;">Śniadanie</th><th style="padding:3px 6px;">Obiad</th><th style="padding:3px 6px;">Kolacja</th></tr></thead><tbody>`;
-    DAYS.forEach(d=>{ if(!state.eaten[d]) state.eaten[d]={ty:{breakfast:true,lunch:true,dinner:true},mg:{breakfast:true,lunch:true,dinner:true}};
+    let eHTML=`<div class="kk-sgroup" style="margin-top:12px;"><h4>✅ Faktycznie zjedzone (osobno Ty / Magda)</h4><div class="kk-note" style="margin:0 0 8px;">Domyślnie <b>nic nie jest zjedzone</b>. Klikaj, gdy coś zjecie — każdy klik przełącza: <b>nie → zjedzone → na mieście 🍴</b> (restauracja / lunch w pracy) → z powrotem. „Faktyczne makro" liczy tylko <b>zjedzone wg planu</b> (posiłków „na mieście" nie liczymy — nie znamy ich wartości). W ostatniej kolumnie odhacz wypity shake / zjedzony dodatek.</div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:11px;min-width:680px;"><thead><tr><th style="text-align:left;padding:3px 6px;">Dzień</th><th style="padding:3px 6px;">Śniadanie</th><th style="padding:3px 6px;">Obiad</th><th style="padding:3px 6px;">Kolacja</th><th style="padding:3px 6px;">Shake / dodatek</th></tr></thead><tbody>`;
+    const eChip=(d,who,mk,label,onCol)=>{ const st=eatStat(state.eaten[d][who][mk]); const sty=st==="y"?onCol:(st==="out"?"background:var(--mustard);color:#3a2f00;":""); return `<span class="kk-eatchip" data-eat="${d}|${who}|${mk}" title="klik: nie → zjedzone → na mieście" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${sty}">${label}${st==="out"?" 🍴":""}</span>`; };
+    DAYS.forEach(d=>{ if(!state.eaten[d]) state.eaten[d]={ty:{},mg:{}}; if(!state.eaten[d].ty) state.eaten[d].ty={}; if(!state.eaten[d].mg) state.eaten[d].mg={};
       eHTML+=`<tr><td style="text-align:left;padding:3px 6px;font-weight:600;">${d}</td>`;
       ["breakfast","lunch","dinner"].forEach(mk=>{ const r=findR(state.week[d][mk].recipeId); const nm=r?esc(r.name).slice(0,24):"—";
-        const tOn=state.eaten[d].ty[mk]!==false, mOn=state.eaten[d].mg[mk]!==false;
-        eHTML+=`<td style="padding:3px 6px;text-align:center;"><div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">${nm}</div><span class="kk-eatchip" data-eat="${d}|ty|${mk}" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${tOn?"background:var(--herb);color:#fff;":""}">Ty</span> <span class="kk-eatchip" data-eat="${d}|mg|${mk}" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${mOn?"background:var(--plum);color:#fff;":""}">M</span></td>`;
+        eHTML+=`<td style="padding:3px 6px;text-align:center;"><div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">${nm}</div>${eChip(d,"ty",mk,"Ty","background:var(--herb);color:#fff;")} ${eChip(d,"mg",mk,"M","background:var(--plum);color:#fff;")}</td>`;
       });
+      const sm=shakeMacroDay(d);
+      if(!sm.hasAny){ eHTML+=`<td style="padding:3px 6px;text-align:center;color:#c7c2b8;">—</td>`; }
+      else { const tOn=!!state.eaten[d].ty.shake, mOn=!!state.eaten[d].mg.shake;
+        eHTML+=`<td style="padding:3px 6px;text-align:center;"><div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">${esc(sm.name||"dodatek").slice(0,20)}</div><span class="kk-eatchip" data-eat="${d}|ty|shake" title="wypity shake / zjedzony dodatek" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${tOn?"background:var(--herb);color:#fff;":""}">Ty</span> <span class="kk-eatchip" data-eat="${d}|mg|shake" title="wypity shake / zjedzony dodatek" style="cursor:pointer;padding:1px 7px;border-radius:6px;border:1px solid var(--line);${mOn?"background:var(--plum);color:#fff;":""}">M</span></td>`; }
       eHTML+=`</tr>`;
     });
     eHTML+=`</tbody></table></div>`;
     const ET={p:0,c:0,f:0,kcal:0,fib:0}, EM={p:0,c:0,f:0,kcal:0,fib:0};
     DAYS.forEach(d=>{ ["breakfast","lunch","dinner"].forEach(mk=>{ const mm=mealMacro(d,mk);
-      if(state.eaten[d]&&state.eaten[d].ty[mk]!==false) ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=mm.ty[x]);
-      if(state.eaten[d]&&state.eaten[d].mg[mk]!==false) ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=mm.mg[x]); }); });
+      if(state.eaten[d]&&eatStat(state.eaten[d].ty[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=mm.ty[x]);
+      if(state.eaten[d]&&eatStat(state.eaten[d].mg[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=mm.mg[x]); });
+      const sm=shakeMacroDay(d);
+      if(state.eaten[d]&&state.eaten[d].ty&&state.eaten[d].ty.shake) ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=sm.ty[x]);
+      if(state.eaten[d]&&state.eaten[d].mg&&state.eaten[d].mg.shake) ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=sm.mg[x]);
+    });
     const cE=(a,t)=> !t?"":(Math.abs(a-t)<=t*0.12?"kk-hit":"kk-miss");
     const erows=[["Kalorie","kcal","kcal2","kcal1"," kcal"],["Białko","p","p2","p1"," g"],["Tłuszcz","f","fat2","fat1"," g"],["Węgle","c","carb2","carb1"," g"],["Błonnik","fib","fib2","fib1"," g"]];
     eHTML+=`<div class="kk-note" style="margin:8px 0 4px;"><b>Faktyczne makro (tylko zjedzone)</b></div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:640px;"><thead><tr><th style="text-align:left;padding:4px 8px;"></th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Ty</th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Magda</th></tr><tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th></tr></thead><tbody>`;
@@ -1993,7 +2013,7 @@
     document.getElementById("fitcarbs").addEventListener("click",()=>{ fitCarbsToTarget(); });
     document.getElementById("resetcarbs").addEventListener("click",()=>{ resetCarbs(); });
     document.getElementById("printweek").addEventListener("click",()=>{ printPlan(); });
-    p.querySelectorAll("[data-eat]").forEach(el=> el.addEventListener("click",()=>{ const a=el.dataset.eat.split("|"); const d=a[0],who=a[1],mk=a[2]; state.eaten=state.eaten||{}; if(!state.eaten[d]) state.eaten[d]={ty:{breakfast:true,lunch:true,dinner:true},mg:{breakfast:true,lunch:true,dinner:true}}; state.eaten[d][who][mk]=(state.eaten[d][who][mk]===false); queueSave(); renderWeek(); }));
+    p.querySelectorAll("[data-eat]").forEach(el=> el.addEventListener("click",()=>{ const a=el.dataset.eat.split("|"); const d=a[0],who=a[1],mk=a[2]; state.eaten=state.eaten||{}; if(!state.eaten[d]) state.eaten[d]={ty:{},mg:{}}; if(!state.eaten[d][who]) state.eaten[d][who]={}; if(mk==="shake"){ state.eaten[d][who].shake=!state.eaten[d][who].shake; } else { const cur=eatStat(state.eaten[d][who][mk]); state.eaten[d][who][mk]= cur==="no"?"y":(cur==="y"?"out":"no"); } queueSave(); renderWeek(); }));
   }
 
   function generateWeek(tempo){
@@ -2639,38 +2659,52 @@
   }
 
   function renderPrepPreset(p, prepToggle, wk){
-    const items=(typeof PREP_PRESETS!=="undefined" && PREP_PRESETS[String(wk)])?PREP_PRESETS[String(wk)]:[];
+    const W=(typeof PREP_PRESETS!=="undefined" && PREP_PRESETS[String(wk)])?PREP_PRESETS[String(wk)]:null;
     if(!state.prepChecked) state.prepChecked={};
     const chk=state.prepChecked[wk]||{};
-    let html=prepToggle+`<div class="kk-note" style="margin:0 0 12px;">Gotowy plan meal prep na <b>Tydzień ${wk}</b> (z pliku). Odhaczaj etapy — zapis wspólny. Kliknij <b>→ przepis</b> przy zadaniu, żeby od razu otworzyć jego kartę. „Silnik" wróci do listy generowanej z planu.</div>`;
-    if(items.length===0){ html+=`<div class="kk-note">Brak wgranego meal prepu dla tego tygodnia.</div>`; p.innerHTML=html; }
+    // znajdź przepis dla danego dnia+posiłku z zapisanego tygodnia (dokładnie), w razie czego po nazwie
+    const swRecipe=(d,mk)=>{ const sw=(state.savedWeeks||[]).find(w=>w.id==="w_t"+wk); const id=sw&&sw.week&&sw.week[d]&&sw.week[d][mk]&&sw.week[d][mk].recipeId; return (id&&findR(id))?id:null; };
+    const rByName=(nm)=>{ if(!nm) return null; const t=nm.trim().toLowerCase(); let r=state.recipes.find(x=>x.name&&x.name.trim().toLowerCase()===t); if(!r) r=state.recipes.find(x=>x.name&&t.indexOf(x.name.trim().toLowerCase())===0); return r?r.id:null; };
+    let html=prepToggle+`<div class="kk-note" style="margin:0 0 12px;">Plan meal prep na <b>Tydzień ${wk}</b> — <b>dzień po dniu</b>, wszystkie posiłki. Odhaczaj, co zrobione (zapis wspólny). Kliknij <b>→ przepis</b>, żeby otworzyć kartę dania. „Silnik" wróci do listy generowanej z planu.</div>`;
+    if(!W||!W.meals||!W.meals.length){ html+=`<div class="kk-note">Brak wgranego meal prepu dla tego tygodnia.</div>`; p.innerHTML=html; }
     else {
-      // Sesje prep (Niedziela / Czwartek / …). Info „świeżo" wędruje do osobnej sekcji niżej.
-      const byT={}; const ord=[];
-      items.forEach((it,idx)=>{ const t=it.termin||"Inne"; if(!byT[t]){byT[t]=[];ord.push(t);} byT[t].push(Object.assign({idx:idx},it)); });
-      const done=items.reduce((a,it,idx)=>a+(chk["p"+idx]?1:0),0);
-      html+=`<div class="kk-note" style="margin:0 0 8px;">Odhaczono <b>${done}/${items.length}</b> etapów prep.</div>`;
-      ord.forEach(t=>{ html+=`<div class="kk-sgroup"><h4>${esc(t)}</h4><div class="kk-plist">`;
-        byT[t].forEach(it=>{ const key="p"+it.idx; const on=!!chk[key];
-          const sub=[it.dotyczy,it.store?("Przechowywanie: "+it.store):""].filter(Boolean).join(" · ");
-          const link=gotoLink(dotyczyRecipeIds(wk,it.dotyczy));
-          html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${it.etap&&it.etap!=="—"?`<b>${esc(String(it.etap))}.</b> `:""}${esc(it.co)}${link}${it.czas?` <span class="kk-badge kk-b-fresh">${esc(it.czas)}</span>`:""}${sub?`<span class="kk-psub">${esc(sub)}</span>`:""}</span></div>`;
+      // ── Podsumowanie sesji przygotowań ──
+      const line=(lab,val)=> val?`<div style="margin:2px 0;"><b>${lab}:</b> ${esc(val)}</div>`:"";
+      html+=`<div class="kk-sgroup"><h4>🗓️ Sesje przygotowań (2× w tygodniu)</h4><div class="kk-note" style="margin:0;line-height:1.55;">`+
+        line("Niedziela (obiady/kolacje Pn–Czw)", W.sun)+
+        line("Czwartek (Pt–Sob)", W.thu)+
+        line("Główny batch", W.batch)+
+        line("Głównie na świeżo", W.freshMain)+
+        line("Zamrażanie", W.freeze)+
+        line("Świeża niedziela", W.sunFresh)+
+        `</div></div>`;
+      // ── Plan dzień po dniu ──
+      const DC=["Pon","Wt","Śr","Czw","Pt","Sob","Nd"];
+      const DL={Pon:"Poniedziałek",Wt:"Wtorek","Śr":"Środa",Czw:"Czwartek",Pt:"Piątek",Sob:"Sobota",Nd:"Niedziela"};
+      const mo={breakfast:0,lunch:1,dinner:2};
+      const total=W.meals.length;
+      const done=W.meals.reduce((n,m)=>n+(chk["m_"+m.d+"_"+m.m]?1:0),0);
+      html+=`<div class="kk-note" style="margin:4px 0 8px;">Odhaczono <b>${done}/${total}</b> posiłków w tym tygodniu.</div>`;
+      DC.forEach(dc=>{
+        const dayMeals=W.meals.filter(x=>x.d===dc).sort((a,b)=>((mo[a.m]==null?9:mo[a.m])-(mo[b.m]==null?9:mo[b.m])));
+        if(!dayMeals.length) return;
+        html+=`<div class="kk-sgroup"><h4>${esc(DL[dc]||dc)}</h4><div class="kk-plist">`;
+        dayMeals.forEach(mm=>{
+          const key="m_"+mm.d+"_"+mm.m; const on=!!chk[key];
+          const rid=swRecipe(mm.d,mm.m)||rByName(mm.dish);
+          const link=rid?gotoLink([rid]):"";
+          const isFresh=(mm.src==="Na świeżo");
+          const srcBadge=mm.src?`<span class="kk-badge" style="font-size:9px;background:${isFresh?"var(--mustard,#F5A524);color:#3a2f00":"var(--herb,#1F8A6D);color:#fff"};">${esc(mm.src)}</span>`:"";
+          const parts=[];
+          if(mm.ahead) parts.push(`<b>Wcześniej:</b> ${esc(mm.ahead)}`);
+          if(mm.fresh) parts.push(`<b>Na świeżo:</b> ${esc(mm.fresh).replace(/\n/g,"<br>")}`);
+          if(mm.store) parts.push(`<b>Przechowywanie:</b> ${esc(mm.store)}`);
+          if(mm.org && mm.org!==mm.store) parts.push(esc(mm.org));
+          const sub=parts.join("<br>");
+          html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span><b>${esc(mm.ml)}:</b> ${esc(mm.dish)}${link} ${srcBadge}${sub?`<span class="kk-psub" style="line-height:1.5;">${sub}</span>`:""}</span></div>`;
         });
         html+=`</div></div>`;
       });
-      // ── Sekcja „Na świeżo" — zadania dzień po dniu (od poniedziałku), osobne checkboxy ──
-      const fresh=items.map((it,idx)=>Object.assign({idx},it))
-        .filter(it=> it.fresh && it.fresh!=="—")
-        .sort((a,b)=> (prepDayIdx(a.dotyczy)-prepDayIdx(b.dotyczy)) || (a.idx-b.idx));
-      if(fresh.length){
-        const fdone=fresh.reduce((n,it)=>n+(chk["f"+it.idx]?1:0),0);
-        html+=`<div class="kk-sgroup" style="margin-top:16px;border:1px solid var(--mustard,#F5A524);border-radius:12px;padding:10px;"><h4>🍳 Na świeżo — dzień po dniu</h4><div class="kk-note" style="margin:0 0 8px;">Robisz w dniu jedzenia (nie z wyprzedzeniem). Kolejność od poniedziałku. Odhaczono <b>${fdone}/${fresh.length}</b>.</div><div class="kk-plist">`;
-        fresh.forEach(it=>{ const key="f"+it.idx; const on=!!chk[key];
-          const link=gotoLink(dotyczyRecipeIds(wk,it.dotyczy));
-          html+=`<div class="kk-pitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span><b>${esc(it.dotyczy||"")}</b> — ${esc(it.fresh)}${link}</span></div>`;
-        });
-        html+=`</div></div>`;
-      }
       p.innerHTML=html;
     }
     const pE=document.getElementById("pm-eng"); if(pE) pE.addEventListener("click",()=>{ state.prepMode="engine"; queueSave(); renderPrep(); });

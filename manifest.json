@@ -1,6 +1,6 @@
 {
-  "name": "Nasza Kuchnia",
-  "short_name": "Kuchnia",
+  "name": "STJ meal plan",
+  "short_name": "STJ meal plan",
   "description": "Plan tygodnia, przepisy i lista zakupów",
   "start_url": "./index.html",
   "display": "standalone",
