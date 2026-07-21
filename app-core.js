@@ -1125,13 +1125,13 @@
     const max=Math.max(1,...nums)*1.14;
     const y=v=>padT+(H-padT-padB)*(1-(v||0)/max), base=y(0);
     let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto;font-family:inherit;">`;
-    for(let i=0;i<=3;i++){ const v=max*i/3, yy=y(v); s+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line,#E6E1D8)" stroke-width="1"/><text x="2" y="${yy+3}" font-size="8" fill="#9ca3af">${Math.round(v)}</text>`; }
+    for(let i=0;i<=3;i++){ const v=max*i/3, yy=y(v); s+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line,#E4E5DC)" stroke-width="1"/><text x="2" y="${yy+3}" font-size="8" fill="#9ca3af">${Math.round(v)}</text>`; }
     labels.forEach((d,i)=>{ const cx=padL+cw*i+cw/2, bt=y(ty[i]), bm=y(mg[i]);
-      s+=`<rect x="${(cx-bw-1).toFixed(1)}" y="${bt.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,base-bt).toFixed(1)}" rx="2" fill="var(--herb,#1F8A6D)"/>`;
+      s+=`<rect x="${(cx-bw-1).toFixed(1)}" y="${bt.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,base-bt).toFixed(1)}" rx="2" fill="var(--herb,#6B8E6F)"/>`;
       s+=`<rect x="${(cx+1).toFixed(1)}" y="${bm.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,base-bm).toFixed(1)}" rx="2" fill="var(--plum,#8b5cf6)"/>`;
-      s+=`<text x="${cx.toFixed(1)}" y="${H-padB+13}" font-size="9" fill="#4A4E57" text-anchor="middle">${d}</text>`;
+      s+=`<text x="${cx.toFixed(1)}" y="${H-padB+13}" font-size="9" fill="#55584F" text-anchor="middle">${d}</text>`;
     });
-    if(tTy) s+=`<line x1="${padL}" y1="${y(tTy).toFixed(1)}" x2="${W-padR}" y2="${y(tTy).toFixed(1)}" stroke="var(--herb,#1F8A6D)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>`;
+    if(tTy) s+=`<line x1="${padL}" y1="${y(tTy).toFixed(1)}" x2="${W-padR}" y2="${y(tTy).toFixed(1)}" stroke="var(--herb,#6B8E6F)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>`;
     if(tMg) s+=`<line x1="${padL}" y1="${y(tMg).toFixed(1)}" x2="${W-padR}" y2="${y(tMg).toFixed(1)}" stroke="var(--plum,#8b5cf6)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>`;
     s+=`</svg>`;
     return s;
@@ -1475,7 +1475,7 @@
       card.scrollIntoView({behavior:"smooth",block:"center"});
       const det=card.querySelector("details"); if(det) det.open=true;
       const prev=card.style.boxShadow;
-      card.style.transition="box-shadow .25s"; card.style.boxShadow="0 0 0 3px var(--tomato,#F0563F)";
+      card.style.transition="box-shadow .25s"; card.style.boxShadow="0 0 0 3px var(--tomato,#C97B5A)";
       setTimeout(()=>{ card.style.boxShadow=prev||""; },1600);
     },60);
     return true;
@@ -1507,7 +1507,7 @@
     if(/niedziel|(^|[^a-ząćęłńóśźż])nd([^a-ząćęłńóśźż]|$)/.test(t)) b=Math.min(b,6);
     return b;
   }
-  function gotoLink(ids){ return (ids&&ids.length===1) ? ` <a class="kk-goto" data-open="${ids[0]}" style="color:var(--tomato,#F0563F);font-weight:600;cursor:pointer;white-space:nowrap;">→ przepis</a>` : ""; }
+  function gotoLink(ids){ return (ids&&ids.length===1) ? ` <a class="kk-goto" data-open="${ids[0]}" style="color:var(--tomato,#C97B5A);font-weight:600;cursor:pointer;white-space:nowrap;">→ przepis</a>` : ""; }
   function getMult(id){ return (state.mult && state.mult[id]) ? state.mult[id] : 1; }
   function getExtra(id){ return (state.batchExtra && state.batchExtra[id]) ? state.batchExtra[id] : 0; }
   function setExtra(id,v){ if(!state.batchExtra) state.batchExtra={}; state.batchExtra[id]=Math.max(0,Math.min(6,v)); queueSave(); }
@@ -1667,7 +1667,7 @@
       </div>
     </div>`;
     // ── Kopia zapasowa: eksport / import ──
-    const bkMsg=(t,ok)=>{ const m=document.getElementById("bk-msg"); if(m){ m.textContent=t; m.style.color=ok?"var(--herb,#1F8A6D)":"var(--tomato,#F0563F)"; } };
+    const bkMsg=(t,ok)=>{ const m=document.getElementById("bk-msg"); if(m){ m.textContent=t; m.style.color=ok?"var(--herb,#6B8E6F)":"var(--tomato,#C97B5A)"; } };
     const bkExp=document.getElementById("bk-export");
     if(bkExp) bkExp.addEventListener("click",()=>{
       try{
@@ -2139,7 +2139,7 @@
     });
     eHTML+=`</tbody></table></div></div>`;
     // ── Poza planem i napoje + Trendy ──
-    const _mini="font-size:12px;padding:5px 7px;border:1px solid var(--line,#E6E1D8);border-radius:8px;background:#fff;font-family:inherit;";
+    const _mini="font-size:12px;padding:5px 7px;border:1px solid var(--line,#E4E5DC);border-radius:8px;background:#fff;font-family:inherit;";
     let exHTML=`<div class="kk-sgroup" style="margin-top:12px;"><h4>➕ Poza planem i napoje</h4><div class="kk-note" style="margin:0 0 8px;">Dodaj, co zjecie/wypijecie <b>spoza planu</b> (restauracja, przekąska, piwo, wino, drink). Makra są <b>szacunkowe</b> — doliczają się do „faktycznego makra" powyżej i do wykresów niżej.</div>`;
     exHTML+=`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
       <select id="ex-day" style="${_mini}">`+DAYS.map(d=>`<option value="${d}">${d}</option>`).join("")+`</select>
@@ -2150,7 +2150,7 @@
     </div>`;
     let anyEx=false;
     DAYS.forEach(d=>{ ["ty","mg"].forEach(who=>{ const arr=(state.extras&&state.extras[d]&&state.extras[d][who])||[]; arr.forEach((it,idx)=>{ anyEx=true;
-      exHTML+=`<div class="kk-sitem" style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span><b>${esc(d)}</b> · ${who==="ty"?"Ty":"Magda"} — ${esc(it.name)}${(it.qty||1)>1?` ×${it.qty}`:""} <span style="color:#9ca3af;">(${Math.round((+it.kcal||0)*(it.qty||1))} kcal, ${Math.round((+it.p||0)*(it.qty||1))} g B)</span></span><button data-exdel="${esc(d)}|${who}|${idx}" style="border:none;background:none;cursor:pointer;color:var(--tomato,#F0563F);font-weight:700;font-size:15px;line-height:1;">✕</button></div>`;
+      exHTML+=`<div class="kk-sitem" style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span><b>${esc(d)}</b> · ${who==="ty"?"Ty":"Magda"} — ${esc(it.name)}${(it.qty||1)>1?` ×${it.qty}`:""} <span style="color:#9ca3af;">(${Math.round((+it.kcal||0)*(it.qty||1))} kcal, ${Math.round((+it.p||0)*(it.qty||1))} g B)</span></span><button data-exdel="${esc(d)}|${who}|${idx}" style="border:none;background:none;cursor:pointer;color:var(--tomato,#C97B5A);font-weight:700;font-size:15px;line-height:1;">✕</button></div>`;
     }); }); });
     if(!anyEx) exHTML+=`<div class="kk-note">Nic jeszcze nie dodano.</div>`;
     exHTML+=`</div>`;
@@ -2161,7 +2161,7 @@
     const kcTy=DAYS.map(d=>Math.round(eatenDay(d).ty.kcal)), kcMg=DAYS.map(d=>Math.round(eatenDay(d).mg.kcal));
     const prTy=DAYS.map(d=>Math.round(eatenDay(d).ty.p)),   prMg=DAYS.map(d=>Math.round(eatenDay(d).mg.p));
     eHTML+=`<div class="kk-sgroup"><h4>📊 Trendy — ten tydzień</h4>
-      <div class="kk-note" style="margin:0 0 6px;">Zjedzone dziennie (odhaczenia + pozycje poza planem) vs cel. <span style="color:var(--herb,#1F8A6D);font-weight:700;">■ Ty</span> · <span style="color:var(--plum,#8b5cf6);font-weight:700;">■ Magda</span> · linia przerywana = cel.</div>
+      <div class="kk-note" style="margin:0 0 6px;">Zjedzone dziennie (odhaczenia + pozycje poza planem) vs cel. <span style="color:var(--herb,#6B8E6F);font-weight:700;">■ Ty</span> · <span style="color:var(--plum,#8b5cf6);font-weight:700;">■ Magda</span> · linia przerywana = cel.</div>
       <div style="font-size:11px;font-weight:600;margin:4px 0 2px;">Kalorie / dzień</div>${svgBars(dLbl,kcTy,kcMg,Tt.kcal2,Tt.kcal1)}
       <div style="font-size:11px;font-weight:600;margin:8px 0 2px;">Białko / dzień (g)</div>${svgBars(dLbl,prTy,prMg,Tt.p2,Tt.p1)}
     </div>`;
@@ -2890,8 +2890,8 @@
   };
   function shakeSystemHTML(){
     const SS=(typeof SHAKE_SYSTEM!=="undefined")?SHAKE_SYSTEM:null; if(!SS) return "";
-    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8F9A;border-bottom:1px solid var(--line,#E6E1D8);";
-    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F0EDE8);vertical-align:top;";
+    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8D82;border-bottom:1px solid var(--line,#E4E5DC);";
+    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F3F4EF);vertical-align:top;";
     let h=`<div class="kk-sgroup" style="margin-top:2px;"><h4>🥤 System shake'ów</h4><div class="kk-note" style="margin:0 0 8px;">${esc(SS.intro)}</div>`;
     // reguła wyboru
     h+=`<div style="font-weight:700;font-size:12.5px;margin:4px 0 4px;">Który shake kiedy?</div><div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:420px;"><tr><th style="${th}">Sytuacja</th><th style="${th}">Najlepszy shake</th></tr>`;
@@ -2901,13 +2901,13 @@
     h+=`</div>`;
     // 7 kart
     SS.shakes.forEach(sh=>{
-      h+=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-radius:12px;">`;
+      h+=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E4E5DC);border-radius:12px;">`;
       h+=`<div style="font-weight:700;font-size:13px;margin-bottom:3px;">${sh.n}. ${esc(sh.h)}</div>`;
       if(sh.when) h+=`<div class="kk-note" style="margin:0 0 8px;">${esc(sh.when)}</div>`;
       h+=`<table style="border-collapse:collapse;width:100%;"><tr><th style="${th}">Składnik</th><th style="${th}">Ty</th><th style="${th}">Magda</th></tr>`;
       sh.rows.forEach(r=> h+=`<tr><td style="${td}font-weight:500;">${esc(r[0])}</td><td style="${td}">${esc(r[1])}</td><td style="${td}">${esc(r[2])}</td></tr>`);
       h+=`</table>`;
-      h+=`<div style="margin-top:7px;font-size:11.5px;color:#4A4E57;display:flex;gap:14px;flex-wrap:wrap;"><span><b>Ty:</b> ${esc(sh.mTy)}</span><span><b>Magda:</b> ${esc(sh.mMg)}</span></div>`;
+      h+=`<div style="margin-top:7px;font-size:11.5px;color:#55584F;display:flex;gap:14px;flex-wrap:wrap;"><span><b>Ty:</b> ${esc(sh.mTy)}</span><span><b>Magda:</b> ${esc(sh.mMg)}</span></div>`;
       if(sh.note) h+=`<div class="kk-note" style="margin:6px 0 0;">${esc(sh.note)}</div>`;
       h+=`</div>`;
     });
@@ -2998,10 +2998,10 @@
     const p=document.querySelector('[data-panel="survival"]');
     if(!p) return;
     const SP=(typeof SURVIVAL_PLAN!=="undefined")?SURVIVAL_PLAN:null;
-    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8F9A;border-bottom:1px solid var(--line,#E6E1D8);";
-    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F0EDE8);vertical-align:top;";
+    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8D82;border-bottom:1px solid var(--line,#E4E5DC);";
+    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F3F4EF);vertical-align:top;";
     function card(c){
-      let h=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-radius:12px;">`;
+      let h=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E4E5DC);border-radius:12px;">`;
       h+=`<div style="font-weight:700;font-size:13px;margin-bottom:${c.note?4:6}px;">${esc(c.h)}</div>`;
       if(c.note) h+=`<div class="kk-note" style="margin:0 0 8px;">${esc(c.note)}</div>`;
       if(c.rows&&c.rows.length){
@@ -3014,7 +3014,7 @@
         });
         h+=`</table>`;
       }
-      if(c.macro) h+=`<div style="margin-top:7px;font-size:11.5px;color:#4A4E57;"><b>Makro:</b> ${esc(c.macro)}</div>`;
+      if(c.macro) h+=`<div style="margin-top:7px;font-size:11.5px;color:#55584F;"><b>Makro:</b> ${esc(c.macro)}</div>`;
       h+=`</div>`; return h;
     }
 
@@ -3024,18 +3024,18 @@
       // tabela tygodnia
       html+=`<div class="kk-sgroup"><h4>Plan tygodnia</h4><div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:640px;">`;
       html+=`<tr><th style="${th}">Dzień</th><th style="${th}">Śniadanie</th><th style="${th}">Obiad</th><th style="${th}">Kolacja</th><th style="${th}">Przekąska</th></tr>`;
-      SP.week.forEach(w=>{ html+=`<tr><td style="${td}font-weight:700;white-space:nowrap;">${esc(w.d)}</td><td style="${td}">${esc(w.b)}</td><td style="${td}">${esc(w.l)}</td><td style="${td}">${esc(w.k)}</td><td style="${td}color:#8A8F9A;">${esc(w.s)}</td></tr>`; });
+      SP.week.forEach(w=>{ html+=`<tr><td style="${td}font-weight:700;white-space:nowrap;">${esc(w.d)}</td><td style="${td}">${esc(w.b)}</td><td style="${td}">${esc(w.l)}</td><td style="${td}">${esc(w.k)}</td><td style="${td}color:#8A8D82;">${esc(w.s)}</td></tr>`; });
       html+=`</table></div><div class="kk-note" style="margin-top:8px;">Śniadania: 3 schematy · obiady gotowane: 2 dania (wt. i sob.) · kolacje: 4 · reszta składana na świeżo.</div></div>`;
       // szczegóły w rozwijanych sekcjach
       (SP.groups||[]).forEach(gr=>{
-        html+=`<details style="margin:10px 0;border:1px solid var(--line,#E6E1D8);border-radius:12px;overflow:hidden;"><summary style="cursor:pointer;padding:11px 13px;font-weight:700;font-size:13px;background:#FBF9F6;list-style:none;">${esc(gr.g)}</summary><div style="padding:2px 12px 10px;">`;
+        html+=`<details style="margin:10px 0;border:1px solid var(--line,#E4E5DC);border-radius:12px;overflow:hidden;"><summary style="cursor:pointer;padding:11px 13px;font-weight:700;font-size:13px;background:#F6F7F2;list-style:none;">${esc(gr.g)}</summary><div style="padding:2px 12px 10px;">`;
         gr.cards.forEach(c=> html+=card(c));
         html+=`</div></details>`;
       });
       // harmonogram
       if(SP.schedule&&SP.schedule.length){
         html+=`<div class="kk-sgroup"><h4>🗓️ Harmonogram przygotowania</h4>`;
-        SP.schedule.forEach(s=>{ html+=`<div style="margin:8px 0;padding:9px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-left:3px solid var(--herb,#1F8A6D);border-radius:10px;"><div style="font-weight:700;font-size:12.5px;">${esc(s.when)} <span style="font-weight:500;color:#8A8F9A;">· ${esc(s.time)}</span></div><ol style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.5;">`+s.steps.map(x=>`<li>${esc(x)}</li>`).join("")+`</ol></div>`; });
+        SP.schedule.forEach(s=>{ html+=`<div style="margin:8px 0;padding:9px 12px;background:#fff;border:1px solid var(--line,#E4E5DC);border-left:3px solid var(--herb,#6B8E6F);border-radius:10px;"><div style="font-weight:700;font-size:12.5px;">${esc(s.when)} <span style="font-weight:500;color:#8A8D82;">· ${esc(s.time)}</span></div><ol style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.5;">`+s.steps.map(x=>`<li>${esc(x)}</li>`).join("")+`</ol></div>`; });
         html+=`</div>`;
       }
       // makro
@@ -3070,47 +3070,26 @@
       queueSave(); tab="shop"; renderShop(); refreshTabs();
     });
   }
-  const SUPP_PLAN = {
-    ty: { name:"Ty", groups:[
-      { when:"Do obiadu", items:[
-        { id:"krea", name:"Kreatyna", dose:"5 g" },
-        { id:"omega", name:"Omega-3 (EPA+DHA)", dose:"1500–2000 mg" } ]},
-      { when:"Wieczorem", items:[
-        { id:"mag", name:"Magnez (bisglicynian)", dose:"250–300 mg elem." } ]}
-    ], note:"Witamina D: na razie bez stałej dawki — do czasu kontroli." },
-    mg: { name:"Magda", groups:[
-      { when:"Po przebudzeniu", items:[
-        { id:"levo", name:"Lewotyroksyna", dose:"z wodą, na czczo" } ]},
-      { when:"Do obiadu", items:[
-        { id:"folian", name:"Folian", dose:"800 µg" },
-        { id:"b12", name:"Witamina B12", dose:"1000 µg" },
-        { id:"krea", name:"Kreatyna", dose:"3 g" },
-        { id:"omega", name:"Omega-3 (EPA+DHA)", dose:"1000 mg" },
-        { id:"d3", name:"Witamina D3", dose:"1000 IU (mała ekspozycja na słońce)" } ]},
-      { when:"Wieczorem", items:[
-        { id:"mag", name:"Magnez (bisglicynian)", dose:"200–250 mg elem." } ]}
-    ] }
-  };
   function renderSupps(){
     const p=document.querySelector('[data-panel="supps"]'); if(!p) return;
     const SP=(typeof SUPP_PLAN!=="undefined")?SUPP_PLAN:null; if(!SP){ p.innerHTML=""; return; }
     if(!state.supps) state.supps={};
     const todayIdx=(new Date().getDay()+6)%7; // Pon=0 … Nd=6
     const shortD=(d)=> d.replace("Pon","Pn").replace("Czw","Cz").replace("Sob","So");
-    const th="padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#8A8F9A;text-align:center;";
+    const th="padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#8A8D82;text-align:center;";
     function personBlock(whoKey){
-      const P=SP[whoKey]; const color = whoKey==="ty" ? "var(--herb,#1F8A6D)" : "var(--plum,#8b5cf6)";
+      const P=SP[whoKey]; const color = whoKey==="ty" ? "var(--herb,#6B8E6F)" : "var(--plum,#8b5cf6)";
       let doneToday=0, totToday=0; const tD=DAYS[todayIdx];
       P.groups.forEach(g=>g.items.forEach(it=>{ totToday++; if(state.supps[tD]&&state.supps[tD][whoKey]&&state.supps[tD][whoKey][it.id]) doneToday++; }));
-      let h=`<div class="kk-sgroup"><h4 style="border-left:3px solid ${color};padding-left:8px;">${esc(P.name)} <span style="font-weight:500;color:#8A8F9A;font-size:12px;">— dziś ${doneToday}/${totToday}</span></h4>`;
+      let h=`<div class="kk-sgroup"><h4 style="border-left:3px solid ${color};padding-left:8px;">${esc(P.name)} <span style="font-weight:500;color:#8A8D82;font-size:12px;">— dziś ${doneToday}/${totToday}</span></h4>`;
       h+=`<div style="overflow-x:auto;"><table style="border-collapse:collapse;min-width:560px;width:100%;">`;
-      h+=`<tr><th style="${th}text-align:left;">Suplement</th>`+DAYS.map((d,i)=>`<th style="${th}${i===todayIdx?"background:#FBF9F6;color:"+color+";font-weight:700;":""}">${shortD(d)}</th>`).join("")+`</tr>`;
+      h+=`<tr><th style="${th}text-align:left;">Suplement</th>`+DAYS.map((d,i)=>`<th style="${th}${i===todayIdx?"background:#F6F7F2;color:"+color+";font-weight:700;":""}">${shortD(d)}</th>`).join("")+`</tr>`;
       P.groups.forEach(g=>{
-        h+=`<tr><td colspan="8" style="padding:9px 6px 2px;font-size:10.5px;font-weight:700;color:#4A4E57;text-transform:uppercase;letter-spacing:.4px;">${esc(g.when)}</td></tr>`;
+        h+=`<tr><td colspan="8" style="padding:9px 6px 2px;font-size:10.5px;font-weight:700;color:#55584F;text-transform:uppercase;letter-spacing:.4px;">${esc(g.when)}</td></tr>`;
         g.items.forEach(it=>{
           h+=`<tr><td style="padding:5px 6px;font-size:12.5px;"><b>${esc(it.name)}</b> <span style="color:#9ca3af;">${esc(it.dose)}</span></td>`;
           DAYS.forEach((d,i)=>{ const on=!!(state.supps[d]&&state.supps[d][whoKey]&&state.supps[d][whoKey][it.id]);
-            h+=`<td style="text-align:center;padding:4px;${i===todayIdx?"background:#FBF9F6;":""}"><span data-supp="${d}|${whoKey}|${it.id}" title="odhacz" style="display:inline-block;width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid ${on?color:"var(--line,#E6E1D8)"};background:${on?color:"transparent"};"></span></td>`;
+            h+=`<td style="text-align:center;padding:4px;${i===todayIdx?"background:#F6F7F2;":""}"><span data-supp="${d}|${whoKey}|${it.id}" title="odhacz" style="display:inline-block;width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid ${on?color:"var(--line,#E4E5DC)"};background:${on?color:"transparent"};"></span></td>`;
           });
           h+=`</tr>`;
         });
@@ -3149,7 +3128,7 @@
       let fTot=0,fDone=0; (W.fresh||[]).forEach(dy=>dy.meals.forEach(mm=>{ fTot++; if(chk["f_"+dy.d+"_"+mm.m]) fDone++; }));
 
       // ── SESJE MEAL PREP ──
-      html+=`<div style="font-weight:700;font-size:13px;margin:6px 0 4px;color:var(--ink,#17181C);">🍳 Sesje meal prep <span style="font-weight:500;color:#8A8F9A;">(odhaczono ${sDone}/${sTot})</span></div>`;
+      html+=`<div style="font-weight:700;font-size:13px;margin:6px 0 4px;color:var(--ink,#2C2E2A);">🍳 Sesje meal prep <span style="font-weight:500;color:#8A8D82;">(odhaczono ${sDone}/${sTot})</span></div>`;
       (W.sessions||[]).forEach((se,si)=>{
         const timeTag = si===0 ? (W.sun?` <span class="kk-badge kk-b-fresh">${esc(W.sun)}</span>`:"") : (W.thu?` <span class="kk-badge kk-b-fresh">${esc(W.thu)}</span>`:"");
         html+=`<div class="kk-sgroup"><h4>${esc(se.title||("Sesja "+(si+1)))}${timeTag}</h4><div class="kk-plist">`;
@@ -3163,11 +3142,11 @@
 
       // ── NA ŚWIEŻO ──
       if(W.fresh&&W.fresh.length){
-        html+=`<div style="font-weight:700;font-size:13px;margin:16px 0 4px;color:var(--ink,#17181C);">🥗 Na świeżo — dzień po dniu <span style="font-weight:500;color:#8A8F9A;">(odhaczono ${fDone}/${fTot})</span></div>`;
+        html+=`<div style="font-weight:700;font-size:13px;margin:16px 0 4px;color:var(--ink,#2C2E2A);">🥗 Na świeżo — dzień po dniu <span style="font-weight:500;color:#8A8D82;">(odhaczono ${fDone}/${fTot})</span></div>`;
         html+=`<div class="kk-note" style="margin:0 0 8px;">Zadania do wykonania bezpośrednio przed jedzeniem, od poniedziałku.</div>`;
         const mo={breakfast:0,lunch:1,dinner:2};
         W.fresh.forEach(dy=>{
-          html+=`<div class="kk-sgroup" style="border-left:3px solid var(--mustard,#F5A524);"><h4>${esc(dy.dl||dy.d)}</h4><div class="kk-plist">`;
+          html+=`<div class="kk-sgroup" style="border-left:3px solid var(--mustard,#E0A458);"><h4>${esc(dy.dl||dy.d)}</h4><div class="kk-plist">`;
           dy.meals.slice().sort((a,b)=>((mo[a.m]==null?9:mo[a.m])-(mo[b.m]==null?9:mo[b.m]))).forEach(mm=>{
             const key="f_"+dy.d+"_"+mm.m; const on=!!chk[key];
             const rid=swRecipe(dy.d,mm.m)||rByName(mm.dish);

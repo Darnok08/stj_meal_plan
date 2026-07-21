@@ -6,7 +6,7 @@
 <title>STJ meal plan</title>
 
 <!-- PWA: żeby dało się dodać do ekranu głównego jak apkę -->
-<meta name="theme-color" content="#17181C">
+<meta name="theme-color" content="#2C2E2A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="STJ meal plan">
@@ -19,32 +19,32 @@
 
 <link rel="stylesheet" href="style.css">
 <style>
-  html,body{ margin:0; padding:0; background:#F0EDE8; }
+  html,body{ margin:0; padding:0; background:#F3F4EF; }
   body{ font-family:'Inter','Work Sans',sans-serif; -webkit-font-smoothing:antialiased; }
   #app-wrap{ display:none; max-width:1400px; margin:0 auto; padding:14px; }
 
   #topbar{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:6px 4px 12px; color:#4A4E57; font-size:12px; flex-wrap:wrap;
+    padding:6px 4px 12px; color:#55584F; font-size:12px; flex-wrap:wrap;
   }
   #topbar .right{ display:flex; align-items:center; gap:12px; }
-  #topbar b{ color:#17181C; }
-  #saveflag{ color:#1F8A6D; opacity:0; transition:opacity .3s; font-size:11.5px; font-weight:600; }
+  #topbar b{ color:#2C2E2A; }
+  #saveflag{ color:#6B8E6F; opacity:0; transition:opacity .3s; font-size:11.5px; font-weight:600; }
   #logout{
-    background:#fff; border:1px solid #E6E1D8; color:#4A4E57; border-radius:9px;
+    background:#fff; border:1px solid #E4E5DC; color:#55584F; border-radius:9px;
     padding:6px 12px; cursor:pointer; font-size:11.5px; font-weight:600;
     font-family:inherit; transition:all .15s;
   }
-  #logout:hover{ background:#F0563F; color:#fff; border-color:#F0563F; }
+  #logout:hover{ background:#C97B5A; color:#fff; border-color:#C97B5A; }
 
   /* ─── Ekran logowania ─── */
   #auth{
     display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
     box-sizing:border-box;
     background:
-      radial-gradient(700px 400px at 80% 10%, rgba(245,165,36,.20), transparent 60%),
-      radial-gradient(600px 380px at 15% 85%, rgba(240,86,63,.18), transparent 60%),
-      #F0EDE8;
+      radial-gradient(700px 400px at 80% 10%, rgba(224,164,88,.20), transparent 60%),
+      radial-gradient(600px 380px at 15% 85%, rgba(201,123,90,.18), transparent 60%),
+      #F3F4EF;
   }
   .au-card{
     background:#fff; border-radius:18px; padding:32px 30px; width:100%; max-width:400px;
@@ -53,43 +53,43 @@
   }
   .au-card::before{
     content:""; position:absolute; top:0; left:0; right:0; height:4px;
-    background:linear-gradient(90deg,#F0563F,#F5A524 50%,#1F8A6D);
+    background:linear-gradient(90deg,#C97B5A,#E0A458 50%,#6B8E6F);
   }
   .au-eyebrow{
     font-weight:600; letter-spacing:2.2px; font-size:10px; text-transform:uppercase;
-    color:#F5A524; margin-bottom:6px;
+    color:#E0A458; margin-bottom:6px;
   }
   .au-title{
     font-family:'Bricolage Grotesque','Inter',sans-serif; font-weight:700;
-    font-size:30px; letter-spacing:-.7px; margin:0 0 6px; color:#17181C;
+    font-size:30px; letter-spacing:-.7px; margin:0 0 6px; color:#2C2E2A;
   }
-  .au-sub{ font-size:13px; color:#8A8F9A; margin-bottom:20px; line-height:1.55; }
+  .au-sub{ font-size:13px; color:#8A8D82; margin-bottom:20px; line-height:1.55; }
   .au-card label{
     display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
-    color:#8A8F9A; margin:14px 0 5px; font-weight:600;
+    color:#8A8D82; margin:14px 0 5px; font-weight:600;
   }
   .au-card input{
-    width:100%; padding:11px 13px; border:1px solid #E6E1D8; border-radius:10px;
-    font-size:14px; font-family:inherit; box-sizing:border-box; background:#FBF9F6;
-    color:#17181C; transition:border-color .15s, background .15s;
+    width:100%; padding:11px 13px; border:1px solid #E4E5DC; border-radius:10px;
+    font-size:14px; font-family:inherit; box-sizing:border-box; background:#F6F7F2;
+    color:#2C2E2A; transition:border-color .15s, background .15s;
   }
-  .au-card input:focus{ outline:none; border-color:#F0563F; background:#fff; }
+  .au-card input:focus{ outline:none; border-color:#C97B5A; background:#fff; }
   .au-btns{ display:flex; gap:9px; margin-top:22px; }
   .au-btns button{
     flex:1; font-family:inherit; font-weight:600; font-size:13px;
     border:none; padding:12px; border-radius:10px; cursor:pointer; transition:all .15s;
   }
-  #au-login{ background:#F0563F; color:#fff; box-shadow:0 2px 10px rgba(240,86,63,.28); }
-  #au-login:hover{ background:#D8432D; transform:translateY(-1px); }
-  #au-signup, #cf-save{ background:#fff; color:#1F8A6D; border:1px solid #1F8A6D; }
-  #au-signup:hover{ background:#1F8A6D; color:#fff; }
-  #cf-save{ background:#F0563F; color:#fff; border:none; box-shadow:0 2px 10px rgba(240,86,63,.28); }
-  #cf-save:hover{ background:#D8432D; }
+  #au-login{ background:#C97B5A; color:#fff; box-shadow:0 2px 10px rgba(201,123,90,.28); }
+  #au-login:hover{ background:#B3673F; transform:translateY(-1px); }
+  #au-signup, #cf-save{ background:#fff; color:#6B8E6F; border:1px solid #6B8E6F; }
+  #au-signup:hover{ background:#6B8E6F; color:#fff; }
+  #cf-save{ background:#C97B5A; color:#fff; border:none; box-shadow:0 2px 10px rgba(201,123,90,.28); }
+  #cf-save:hover{ background:#B3673F; }
   .au-msg{ font-size:12.5px; margin-top:14px; min-height:16px; line-height:1.5; }
-  .au-msg.err{ color:#D8432D; }
-  .au-msg.ok{ color:#1F8A6D; }
-  .au-msg a{ color:#F0563F; font-weight:600; }
-  .au-hint{ font-size:11.5px; color:#8A8F9A; margin-top:16px; line-height:1.55; }
+  .au-msg.err{ color:#B3673F; }
+  .au-msg.ok{ color:#6B8E6F; }
+  .au-msg a{ color:#C97B5A; font-weight:600; }
+  .au-hint{ font-size:11.5px; color:#8A8D82; margin-top:16px; line-height:1.55; }
 </style>
 </head>
 <body>

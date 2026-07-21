@@ -4,33 +4,33 @@
    ═══════════════════════════════════════════════════════════ */
 :root{
   /* baza */
-  --ink:      #17181C;   /* prawie czarny, z chłodnym odcieniem */
-  --ink-soft: #4A4E57;
-  --mute:     #8A8F9A;
-  --canvas:   #FBF9F6;   /* ciepła biel */
+  --ink:      #2C2E2A;   /* prawie czarny, z chłodnym odcieniem */
+  --ink-soft: #55584F;
+  --mute:     #8A8D82;
+  --canvas:   #F6F7F2;   /* ciepła biel */
   --surface:  #FFFFFF;
-  --surface-2:#F4F1EC;
-  --line:     #E6E1D8;
+  --surface-2:#ECEDE6;
+  --line:     #E4E5DC;
 
   /* akcenty — "joy" */
-  --flame:    #F0563F;   /* żywy koral — akcja, główny */
-  --flame-2:  #D8432D;
-  --amber:    #F5A524;   /* bursztyn — energia */
-  --basil:    #1F8A6D;   /* głęboka zieleń — sukces, zapas */
+  --flame:    #C97B5A;   /* żywy koral — akcja, główny */
+  --flame-2:  #B3673F;
+  --amber:    #E0A458;   /* bursztyn — energia */
+  --basil:    #6B8E6F;   /* głęboka zieleń — sukces, zapas */
   --basil-2:  #17growth; /* placeholder nadpisany niżej */
   --plum:     #7C5CD6;   /* fiolet — notatki */
   --sky:      #2E7FB8;   /* błękit — świeżo */
 
   /* aliasy zgodne z wcześniejszą strukturą */
-  --slate:    #17181C;
+  --slate:    #2C2E2A;
   --slate-2:  #24262C;
-  --paper:    #FBF9F6;
-  --paper-2:  #F4F1EC;
-  --meat:     #F0563F;
-  --meat-2:   #D8432D;
-  --herb:     #1F8A6D;
+  --paper:    #F6F7F2;
+  --paper-2:  #ECEDE6;
+  --meat:     #C97B5A;
+  --meat-2:   #B3673F;
+  --herb:     #6B8E6F;
   --herb-2:   #16always;
-  --mustard:  #F5A524;
+  --mustard:  #E0A458;
   --teal:     #2E7FB8;
 
   --radius:   14px;
@@ -39,7 +39,7 @@
   --shadow-l: 0 2px 4px rgba(23,24,28,.05), 0 16px 40px rgba(23,24,28,.10);
 }
 /* korekta placeholderów */
-:root{ --basil-2:#166F57; --herb-2:#166F57; }
+:root{ --basil-2:#56765A; --herb-2:#56765A; }
 
 #kk-root{
   font-family:'Inter','Work Sans','Segoe UI',sans-serif;
