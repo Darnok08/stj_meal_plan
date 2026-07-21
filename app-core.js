@@ -589,7 +589,35 @@
     R("d48","Pinsa Bianca z Prosciutto Cotto, Ricottą, Szpinakiem i Cytryną","Europejska",["dinner"],"Roślinne",18,89,"fresh",
       "",
       ["370 g Spód do pinsy", "150 g Prosciutto cotto", "150 g Ricotta", "20 g Parmezan", "200 g Szpinak", "5 g Oliwa", "Skórka z cytryny i pieprz"],
-      ["Krem. Wymieszaj ricottę z parmezanem, pieprzem i skórką z cytryny.", "Spód. Rozsmaruj krem na pinsie, dodaj połowę szpinaku.", "Pieczenie. Piecz 8–10 minut w 230°C.", "Wykończenie. Dodaj szynkę cotto, resztę szpinaku, kilka kropli oliwy i cytrynę."])
+      ["Krem. Wymieszaj ricottę z parmezanem, pieprzem i skórką z cytryny.", "Spód. Rozsmaruj krem na pinsie, dodaj połowę szpinaku.", "Pieczenie. Piecz 8–10 minut w 230°C.", "Wykończenie. Dodaj szynkę cotto, resztę szpinaku, kilka kropli oliwy i cytrynę."]),
+    R("s1","Shake: izolat z wodą","Uniwersalna",["shake"],"—",3,52,"fresh",
+      "Czyste podbicie białka, gdy kalorie z jedzenia są już wystarczające.",
+      ["Izolat: Ty 35 g / Magda 25 g","Woda 250–400 ml","Lód (opcjonalnie)","Opcjonalnie: kakao, espresso, cynamon, wanilia, szczypta soli"],
+      ["Wsyp izolat, dolej wodę i lód.","Wstrząśnij w shakerze lub krótko zblenduj."]),
+    R("s2","Shake: izolat z mlekiem","Uniwersalna",["shake"],"—",3,67,"fresh",
+      "Kompromis między czystym białkiem a normalnym shakiem — po treningu lub jako mała przekąska.",
+      ["Izolat: Ty 35 g / Magda 25 g","Mleko 2%: Ty 250 ml / Magda 200 ml","Woda lub lód wg konsystencji"],
+      ["Połącz izolat z mlekiem.","Dolej wodę/lód wg gęstości i zblenduj."]),
+    R("s3","Shake borówkowy (lekki)","Uniwersalna",["shake"],"—",5,73,"fresh",
+      "Smak koktajlu przy niewielkich kaloriach. Mrożone owoce dają lepszą konsystencję niż świeże.",
+      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 150 g / Magda 100 g","Borówki mrożone: Ty 150 g / Magda 100 g","Woda 150–250 ml + lód","Sok z cytryny (opcjonalnie)"],
+      ["Wrzuć wszystko do blendera.","Zblenduj na gładko; dolej wody wg gęstości."]),
+    R("s4","Shake śniadaniowy (pełny)","Uniwersalna",["shake"],"—",6,95,"fresh",
+      "Może zastąpić śniadanie: białko, płatki, owoc i błonnik. Wariant borówkowy: zamiast banana 150/100 g borówek.",
+      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 200 g / Magda 150 g","Płatki owsiane: Ty 50 g / Magda 35 g","Banan: Ty 100 g / Magda 70 g","Woda lub mleko ≈ 200 ml","Cynamon i szczypta soli"],
+      ["Wrzuć wszystko do blendera.","Zblenduj na gładko."]),
+    R("s5","Shake na podbicie kalorii","Uniwersalna",["shake"],"—",6,82,"fresh",
+      "Na dzień treningowy lub gdy do wieczora wychodzi za mało kalorii. To pełny posiłek, nie dodatek do obiadu.",
+      ["Izolat: Ty 30 g / Magda 20 g","Mleko 2%: Ty 300 ml / Magda 200 ml","Banan: Ty 120 g / Magda 80 g","Płatki owsiane: Ty 40 g / Magda 30 g","Masło orzechowe: Ty 25 g / Magda 15 g","Cynamon lub kakao + lód"],
+      ["Wrzuć wszystko do blendera.","Zblenduj na gładko; masło orzechowe mocno podnosi kalorie."]),
+    R("s6","Shake wysokobiałkowy z błonnikiem","Uniwersalna",["shake"],"—",7,84,"fresh",
+      "Na dni z małą ilością warzyw, owoców i strączków. Chia zostaw 5–10 min po zblendowaniu — zgęstnieje.",
+      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 150 g / Magda 100 g","Borówki lub maliny: Ty 150 g / Magda 100 g","Płatki owsiane: Ty 30 g / Magda 20 g","Chia: Ty 15 g / Magda 10 g","Woda ≈ 250 ml"],
+      ["Zblenduj wszystko poza chią.","Dodaj chię i zostaw 5–10 min, aż zgęstnieje."]),
+    R("s7","Shake kawowy","Uniwersalna",["shake"],"—",4,60,"fresh",
+      "Szybkie śniadanie przed wyjściem albo przed treningiem. Espresso schłodź lub wlej na dużo lodu.",
+      ["Izolat waniliowy/czekoladowy: Ty 30 g / Magda 20 g","Mleko 2%: Ty 250 ml / Magda 200 ml","Espresso: Ty 1–2 porcje / Magda 1","Banan: Ty 80 g / Magda 60 g","Lód, kakao opcjonalnie"],
+      ["Schłodź espresso lub wlej na lód.","Zblenduj wszystko na gładko."])
   ];}
 
   // specjalne pseudo-pozycje trybu dnia (wpisywane w komórki planu)
@@ -1315,6 +1343,13 @@
       queueSave();
       console.log("Zmigrowano bazę przepisów do wersji "+RECIPES_VERSION);
     }
+    // ═══ Dołącz wbudowane shake'i do istniejącej bazy (idempotentnie, bez resetu tygodnia) ═══
+    try{
+      const builtinShakes=seed().filter(r=>r.mealTypes.includes("shake"));
+      const have=new Set((state.recipes||[]).map(r=>r.id));
+      const missing=builtinShakes.filter(r=>!have.has(r.id));
+      if(missing.length){ state.recipes=(state.recipes||[]).concat(missing); queueSave(); }
+    }catch(e){}
     if(!state.savedWeeks) state.savedWeeks=seedSavedWeeks();
     if(state.shopSum==null) state.shopSum=false;
     if(!state.season) state.season="all";
@@ -1556,6 +1591,7 @@
 
     let html="";
     if(meal==="shake") html+=`<div class="kk-note" style="margin:0 0 12px;">Shake'i to indywidualny dodatek białkowy — świetne po Waszych 3 porannych treningach (siłownia / HIIT / bieganie), żeby szybko dobić dzienne białko. W <b>Planie tygodnia</b> wybierasz konkretny shake w wierszu „Shake / dodatek" — jego białko dzieli się między Was, a ręcznie możesz dopisać dodatkowe gramy (np. kefir, skyr).</div>`;
+    if(meal==="shake") html+=shakeSystemHTML();
     if(showSeason){
       html+=`<div class="kk-note" style="margin:0 0 6px;"><b>Sezon</b></div><div class="kk-filters">`;
       [["all","Cały rok"],["lato","Wiosna / Lato"],["zima","Jesień / Zima"]].forEach(([v,lab])=> html+=`<div class="kk-fbtn kk-fs ${state.season===v?"active":""}" data-s="${v}" style="border-color:var(--mustard);">${lab}</div>`);
@@ -2559,6 +2595,138 @@
     "Awokado","Pomidorki, ogórek, rukola/szpinak (myte, gotowe)","Mrożone owoce (mango, maliny)","Owsianka / płatki",
     "Kimchi / ogórki kiszone / buraczki","Masło orzechowe","Banany"
   ];
+  const SURVIVAL_PLAN = {
+    title: "Tydzień 0 – plan przetrwania",
+    intro: "Trzy powtarzalne śniadania (każde na dwa dni), dwa gotowania obiadowe po cztery porcje, cztery schematy kolacji i trzy lunche w pracy. Bez wędliny i wędzonego łososia w kółko, bez produktów wymagających dodatkowej produkcji. Cel: trafić w białko i utrzymać rytm przy minimum decyzji.",
+    week: [
+      { d:"Poniedziałek", b:"Owsianka nocna ze skyrem, borówkami i chia", l:"Ty: butter chicken z ryżem · Magda: Korean fried chicken z ryżem", k:"Wrap z pastą z tuńczyka, awokado, ogórkiem i pomidorem", s:"Ty: izolat · Magda: skyr, owoc, orzechy" },
+      { d:"Wtorek", b:"Ta sama owsianka", l:"Chicken Pesto Orzo – porcja 1", k:"Shakshuka z ciecierzycą – porcja 1", s:"Stała przekąska" },
+      { d:"Środa", b:"Cottage Bowl: serek wiejski, awokado, pomidor, ogórek, pieczywo", l:"Chicken Pesto Orzo – porcja 2", k:"Shakshuka – druga porcja bazy, świeże jajka", s:"Stała przekąska" },
+      { d:"Czwartek", b:"Ten sam Cottage Bowl", l:"Ty: Pad Thai z kurczakiem · Magda: sushi z edamame", k:"Jajka, hummus, pieczywo i warzywa", s:"Stała przekąska" },
+      { d:"Piątek", b:"Kupiona kanapka + skyr", l:"Ty: wołowina z ryżem i warzywami · Magda: ryba z ryżem i warzywami", k:"Pinsa z kurczakiem, mozzarellą i pomidorami – porcja 1", s:"Stała przekąska" },
+      { d:"Sobota", b:"Prosta jajecznica, pieczywo i warzywa", l:"Turkey Chili – porcja 1", k:"Pinsa z kurczakiem – porcja 2", s:"Stała przekąska" },
+      { d:"Niedziela", b:"Ta sama jajecznica", l:"Turkey Chili – porcja 2", k:"Wrap z pastą z tuńczyka", s:"Stała przekąska" }
+    ],
+    groups: [
+      { g:"🥣 Śniadania", cards: [
+        { h:"Poniedziałek–wtorek: owsianka nocna", note:"W niedzielę robicie cztery pojemniki. Borówki mogą być mrożone — bez miodu i dodatkowego kremu.",
+          rows:[ ["Płatki owsiane","60 g","45 g"], ["Skyr naturalny","250 g","180 g"], ["Mleko 2%","150 ml","100 ml"], ["Borówki","100 g","80 g"], ["Nasiona chia","10 g","10 g"], ["Cynamon lub wanilia","do smaku","do smaku"] ],
+          macro:"Ty ≈ 560 kcal, 45 g białka · Magda ≈ 425 kcal, 33 g białka" },
+        { h:"Środa–czwartek: Cottage Bowl", note:"Serek przełóż wieczorem do miski. Awokado i warzywa kroicie rano.",
+          rows:[ ["Serek wiejski","250 g","180 g"], ["Pieczywo","90 g","60 g"], ["Awokado","60 g","40 g"], ["Pomidor i ogórek","250–300 g","200–250 g"], ["Szczypiorek, sól, pieprz","do smaku","do smaku"] ],
+          macro:"Ty ≈ 620 kcal, 41 g białka · Magda ≈ 440 kcal, 29 g białka" },
+        { h:"Piątek: kanapka kupiona", note:"Najlepiej: jajko i warzywa / twarożek i jajko / mozzarella i pomidor / pieczone mięso (nie sama wędlina z serem i majonezem).",
+          rows:[ ["Kanapka","400–500 kcal, min 20–25 g białka","300–400 kcal, min 18–20 g białka"], ["Dodatkowo skyr","200 g","150 g"] ] },
+        { h:"Sobota–niedziela: jajecznica", note:"Bez szynki, serka wiejskiego i dodatkowego sera.",
+          rows:[ ["Jajka","4 szt.","3 szt."], ["Pieczywo","80 g","60 g"], ["Masło","5 g","3 g"], ["Pomidor i ogórek","200 g","150–200 g"], ["Szczypiorek","do smaku","do smaku"] ],
+          macro:"Ty ≈ 560 kcal, 34 g białka · Magda ≈ 420 kcal, 26 g białka" }
+      ]},
+      { g:"🍽️ Obiady domowe", cards: [
+        { h:"Wtorek–środa: Chicken Pesto Orzo", note:"Cztery porcje, najlepiej w poniedziałek wieczorem. Przy podgrzewaniu dodajcie łyżkę wody. Składniki na dwa dni dla Was obojga:",
+          rows:[ ["Pierś z kurczaka","≈ 440 g",""], ["Orzo (suche)","320 g",""], ["Pesto","≈ 90 g",""], ["Jogurt grecki 2%","200 g",""], ["Parmezan","60 g",""], ["Szpinak i pomidorki","≈ 600 g",""], ["Czosnek i cytryna","do smaku",""] ],
+          oneCol:true, macro:"Ty ≈ 728 kcal, 57 g białka · Magda ≈ 608 kcal, 42 g białka" },
+        { h:"Sobota–niedziela: Turkey Chili", note:"Cztery porcje w sobotę. Bez makaronu — opcjonalnie trochę ryżu albo pieczywa. Składniki:",
+          rows:[ ["Mielony indyk","",""], ["Fasola z puszki","",""], ["Kukurydza","",""], ["Pomidory z puszki lub passata","",""], ["Cebula (+ opcjonalnie papryka)","",""], ["Kumin, wędzona papryka, oregano, chili","",""] ],
+          oneCol:true, macro:"Ty ≈ 829 kcal, 65 g białka · Magda ≈ 562 kcal, 42 g białka" }
+      ]},
+      { g:"🌯 Kolacje", cards: [
+        { h:"Poniedziałek i niedziela: wrap z tuńczykiem", note:"Tuńczyka mieszacie ze skyrem, musztardą i pieprzem; warzywa i awokado przed zwinięciem. Na dwie kolacje ≈ 480 g odsączonego tuńczyka (≈ 4 puszki).",
+          rows:[ ["Tuńczyk po odsączeniu","140 g","100 g"], ["Tortilla","80 g","60 g"], ["Skyr lub jogurt grecki","70 g","50 g"], ["Awokado","50 g","35 g"], ["Ogórek i pomidor","250 g","200 g"], ["Musztarda","do smaku","do smaku"] ],
+          macro:"Ty ≈ 575 kcal, 54 g białka · Magda ≈ 420 kcal, 39 g białka" },
+        { h:"Wtorek–środa: shakshuka", note:"We wtorek podwójna baza; jajka dodajecie świeże każdego dnia. Bez fety. Baza na dwa dni: passata/pomidory 1,2 kg, ciecierzyca ≈ 340 g, cebula 1 duża, czosnek, oliwa ≈ 15 g, kumin i papryka wędzona.",
+          rows:[ ["Jajka","3 szt.","2 szt."], ["Pieczywo","80 g","60 g"], ["Baza pomidorowa","≈ 60%","≈ 40%"] ] },
+        { h:"Czwartek: jajka z hummusem", note:"Jajka na miękko, na twardo albo sadzone. Poza jajkami tylko wyłożenie składników na talerz.",
+          rows:[ ["Jajka","3 szt.","2 szt."], ["Gotowy hummus","80 g","60 g"], ["Pieczywo lub pita","70 g","60 g"], ["Pomidor, ogórek, rzodkiewka","≈ 300 g","≈ 250 g"] ] },
+        { h:"Piątek–sobota: pinsa z kurczakiem", note:"Kurczaka na obie pinsy upiekcie w czwartek wieczorem; w piątek i sobotę tylko złożenie i pieczenie. Na jedną pinsę dla dwóch osób (podział Ty ≈ 60% / Magda ≈ 40%):",
+          rows:[ ["Spód do pinsy","≈ 230 g",""], ["Pieczony kurczak","≈ 220 g",""], ["Mozzarella","100 g",""], ["Passata","150 g",""], ["Pomidor albo rukola","",""], ["Oregano","do smaku",""] ],
+          oneCol:true, macro:"Ty ≈ 750 kcal, 65 g białka · Magda ≈ 505 kcal, 43 g białka" }
+      ]},
+      { g:"🏢 Lunche w pracy", cards: [
+        { h:"Trzy lunche na mieście", note:"Wartości planistyczne; w restauracji realna kaloryczność bywa o 15–25% wyższa (olej, panierka, sos, ryż). Magda w piątek może wziąć też poke z łososiem lub tuńczykiem.",
+          rows:[ ["Poniedziałek","Butter chicken z ryżem","Korean fried chicken z ryżem"], ["Czwartek","Pad Thai z kurczakiem","Sushi 10–12 szt. + edamame"], ["Piątek","Wołowina z ryżem i warzywami","Ryba z ryżem i warzywami"] ],
+          head:["Dzień","Ty","Magda"] }
+      ]},
+      { g:"🥤 Stałe przekąski", cards: [
+        { h:"Codziennie", rows:[ ["Ty","Izolat białka 35–40 g + woda (≈ 145–160 kcal, 30–33 g białka)",""], ["Magda","Skyr 150 g + jabłko lub gruszka + orzechy 10 g (≈ 240–260 kcal, 18–20 g białka)",""] ],
+          oneCol:true, note:"W poniedziałek, po dużej porcji Korean fried chicken, Magda może pominąć orzechy." }
+      ]}
+    ],
+    schedule: [
+      { when:"Niedziela wieczorem", time:"≈ 25 min", steps:["Przygotuj cztery owsianki.","Umyj pomidory i ogórki.","Sprawdź zapas tuńczyka, tortilli, passaty i ciecierzycy.","Podziel składniki na poniedziałkowe wrapy."] },
+      { when:"Poniedziałek wieczorem", time:"≈ 50–60 min", steps:["Przygotuj Chicken Pesto Orzo na wtorek i środę.","Przygotuj bazę shakshuki na dwa wieczory.","Schłódź i podziel wszystkie porcje.","Jajka do shakshuki zostaw surowe."] },
+      { when:"Czwartek wieczorem", time:"≈ 25 min", steps:["Upiecz kurczaka na dwie pinsy.","Podziel mozzarellę, passatę i dodatki.","Pierwszą pinsę złóż w piątek, drugą w sobotę."] },
+      { when:"Sobota", time:"≈ 40 min", steps:["Przygotuj Turkey Chili na sobotę i niedzielę.","Drugą połowę od razu przełóż do osobnego pojemnika.","Niedzielny wrap z tuńczyka zrób dopiero przed jedzeniem."] }
+    ],
+    macro: {
+      head:["Osoba","kcal","Białko","Tłuszcz","Węgle","Błonnik"],
+      rows:[
+        ["Ty","2230–2280","170–178 g","65–70 g","225–235 g","33–35 g"],
+        ["Magda","1780–1820","117–122 g","54–58 g","200–212 g","29–31 g"]
+      ],
+      note:"Wartości restauracyjne są orientacyjne. Czwartek to najsłabszy dzień białkowy — warto dobić izolatem albo dodatkowym kurczakiem do Pad Thaia."
+    }
+  };
+  const SHAKE_SYSTEM = {
+    intro:"Zamiast kilkunastu przepisów — jeden system. Zależnie od dnia wybieracie cel: czyste białko, lekka przekąska, pełne śniadanie, podbicie kalorii albo więcej błonnika. Makro orientacyjne — zależy głównie od izolatu, mleka i skyru.",
+    rule:[ ["Brakuje tylko białka","Izolat z wodą"], ["Brakuje białka i ~200 kcal","Izolat z mlekiem"], ["Lekka przekąska","Borówkowy ze skyrem"], ["Zastępuje śniadanie","Pełny z płatkami i bananem"], ["Trzeba mocno podbić kalorie","Banan, płatki i masło orzechowe"], ["Brakuje błonnika","Owoce jagodowe, chia i płatki"], ["Szybki poranek / przed treningiem","Shake kawowy"] ],
+    base:"Na stałe wystarczą trzy: (1) izolat z wodą — korekta białka, (2) pełny shake śniadaniowy — awaryjne śniadanie, (3) borówkowy z chia — przekąska z białkiem i błonnikiem. Reszta to ich modyfikacje.",
+    staples:["izolat waniliowy i czekoladowy","skyr","mleko","mrożone borówki/maliny","banany","płatki owsiane","chia","masło orzechowe","kakao","kawa","lód"],
+    shakes:[
+      { n:1, h:"Zwykły izolat z wodą", when:"Gdy kalorie z jedzenia są już wystarczające, ale brakuje białka.",
+        rows:[["Izolat","35 g","25 g"],["Woda","300–400 ml","250–300 ml"],["Lód","opcjonalnie","opcjonalnie"]],
+        mTy:"≈ 130 kcal · 30 g białka", mMg:"≈ 95 kcal · 22 g białka",
+        note:"Dobrze działa z kakao, espresso, cynamonem, wanilią, szczyptą soli przy smaku czekoladowym." },
+      { n:2, h:"Izolat z mlekiem", when:"Kompromis między czystym białkiem a normalnym shakiem. Dobry po treningu albo jako mała przekąska między obiadem a kolacją.",
+        rows:[["Izolat","35 g","25 g"],["Mleko 2%","250 ml","200 ml"],["Woda / lód","wg konsystencji","wg konsystencji"]],
+        mTy:"≈ 255 kcal · 38–39 g białka", mMg:"≈ 190 kcal · 28–29 g białka" },
+      { n:3, h:"Lekki shake borówkowy", when:"Smak koktajlu przy niewielkich kaloriach. Mrożone owoce dają dużo lepszą konsystencję niż świeże — bez banana.",
+        rows:[["Izolat","30 g","20 g"],["Skyr","150 g","100 g"],["Borówki mrożone","150 g","100 g"],["Woda","150–250 ml","+ lód"],["Sok z cytryny","opcjonalnie","—"]],
+        mTy:"≈ 275 kcal · 44 g B · 25 g W · 7 g błonnika", mMg:"≈ 185 kcal · 29 g B · 17 g W · 4–5 g błonnika" },
+      { n:4, h:"Pełny shake śniadaniowy", when:"Może zastąpić śniadanie: białko, płatki, owoc i sensowny błonnik. Wariant borówkowy: zamiast banana 150 g (Ty) / 100 g (Magda) borówek — mniej kaloryczny i bardziej kwaśny.",
+        rows:[["Izolat","30 g","20 g"],["Skyr","200 g","150 g"],["Płatki owsiane","50 g","35 g"],["Banan","100 g","70 g"],["Woda / mleko","≈ 200 ml","trochę mleka"],["Cynamon + szczypta soli","do smaku","do smaku"]],
+        mTy:"≈ 510 kcal · 56 g B · 62 g W · 8 g błonnika", mMg:"≈ 360 kcal · 39 g B · 44 g W · 5 g błonnika" },
+      { n:5, h:"Shake do podbicia kalorii", when:"Dzień treningowy, bardzo aktywny dzień albo za mało kalorii do wieczora. To już pełny posiłek, nie dodatek do obiadu. Masło orzechowe szybko podnosi kalorie — jeśli chodzi tylko o białko, wybierz inny.",
+        rows:[["Izolat","30 g","20 g"],["Mleko 2%","300 ml","200 ml"],["Banan","120 g","80 g"],["Płatki owsiane","40 g","30 g"],["Masło orzechowe","25 g","15 g"],["Cynamon / kakao + lód","do smaku","do smaku"]],
+        mTy:"≈ 670 kcal · 49 g B · 72 g W · 22 g T · 9 g błonnika", mMg:"≈ 450 kcal · 33 g B · 50 g W · 14 g T · 6 g błonnika" },
+      { n:6, h:"Wysokobiałkowy z dużą ilością błonnika", when:"Dni z małą ilością warzyw, owoców i strączków. Chia zostaw w płynie 5–10 min po zblendowaniu — shake wyraźnie zgęstnieje. Nie trzeba pić szybko.",
+        rows:[["Izolat","30 g","20 g"],["Skyr","150 g","100 g"],["Borówki lub maliny","150 g","100 g"],["Płatki owsiane","30 g","20 g"],["Chia","15 g","10 g"],["Woda","≈ 250 ml","wg konsystencji"]],
+        mTy:"≈ 465 kcal · 50 g B · 49 g W · 15 g błonnika", mMg:"≈ 310 kcal · 34 g B · 33 g W · 10 g błonnika" },
+      { n:7, h:"Shake kawowy", when:"Szybkie śniadanie przed wyjściem albo przed treningiem. Espresso schłodź wcześniej albo wlej bezpośrednio na dużą ilość lodu.",
+        rows:[["Izolat wanil. / czekol.","30 g","20 g"],["Mleko 2%","250 ml","200 ml"],["Espresso","1–2 porcje","1 porcja"],["Banan","80 g","60 g"],["Lód (+ kakao)","opcjonalnie","+ lód"]],
+        mTy:"≈ 310 kcal · 35 g białka", mMg:"≈ 230 kcal · 25 g białka" }
+    ]
+  };
+  function shakeSystemHTML(){
+    const SS=(typeof SHAKE_SYSTEM!=="undefined")?SHAKE_SYSTEM:null; if(!SS) return "";
+    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8F9A;border-bottom:1px solid var(--line,#E6E1D8);";
+    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F0EDE8);vertical-align:top;";
+    let h=`<div class="kk-sgroup" style="margin-top:2px;"><h4>🥤 System shake'ów</h4><div class="kk-note" style="margin:0 0 8px;">${esc(SS.intro)}</div>`;
+    // reguła wyboru
+    h+=`<div style="font-weight:700;font-size:12.5px;margin:4px 0 4px;">Który shake kiedy?</div><div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:420px;"><tr><th style="${th}">Sytuacja</th><th style="${th}">Najlepszy shake</th></tr>`;
+    SS.rule.forEach(r=> h+=`<tr><td style="${td}">${esc(r[0])}</td><td style="${td}font-weight:600;">${esc(r[1])}</td></tr>`);
+    h+=`</table></div>`;
+    if(SS.base) h+=`<div class="kk-note" style="margin:8px 0 0;">${esc(SS.base)}</div>`;
+    h+=`</div>`;
+    // 7 kart
+    SS.shakes.forEach(sh=>{
+      h+=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-radius:12px;">`;
+      h+=`<div style="font-weight:700;font-size:13px;margin-bottom:3px;">${sh.n}. ${esc(sh.h)}</div>`;
+      if(sh.when) h+=`<div class="kk-note" style="margin:0 0 8px;">${esc(sh.when)}</div>`;
+      h+=`<table style="border-collapse:collapse;width:100%;"><tr><th style="${th}">Składnik</th><th style="${th}">Ty</th><th style="${th}">Magda</th></tr>`;
+      sh.rows.forEach(r=> h+=`<tr><td style="${td}font-weight:500;">${esc(r[0])}</td><td style="${td}">${esc(r[1])}</td><td style="${td}">${esc(r[2])}</td></tr>`);
+      h+=`</table>`;
+      h+=`<div style="margin-top:7px;font-size:11.5px;color:#4A4E57;display:flex;gap:14px;flex-wrap:wrap;"><span><b>Ty:</b> ${esc(sh.mTy)}</span><span><b>Magda:</b> ${esc(sh.mMg)}</span></div>`;
+      if(sh.note) h+=`<div class="kk-note" style="margin:6px 0 0;">${esc(sh.note)}</div>`;
+      h+=`</div>`;
+    });
+    // produkty na stałe
+    if(SS.staples&&SS.staples.length){
+      h+=`<div class="kk-sgroup"><h4>Produkty, które warto stale mieć</h4><div style="display:flex;gap:6px;flex-wrap:wrap;">`;
+      SS.staples.forEach(s=> h+=`<span class="kk-pill">${esc(s)}</span>`);
+      h+=`</div></div>`;
+    }
+    return h;
+  }
   function renderHistory(){
     const p=document.querySelector('[data-panel="history"]');
     if(!p) return;
@@ -2637,12 +2805,64 @@
   function renderSurvival(){
     const p=document.querySelector('[data-panel="survival"]');
     if(!p) return;
+    const SP=(typeof SURVIVAL_PLAN!=="undefined")?SURVIVAL_PLAN:null;
+    const th="padding:5px 8px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8A8F9A;border-bottom:1px solid var(--line,#E6E1D8);";
+    const td="padding:5px 8px;font-size:12.5px;border-bottom:1px solid var(--line,#F0EDE8);vertical-align:top;";
+    function card(c){
+      let h=`<div style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-radius:12px;">`;
+      h+=`<div style="font-weight:700;font-size:13px;margin-bottom:${c.note?4:6}px;">${esc(c.h)}</div>`;
+      if(c.note) h+=`<div class="kk-note" style="margin:0 0 8px;">${esc(c.note)}</div>`;
+      if(c.rows&&c.rows.length){
+        const head=c.head||(c.oneCol?null:["Składnik","Ty","Magda"]);
+        h+=`<table style="border-collapse:collapse;width:100%;">`;
+        if(head){ h+=`<tr>`+head.map(x=>`<th style="${th}">${esc(x)}</th>`).join("")+`</tr>`; }
+        c.rows.forEach(r=>{
+          if(c.oneCol){ h+=`<tr><td style="${td}white-space:nowrap;font-weight:600;">${esc(r[0])}</td><td style="${td}">${esc(r[1])}</td></tr>`; }
+          else { h+=`<tr><td style="${td}font-weight:500;">${esc(r[0])}</td><td style="${td}">${esc(r[1])}</td><td style="${td}">${esc(r[2])}</td></tr>`; }
+        });
+        h+=`</table>`;
+      }
+      if(c.macro) h+=`<div style="margin-top:7px;font-size:11.5px;color:#4A4E57;"><b>Makro:</b> ${esc(c.macro)}</div>`;
+      h+=`</div>`; return h;
+    }
+
+    let html="";
+    if(SP){
+      html+=`<div class="kk-rules" style="margin-bottom:14px;"><h3>${esc(SP.title)}</h3><div class="kk-rule"><p>${esc(SP.intro)}</p></div></div>`;
+      // tabela tygodnia
+      html+=`<div class="kk-sgroup"><h4>Plan tygodnia</h4><div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:640px;">`;
+      html+=`<tr><th style="${th}">Dzień</th><th style="${th}">Śniadanie</th><th style="${th}">Obiad</th><th style="${th}">Kolacja</th><th style="${th}">Przekąska</th></tr>`;
+      SP.week.forEach(w=>{ html+=`<tr><td style="${td}font-weight:700;white-space:nowrap;">${esc(w.d)}</td><td style="${td}">${esc(w.b)}</td><td style="${td}">${esc(w.l)}</td><td style="${td}">${esc(w.k)}</td><td style="${td}color:#8A8F9A;">${esc(w.s)}</td></tr>`; });
+      html+=`</table></div><div class="kk-note" style="margin-top:8px;">Śniadania: 3 schematy · obiady gotowane: 2 dania (wt. i sob.) · kolacje: 4 · reszta składana na świeżo.</div></div>`;
+      // szczegóły w rozwijanych sekcjach
+      (SP.groups||[]).forEach(gr=>{
+        html+=`<details style="margin:10px 0;border:1px solid var(--line,#E6E1D8);border-radius:12px;overflow:hidden;"><summary style="cursor:pointer;padding:11px 13px;font-weight:700;font-size:13px;background:#FBF9F6;list-style:none;">${esc(gr.g)}</summary><div style="padding:2px 12px 10px;">`;
+        gr.cards.forEach(c=> html+=card(c));
+        html+=`</div></details>`;
+      });
+      // harmonogram
+      if(SP.schedule&&SP.schedule.length){
+        html+=`<div class="kk-sgroup"><h4>🗓️ Harmonogram przygotowania</h4>`;
+        SP.schedule.forEach(s=>{ html+=`<div style="margin:8px 0;padding:9px 12px;background:#fff;border:1px solid var(--line,#E6E1D8);border-left:3px solid var(--herb,#1F8A6D);border-radius:10px;"><div style="font-weight:700;font-size:12.5px;">${esc(s.when)} <span style="font-weight:500;color:#8A8F9A;">· ${esc(s.time)}</span></div><ol style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.5;">`+s.steps.map(x=>`<li>${esc(x)}</li>`).join("")+`</ol></div>`; });
+        html+=`</div>`;
+      }
+      // makro
+      if(SP.macro){
+        html+=`<div class="kk-sgroup"><h4>Szacowane średnie makro (dzienne)</h4><div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:520px;">`;
+        html+=`<tr>`+SP.macro.head.map(x=>`<th style="${th}">${esc(x)}</th>`).join("")+`</tr>`;
+        SP.macro.rows.forEach(r=>{ html+=`<tr>`+r.map((x,i)=>`<td style="${td}${i===0?"font-weight:700;":""}">${esc(x)}</td>`).join("")+`</tr>`; });
+        html+=`</table></div>`;
+        if(SP.macro.note) html+=`<div class="kk-note" style="margin-top:8px;">${esc(SP.macro.note)}</div>`;
+        html+=`</div>`;
+      }
+    }
+
+    // ── Ogólny tryb przetrwania + szybkie dania + lista zakupów (jak dotąd) ──
     const survMeals=(()=>{ const byT=t=>state.recipes.filter(r=>r.mealTypes.includes(t)).sort((a,b)=>(a.prepTime||99)-(b.prepTime||99)).slice(0,4); return [].concat(byT("breakfast"),byT("lunch"),byT("dinner")).filter(Boolean); })();
-    let html=`<div class="kk-rules">
-      <h3>Tryb przetrwania</h3>
-      <div class="kk-rule"><b>Kiedy go włączyć.</b><p>Tydzień z górą pracy, wyjazdy, zero energii na gotowanie. Celem NIE jest idealny plan — celem jest trafić w białko z minimalnym wysiłkiem i bez poczucia porażki. Kanapki, wrapy, skyr, shake i lunch na mieście są tu <b>planem A</b>, nie wyjątkiem.</p></div>
-      <div class="kk-rule"><b>Zasada 3 ruchów dziennie.</b><p>1) <b>Śniadanie z lodówki</b> — overnight oats / twarożek / skyr z owocami (0 gotowania). 2) <b>Lunch na mieście lub wrap</b> — food hall Powiśle albo wrap z gotowym kurczakiem. 3) <b>Kolacja 10-minutowa</b> — jajka, tuna melt, kanapka + shake, żeby dobić białko. To wszystko.</p></div>
-      <div class="kk-rule"><b>Reset po złym tygodniu.</b><p>Wracasz zawsze tak samo: (1) zrób jedne duże zakupy z listy poniżej, (2) w niedzielę wieczorem zrób tylko owsianki na noc na 3 dni i ugotuj kurczaka/jajka na zapas, (3) resztę składaj na bieżąco. Nie próbuj od razu wracać do pełnego planu — najpierw odzyskaj rytm.</p></div>
+    html+=`<div class="kk-rules" style="margin-top:16px;">
+      <h3>Tryb przetrwania — zasady</h3>
+      <div class="kk-rule"><b>Kiedy go włączyć.</b><p>Tydzień z górą pracy, wyjazdy, zero energii na gotowanie. Celem NIE jest idealny plan — celem jest trafić w białko z minimalnym wysiłkiem i bez poczucia porażki.</p></div>
+      <div class="kk-rule"><b>Reset po złym tygodniu.</b><p>Wracasz zawsze tak samo: (1) jedne duże zakupy z listy poniżej, (2) w niedzielę zrób tylko owsianki i ugotuj kurczaka/jajka na zapas, (3) resztę składaj na bieżąco. Najpierw odzyskaj rytm, potem wracaj do pełnego planu.</p></div>
     </div>`;
     html+=`<div class="kk-sgroup" style="margin-top:6px;"><h4>Szybkie dania przetrwania (z bazy)</h4>`;
     survMeals.forEach(r=> html+=`<div class="kk-sitem"><span>${esc(r.name)} <span class="kk-mealtag">${esc(recipeMealLabel(r))}</span> · ${r.prepTime} min · ${r.proteinTotal} g</span></div>`);
@@ -2651,13 +2871,13 @@
     SURVIVAL_STAPLES.forEach(s=> html+=`<div class="kk-sitem"><span>${esc(s)}</span></div>`);
     html+=`<button class="kk-btn" id="surv-add" style="margin-top:10px;">Dodaj tę listę do zakupów</button></div>`;
     p.innerHTML=html;
-    document.getElementById("surv-add").addEventListener("click",()=>{
+    const addBtn=document.getElementById("surv-add");
+    if(addBtn) addBtn.addEventListener("click",()=>{
       const keys=new Set(state.shopping.map(x=>x.name.toLowerCase()));
       SURVIVAL_STAPLES.forEach(s=>{ if(!keys.has(s.toLowerCase())){ state.shopping.push({id:uid("i"),name:s,group:"Przetrwanie",meal:"",cat:prodCat(s),auto:false,checked:false}); }});
       queueSave(); tab="shop"; renderShop(); refreshTabs();
     });
   }
-
   function renderPrepPreset(p, prepToggle, wk){
     const W=(typeof PREP_PRESETS!=="undefined" && PREP_PRESETS[String(wk)])?PREP_PRESETS[String(wk)]:null;
     if(!state.prepChecked) state.prepChecked={};
