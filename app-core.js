@@ -1350,6 +1350,13 @@
       const missing=builtinShakes.filter(r=>!have.has(r.id));
       if(missing.length){ state.recipes=(state.recipes||[]).concat(missing); queueSave(); }
     }catch(e){}
+    // ═══ Jednorazowo: usuń starą logikę „domyślnie zjedzone" (wartości true/false) ═══
+    // Nowy model: nic nie jest zjedzone, dopóki nie klikniesz. Kasujemy stare boole
+    // z posiłków; zostawiamy świadome oznaczenia ("y"/"out") i odhaczone shake'i.
+    if(!state.eatenReset){
+      try{ if(state.eaten) Object.keys(state.eaten).forEach(d=>{ ["ty","mg"].forEach(who=>{ const o=state.eaten[d]&&state.eaten[d][who]; if(o) Object.keys(o).forEach(mk=>{ if(mk!=="shake" && typeof o[mk]==="boolean") delete o[mk]; }); }); }); }catch(e){}
+      state.eatenReset=true; queueSave();
+    }
     if(!state.savedWeeks) state.savedWeeks=seedSavedWeeks();
     if(state.shopSum==null) state.shopSum=false;
     if(!state.season) state.season="all";
