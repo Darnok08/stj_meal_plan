@@ -1065,6 +1065,77 @@
     T.p+=ap2; K.p+=ap1; T.kcal+=ap2*4; K.kcal+=ap1*4;
     return {ty:T, mg:K, name:(sh?sh.name:""), hasAny: !!sh || ap2>0 || ap1>0};
   }
+  // ── Popularne posiłki poza planem (szacunkowe makro na 1 porcję / 1 osobę) ──
+  const POPULAR_MEALS = [
+    { id:"padthai", name:"Pad Thai z kurczakiem", kcal:750, p:35, c:90, f:25 },
+    { id:"burger", name:"Burger z frytkami", kcal:900, p:40, c:75, f:45 },
+    { id:"pizza", name:"Pizza (½ dużej / ~4 kawałki)", kcal:850, p:34, c:95, f:35 },
+    { id:"restdinner", name:"Kolacja w restauracji (obfita)", kcal:1000, p:45, c:80, f:50 },
+    { id:"sushiset", name:"Sushi — większy zestaw (30–40 szt.)", kcal:1000, p:48, c:150, f:18 },
+    { id:"handroll", name:"Sushi handroll (1 szt.)", kcal:150, p:6, c:22, f:4 },
+    { id:"kfc", name:"Korean fried chicken z ryżem", kcal:950, p:45, c:95, f:40 },
+    { id:"rosol", name:"Rosół z makaronem (miska)", kcal:320, p:24, c:30, f:10 },
+    { id:"schabowy", name:"Schabowy z ziemniakami i surówką", kcal:820, p:45, c:72, f:38 },
+    { id:"kebabL", name:"Kebab L mieszany", kcal:1150, p:55, c:105, f:55 },
+    { id:"kebabM", name:"Kebab M z kurczakiem", kcal:780, p:48, c:72, f:32 },
+    { id:"butter", name:"Butter chicken z ryżem", kcal:950, p:45, c:95, f:45 },
+    { id:"biryani", name:"Biryani z kurczakiem", kcal:870, p:42, c:100, f:30 },
+    { id:"tikka", name:"Tikka masala z ryżem", kcal:920, p:44, c:92, f:42 }
+  ];
+  const POPULAR_DRINKS = [
+    { id:"piwo05", name:"Piwo 0,5 l", kcal:215, p:2, c:18, f:0 },
+    { id:"piwo033", name:"Piwo 0,33 l", kcal:145, p:1, c:12, f:0 },
+    { id:"wino", name:"Wino — lampka (150 ml)", kcal:130, p:0, c:4, f:0 },
+    { id:"prosecco", name:"Prosecco / szampan — lampka", kcal:90, p:0, c:2, f:0 },
+    { id:"gt", name:"Gin & tonic", kcal:180, p:0, c:16, f:0 },
+    { id:"negroni", name:"Negroni", kcal:240, p:0, c:13, f:0 },
+    { id:"aperol", name:"Aperol Spritz", kcal:150, p:0, c:13, f:0 },
+    { id:"drink", name:"Drink słodki (mojito / margarita)", kcal:250, p:0, c:28, f:0 },
+    { id:"shot", name:"Wódka / whisky (40 ml)", kcal:95, p:0, c:0, f:0 }
+  ];
+  function popularItem(kind, id){ const src=(kind==="d")?POPULAR_DRINKS:POPULAR_MEALS; return src.find(x=>x.id===id)||null; }
+  // suma makr z pozycji „poza planem" danego dnia i osoby
+  function extrasMacro(d, who){
+    const T={p:0,c:0,f:0,kcal:0,fib:0};
+    const arr=(state.extras&&state.extras[d]&&state.extras[d][who])||[];
+    arr.forEach(it=>{ const q=it.qty||1; T.p+=(+it.p||0)*q; T.c+=(+it.c||0)*q; T.f+=(+it.f||0)*q; T.kcal+=(+it.kcal||0)*q; });
+    return T;
+  }
+  // pełne „zjedzone" danego dnia: posiłki wg planu + shake + pozycje poza planem
+  function eatenDay(d){
+    const T={p:0,c:0,f:0,kcal:0,fib:0}, M={p:0,c:0,f:0,kcal:0,fib:0};
+    const e=state.eaten&&state.eaten[d];
+    if(e){
+      ["breakfast","lunch","dinner"].forEach(mk=>{ const mm=mealMacro(d,mk);
+        if(eatStat(e.ty&&e.ty[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>T[x]+=mm.ty[x]);
+        if(eatStat(e.mg&&e.mg[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>M[x]+=mm.mg[x]); });
+      const sm=shakeMacroDay(d);
+      if(e.ty&&e.ty.shake) ["p","c","f","kcal","fib"].forEach(x=>T[x]+=sm.ty[x]);
+      if(e.mg&&e.mg.shake) ["p","c","f","kcal","fib"].forEach(x=>M[x]+=sm.mg[x]);
+    }
+    const et=extrasMacro(d,"ty"), em=extrasMacro(d,"mg");
+    ["p","c","f","kcal","fib"].forEach(x=>{ T[x]+=et[x]; M[x]+=em[x]; });
+    return {ty:T, mg:M};
+  }
+  // prosty wykres słupkowy (SVG, bez bibliotek): Ty=herb, Magda=plum, linie celu przerywane
+  function svgBars(labels, ty, mg, tTy, tMg){
+    const W=620,H=190,padL=34,padB=26,padT=12,padR=8;
+    const n=Math.max(1,labels.length), cw=(W-padL-padR)/n, bw=Math.min(20,cw/3.2);
+    const nums=ty.concat(mg,[tTy||0,tMg||0]).filter(v=>typeof v==="number"&&isFinite(v));
+    const max=Math.max(1,...nums)*1.14;
+    const y=v=>padT+(H-padT-padB)*(1-(v||0)/max), base=y(0);
+    let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto;font-family:inherit;">`;
+    for(let i=0;i<=3;i++){ const v=max*i/3, yy=y(v); s+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line,#E6E1D8)" stroke-width="1"/><text x="2" y="${yy+3}" font-size="8" fill="#9ca3af">${Math.round(v)}</text>`; }
+    labels.forEach((d,i)=>{ const cx=padL+cw*i+cw/2, bt=y(ty[i]), bm=y(mg[i]);
+      s+=`<rect x="${(cx-bw-1).toFixed(1)}" y="${bt.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,base-bt).toFixed(1)}" rx="2" fill="var(--herb,#1F8A6D)"/>`;
+      s+=`<rect x="${(cx+1).toFixed(1)}" y="${bm.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,base-bm).toFixed(1)}" rx="2" fill="var(--plum,#8b5cf6)"/>`;
+      s+=`<text x="${cx.toFixed(1)}" y="${H-padB+13}" font-size="9" fill="#4A4E57" text-anchor="middle">${d}</text>`;
+    });
+    if(tTy) s+=`<line x1="${padL}" y1="${y(tTy).toFixed(1)}" x2="${W-padR}" y2="${y(tTy).toFixed(1)}" stroke="var(--herb,#1F8A6D)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>`;
+    if(tMg) s+=`<line x1="${padL}" y1="${y(tMg).toFixed(1)}" x2="${W-padR}" y2="${y(tMg).toFixed(1)}" stroke="var(--plum,#8b5cf6)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>`;
+    s+=`</svg>`;
+    return s;
+  }
   function dayPersonMacros(d){
     const {m,k}=split(); const {c:cs, ck:cks}=splitCF(); const {f:fs, fk:fks}=splitFat();
     const T={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0}, K={p:0,c:0,f:0,kcal:0,fib:0,sat:0,unsat:0};
@@ -1492,6 +1563,7 @@
         <div class="kk-tab" data-tab="lunch">Obiady</div>
         <div class="kk-tab" data-tab="dinner">Kolacje</div>
         <div class="kk-tab" data-tab="shake">Shake</div>
+        <div class="kk-tab" data-tab="supps">Suplementy</div>
         <div class="kk-tab" data-tab="freezer">Zamrażalnik</div>
         <div class="kk-tab" data-tab="weeks">Biblioteka tygodni</div>
         <div class="kk-tab" data-tab="history">Historia</div>
@@ -1504,6 +1576,7 @@
         <div class="kk-panel" data-panel="lunch"></div>
         <div class="kk-panel" data-panel="dinner"></div>
         <div class="kk-panel" data-panel="shake"></div>
+        <div class="kk-panel" data-panel="supps"></div>
         <div class="kk-panel" data-panel="week"></div>
         <div class="kk-panel" data-panel="weeks"></div>
         <div class="kk-panel" data-panel="freezer"></div>
@@ -1523,7 +1596,7 @@
     bindT("t-f1","fat1"); bindT("t-f2","fat2");
     bindT("t-c1","carb1"); bindT("t-c2","carb2");
     bindT("t-split","splitM",15,85); bindT("t-splitc","splitC",15,85);
-    renderRules(); renderMealTab("breakfast"); renderMealTab("lunch"); renderMealTab("dinner"); renderMealTab("shake"); renderWeek(); renderWeeksLib(); renderFreezer(); renderShop(); renderPrep(); renderHistory(); renderSurvival(); refreshTabs();
+    renderRules(); renderMealTab("breakfast"); renderMealTab("lunch"); renderMealTab("dinner"); renderMealTab("shake"); renderWeek(); renderWeeksLib(); renderFreezer(); renderShop(); renderPrep(); renderHistory(); renderSurvival(); renderSupps(); refreshTabs();
   }
   function refreshTabs(){
     document.querySelectorAll(".kk-tab").forEach(t=> t.classList.toggle("active", t.dataset.tab===tab));
@@ -2057,13 +2130,7 @@
     });
     eHTML+=`</tbody></table></div>`;
     const ET={p:0,c:0,f:0,kcal:0,fib:0}, EM={p:0,c:0,f:0,kcal:0,fib:0};
-    DAYS.forEach(d=>{ ["breakfast","lunch","dinner"].forEach(mk=>{ const mm=mealMacro(d,mk);
-      if(state.eaten[d]&&eatStat(state.eaten[d].ty[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=mm.ty[x]);
-      if(state.eaten[d]&&eatStat(state.eaten[d].mg[mk])==="y") ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=mm.mg[x]); });
-      const sm=shakeMacroDay(d);
-      if(state.eaten[d]&&state.eaten[d].ty&&state.eaten[d].ty.shake) ["p","c","f","kcal","fib"].forEach(x=>ET[x]+=sm.ty[x]);
-      if(state.eaten[d]&&state.eaten[d].mg&&state.eaten[d].mg.shake) ["p","c","f","kcal","fib"].forEach(x=>EM[x]+=sm.mg[x]);
-    });
+    DAYS.forEach(d=>{ const ed=eatenDay(d); ["p","c","f","kcal","fib"].forEach(x=>{ ET[x]+=ed.ty[x]; EM[x]+=ed.mg[x]; }); });
     const cE=(a,t)=> !t?"":(Math.abs(a-t)<=t*0.12?"kk-hit":"kk-miss");
     const erows=[["Kalorie","kcal","kcal2","kcal1"," kcal"],["Białko","p","p2","p1"," g"],["Tłuszcz","f","fat2","fat1"," g"],["Węgle","c","carb2","carb1"," g"],["Błonnik","fib","fib2","fib1"," g"]];
     eHTML+=`<div class="kk-note" style="margin:8px 0 4px;"><b>Faktyczne makro (tylko zjedzone)</b></div><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:640px;"><thead><tr><th style="text-align:left;padding:4px 8px;"></th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Ty</th><th colspan="2" style="padding:4px 8px;border-bottom:1px solid var(--line);">Magda</th></tr><tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th><th style="padding:4px 8px;">suma</th><th style="padding:4px 8px;">śr./dzień · cel</th></tr></thead><tbody>`;
@@ -2071,8 +2138,84 @@
       eHTML+=`<tr><td style="text-align:left;padding:4px 8px;font-weight:600;">${row[0]}</td><td style="text-align:center;padding:4px 8px;">${Math.round(ET[row[1]])}${u}</td><td style="text-align:center;padding:4px 8px;"><span class="${cE(aT,g2)}"><b>${Math.round(aT)}${u}</b></span> <span style="color:#9ca3af;">· ${g2||"—"}</span></td><td style="text-align:center;padding:4px 8px;">${Math.round(EM[row[1]])}${u}</td><td style="text-align:center;padding:4px 8px;"><span class="${cE(aM,g1)}"><b>${Math.round(aM)}${u}</b></span> <span style="color:#9ca3af;">· ${g1||"—"}</span></td></tr>`;
     });
     eHTML+=`</tbody></table></div></div>`;
+    // ── Poza planem i napoje + Trendy ──
+    const _mini="font-size:12px;padding:5px 7px;border:1px solid var(--line,#E6E1D8);border-radius:8px;background:#fff;font-family:inherit;";
+    let exHTML=`<div class="kk-sgroup" style="margin-top:12px;"><h4>➕ Poza planem i napoje</h4><div class="kk-note" style="margin:0 0 8px;">Dodaj, co zjecie/wypijecie <b>spoza planu</b> (restauracja, przekąska, piwo, wino, drink). Makra są <b>szacunkowe</b> — doliczają się do „faktycznego makra" powyżej i do wykresów niżej.</div>`;
+    exHTML+=`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+      <select id="ex-day" style="${_mini}">`+DAYS.map(d=>`<option value="${d}">${d}</option>`).join("")+`</select>
+      <select id="ex-who" style="${_mini}"><option value="ty">Ty</option><option value="mg">Magda</option></select>
+      <select id="ex-item" style="${_mini}max-width:260px;"><optgroup label="Posiłki">`+POPULAR_MEALS.map(m=>`<option value="m:${m.id}">${esc(m.name)} · ${m.kcal} kcal</option>`).join("")+`</optgroup><optgroup label="Napoje">`+POPULAR_DRINKS.map(m=>`<option value="d:${m.id}">${esc(m.name)} · ${m.kcal} kcal</option>`).join("")+`</optgroup></select>
+      <input id="ex-qty" type="number" min="1" value="1" style="${_mini}width:52px;" title="ile sztuk / porcji">
+      <button class="kk-btn sec" id="ex-add" style="padding:6px 12px;">Dodaj</button>
+    </div>`;
+    let anyEx=false;
+    DAYS.forEach(d=>{ ["ty","mg"].forEach(who=>{ const arr=(state.extras&&state.extras[d]&&state.extras[d][who])||[]; arr.forEach((it,idx)=>{ anyEx=true;
+      exHTML+=`<div class="kk-sitem" style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span><b>${esc(d)}</b> · ${who==="ty"?"Ty":"Magda"} — ${esc(it.name)}${(it.qty||1)>1?` ×${it.qty}`:""} <span style="color:#9ca3af;">(${Math.round((+it.kcal||0)*(it.qty||1))} kcal, ${Math.round((+it.p||0)*(it.qty||1))} g B)</span></span><button data-exdel="${esc(d)}|${who}|${idx}" style="border:none;background:none;cursor:pointer;color:var(--tomato,#F0563F);font-weight:700;font-size:15px;line-height:1;">✕</button></div>`;
+    }); }); });
+    if(!anyEx) exHTML+=`<div class="kk-note">Nic jeszcze nie dodano.</div>`;
+    exHTML+=`</div>`;
+    eHTML+=exHTML;
+
+    // ── Trendy: ten tydzień, dzień po dniu ──
+    const dLbl=["Pn","Wt","Śr","Cz","Pt","So","Nd"];
+    const kcTy=DAYS.map(d=>Math.round(eatenDay(d).ty.kcal)), kcMg=DAYS.map(d=>Math.round(eatenDay(d).mg.kcal));
+    const prTy=DAYS.map(d=>Math.round(eatenDay(d).ty.p)),   prMg=DAYS.map(d=>Math.round(eatenDay(d).mg.p));
+    eHTML+=`<div class="kk-sgroup"><h4>📊 Trendy — ten tydzień</h4>
+      <div class="kk-note" style="margin:0 0 6px;">Zjedzone dziennie (odhaczenia + pozycje poza planem) vs cel. <span style="color:var(--herb,#1F8A6D);font-weight:700;">■ Ty</span> · <span style="color:var(--plum,#8b5cf6);font-weight:700;">■ Magda</span> · linia przerywana = cel.</div>
+      <div style="font-size:11px;font-weight:600;margin:4px 0 2px;">Kalorie / dzień</div>${svgBars(dLbl,kcTy,kcMg,Tt.kcal2,Tt.kcal1)}
+      <div style="font-size:11px;font-weight:600;margin:8px 0 2px;">Białko / dzień (g)</div>${svgBars(dLbl,prTy,prMg,Tt.p2,Tt.p1)}
+    </div>`;
+
+    // ── Trendy: tydzień po tygodniu (zapisane migawki) ──
+    const mlog=state.macroLog||[];
+    eHTML+=`<div class="kk-sgroup"><h4>📈 Tydzień po tygodniu</h4>
+      <div class="kk-note" style="margin:0 0 6px;">Zapisz podsumowanie tygodnia (średnia dzienna), żeby widzieć trend między tygodniami.</div>
+      <button class="kk-btn sec" id="mlog-save" style="margin:2px 0 8px;">📸 Zapisz ten tydzień do dziennika</button>`;
+    if(mlog.length){
+      const lbl=mlog.map((e,i)=> e.label || ("T"+(i+1)));
+      eHTML+=`<div style="font-size:11px;font-weight:600;margin:4px 0 2px;">Śr. kalorie / dzień — zapisane tygodnie</div>${svgBars(lbl, mlog.map(e=>+e.tyKcal||0), mlog.map(e=>+e.mgKcal||0), Tt.kcal2, Tt.kcal1)}
+      <div style="font-size:11px;font-weight:600;margin:8px 0 2px;">Śr. białko / dzień — zapisane tygodnie</div>${svgBars(lbl, mlog.map(e=>+e.tyP||0), mlog.map(e=>+e.mgP||0), Tt.p2, Tt.p1)}
+      <div style="margin-top:6px;"><button id="mlog-clear" style="border:none;background:none;color:#9ca3af;cursor:pointer;font-size:11px;text-decoration:underline;">wyczyść dziennik</button></div>`;
+    } else {
+      eHTML+=`<div class="kk-note">Brak zapisów — kliknij powyżej po zakończeniu tygodnia, a pojawi się wykres trendu.</div>`;
+    }
+    eHTML+=`</div>`;
     tally+=eHTML;
     p.innerHTML=html; p.insertAdjacentHTML("beforeend",tally);
+    // ── Poza planem: dodaj / usuń ──
+    const exAdd=document.getElementById("ex-add");
+    if(exAdd) exAdd.addEventListener("click",()=>{
+      const d=document.getElementById("ex-day").value;
+      const who=document.getElementById("ex-who").value;
+      const val=document.getElementById("ex-item").value||"";
+      const qty=Math.max(1, Math.min(50, parseInt(document.getElementById("ex-qty").value)||1));
+      const kind=val.slice(0,1), id=val.slice(2);
+      const it=popularItem(kind,id); if(!it) return;
+      if(!state.extras) state.extras={};
+      if(!state.extras[d]) state.extras[d]={ty:[],mg:[]};
+      if(!state.extras[d][who]) state.extras[d][who]=[];
+      state.extras[d][who].push({name:it.name, qty:qty, kcal:it.kcal, p:it.p, c:it.c, f:it.f});
+      queueSave(); renderWeek();
+    });
+    p.querySelectorAll("[data-exdel]").forEach(b=> b.addEventListener("click",()=>{
+      const a=b.dataset.exdel.split("|"); const d=a[0],who=a[1],idx=+a[2];
+      if(state.extras&&state.extras[d]&&state.extras[d][who]){ state.extras[d][who].splice(idx,1); queueSave(); renderWeek(); }
+    }));
+    // ── Dziennik makro: zapisz migawkę tygodnia / wyczyść ──
+    const mlSave=document.getElementById("mlog-save");
+    if(mlSave) mlSave.addEventListener("click",()=>{
+      let et={p:0,c:0,f:0,kcal:0,fib:0}, em={p:0,c:0,f:0,kcal:0,fib:0};
+      DAYS.forEach(d=>{ const ed=eatenDay(d); ["p","c","f","kcal","fib"].forEach(x=>{ et[x]+=ed.ty[x]; em[x]+=ed.mg[x]; }); });
+      const now=new Date(); const label=String(now.getDate()).padStart(2,"0")+"."+String(now.getMonth()+1).padStart(2,"0");
+      if(!Array.isArray(state.macroLog)) state.macroLog=[];
+      state.macroLog.push({ label, ts:now.getTime(),
+        tyKcal:Math.round(et.kcal/7), mgKcal:Math.round(em.kcal/7),
+        tyP:Math.round(et.p/7), mgP:Math.round(em.p/7) });
+      if(state.macroLog.length>26) state.macroLog=state.macroLog.slice(-26);
+      queueSave(); renderWeek();
+    });
+    const mlClear=document.getElementById("mlog-clear");
+    if(mlClear) mlClear.addEventListener("click",()=>{ if(confirm("Wyczyścić dziennik trendów tydzień-po-tygodniu?")){ state.macroLog=[]; queueSave(); renderWeek(); } });
     p.querySelectorAll(".kk-mcell[data-meal] select").forEach(sel=> sel.addEventListener("change",e=>{
       const c=e.target.closest(".kk-mcell"); state.week[c.dataset.day][c.dataset.meal].recipeId=e.target.value; queueSave(); renderWeek();
     }));
@@ -2926,6 +3069,66 @@
       SURVIVAL_STAPLES.forEach(s=>{ if(!keys.has(s.toLowerCase())){ state.shopping.push({id:uid("i"),name:s,group:"Przetrwanie",meal:"",cat:prodCat(s),auto:false,checked:false}); }});
       queueSave(); tab="shop"; renderShop(); refreshTabs();
     });
+  }
+  const SUPP_PLAN = {
+    ty: { name:"Ty", groups:[
+      { when:"Do obiadu", items:[
+        { id:"krea", name:"Kreatyna", dose:"5 g" },
+        { id:"omega", name:"Omega-3 (EPA+DHA)", dose:"1500–2000 mg" } ]},
+      { when:"Wieczorem", items:[
+        { id:"mag", name:"Magnez (bisglicynian)", dose:"250–300 mg elem." } ]}
+    ], note:"Witamina D: na razie bez stałej dawki — do czasu kontroli." },
+    mg: { name:"Magda", groups:[
+      { when:"Po przebudzeniu", items:[
+        { id:"levo", name:"Lewotyroksyna", dose:"z wodą, na czczo" } ]},
+      { when:"Do obiadu", items:[
+        { id:"folian", name:"Folian", dose:"800 µg" },
+        { id:"b12", name:"Witamina B12", dose:"1000 µg" },
+        { id:"krea", name:"Kreatyna", dose:"3 g" },
+        { id:"omega", name:"Omega-3 (EPA+DHA)", dose:"1000 mg" },
+        { id:"d3", name:"Witamina D3", dose:"1000 IU (mała ekspozycja na słońce)" } ]},
+      { when:"Wieczorem", items:[
+        { id:"mag", name:"Magnez (bisglicynian)", dose:"200–250 mg elem." } ]}
+    ] }
+  };
+  function renderSupps(){
+    const p=document.querySelector('[data-panel="supps"]'); if(!p) return;
+    const SP=(typeof SUPP_PLAN!=="undefined")?SUPP_PLAN:null; if(!SP){ p.innerHTML=""; return; }
+    if(!state.supps) state.supps={};
+    const todayIdx=(new Date().getDay()+6)%7; // Pon=0 … Nd=6
+    const shortD=(d)=> d.replace("Pon","Pn").replace("Czw","Cz").replace("Sob","So");
+    const th="padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#8A8F9A;text-align:center;";
+    function personBlock(whoKey){
+      const P=SP[whoKey]; const color = whoKey==="ty" ? "var(--herb,#1F8A6D)" : "var(--plum,#8b5cf6)";
+      let doneToday=0, totToday=0; const tD=DAYS[todayIdx];
+      P.groups.forEach(g=>g.items.forEach(it=>{ totToday++; if(state.supps[tD]&&state.supps[tD][whoKey]&&state.supps[tD][whoKey][it.id]) doneToday++; }));
+      let h=`<div class="kk-sgroup"><h4 style="border-left:3px solid ${color};padding-left:8px;">${esc(P.name)} <span style="font-weight:500;color:#8A8F9A;font-size:12px;">— dziś ${doneToday}/${totToday}</span></h4>`;
+      h+=`<div style="overflow-x:auto;"><table style="border-collapse:collapse;min-width:560px;width:100%;">`;
+      h+=`<tr><th style="${th}text-align:left;">Suplement</th>`+DAYS.map((d,i)=>`<th style="${th}${i===todayIdx?"background:#FBF9F6;color:"+color+";font-weight:700;":""}">${shortD(d)}</th>`).join("")+`</tr>`;
+      P.groups.forEach(g=>{
+        h+=`<tr><td colspan="8" style="padding:9px 6px 2px;font-size:10.5px;font-weight:700;color:#4A4E57;text-transform:uppercase;letter-spacing:.4px;">${esc(g.when)}</td></tr>`;
+        g.items.forEach(it=>{
+          h+=`<tr><td style="padding:5px 6px;font-size:12.5px;"><b>${esc(it.name)}</b> <span style="color:#9ca3af;">${esc(it.dose)}</span></td>`;
+          DAYS.forEach((d,i)=>{ const on=!!(state.supps[d]&&state.supps[d][whoKey]&&state.supps[d][whoKey][it.id]);
+            h+=`<td style="text-align:center;padding:4px;${i===todayIdx?"background:#FBF9F6;":""}"><span data-supp="${d}|${whoKey}|${it.id}" title="odhacz" style="display:inline-block;width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid ${on?color:"var(--line,#E6E1D8)"};background:${on?color:"transparent"};"></span></td>`;
+          });
+          h+=`</tr>`;
+        });
+      });
+      h+=`</table></div>`;
+      if(P.note) h+=`<div class="kk-note" style="margin-top:8px;">${esc(P.note)}</div>`;
+      h+=`</div>`;
+      return h;
+    }
+    let html=`<div class="kk-rules" style="margin-bottom:12px;"><h3>💊 Suplementacja</h3><div class="kk-rule"><p>Odhaczaj, co wzięte — wyróżniona kolumna to dziś. Zapis jest wspólny, ale kółka liczą się osobno dla Ciebie i Magdy. Dawki to plan wyjściowy, nie porada medyczna — przy zmianach czy wątpliwościach konsultujcie z lekarzem.</p></div></div>`;
+    html+=personBlock("ty")+personBlock("mg");
+    p.innerHTML=html;
+    p.querySelectorAll("[data-supp]").forEach(el=> el.addEventListener("click",()=>{
+      const a=el.dataset.supp.split("|"); const d=a[0],who=a[1],id=a[2];
+      if(!state.supps) state.supps={}; if(!state.supps[d]) state.supps[d]={}; if(!state.supps[d][who]) state.supps[d][who]={};
+      state.supps[d][who][id]=!state.supps[d][who][id];
+      queueSave(); renderSupps();
+    }));
   }
   function renderPrepPreset(p, prepToggle, wk){
     const W=(typeof PREP_PRESETS!=="undefined" && PREP_PRESETS[String(wk)])?PREP_PRESETS[String(wk)]:null;
