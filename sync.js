@@ -148,20 +148,35 @@
     location.reload();
   });
 
-  // ---------- Most: window.storage → Supabase ----------
+  // ---------- Most: window.storage → Supabase (z lokalną kopią na offline) ----------
+  const MIRROR = (k) => "kk_mirror_" + HH + "_" + k;
   window.storage = {
     async get(k) {
-      const { data, error } = await sb
-        .from("kitchen_state")
-        .select("data")
-        .eq("household", HH)
-        .eq("key", k)
-        .maybeSingle();
-      if (error) throw error;
-      if (!data) throw new Error("empty");
-      return { key: k, value: data.data, shared: true };
+      try {
+        const { data, error } = await sb
+          .from("kitchen_state")
+          .select("data")
+          .eq("household", HH)
+          .eq("key", k)
+          .maybeSingle();
+        if (error) throw error;
+        if (!data) throw new Error("empty");
+        // odśwież lokalną kopię (do trybu offline)
+        try { localStorage.setItem(MIRROR(k), JSON.stringify(data.data)); } catch (e) {}
+        return { key: k, value: data.data, shared: true };
+      } catch (e) {
+        if (e && e.message === "empty") throw e; // brak danych to nie offline
+        // brak sieci / błąd → spróbuj lokalnej kopii
+        try {
+          const m = localStorage.getItem(MIRROR(k));
+          if (m != null) { flash("Tryb offline — dane z kopii"); return { key: k, value: JSON.parse(m), shared: true }; }
+        } catch (_) {}
+        throw e;
+      }
     },
     async set(k, value) {
+      // najpierw lokalna kopia (żeby offline też była aktualna dla tej przeglądarki)
+      try { localStorage.setItem(MIRROR(k), JSON.stringify(value)); } catch (e) {}
       const { error } = await sb.from("kitchen_state").upsert(
         {
           household: HH,

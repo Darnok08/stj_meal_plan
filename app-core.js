@@ -1582,7 +1582,49 @@
 
       <h3>Jak używać</h3>
       <div class="kk-rule"><b>Tygodniowy rytm.</b><p>1) W <b>Bazie przepisów</b> wybierzcie dania na tydzień (filtruj po kuchni). 2) W <b>Planie tygodnia</b> wpiszcie je w dni; licznik pokaże białko dla Ciebie i Magdy oraz balans drób/wołowina/ryba. 3) <b>Lista zakupów</b> generuje się z planu. 4) <b>Sesja prep</b> zbiera, co ugotować/zamarynować na zapas. Wszystko synchronizuje się między Waszymi kontami na żywo.</p></div>
+
+      <h3>Kopia zapasowa danych</h3>
+      <div class="kk-rule"><b>Eksport / import.</b><p>Wszystkie dane (przepisy, plan, zakupy, prep, oceny) żyją w Supabase. Zrób kopię do pliku — na wypadek pomyłki, pauzy Supabase albo przenosin. Import <b>nadpisze</b> obecne dane u obojga, więc najpierw zrób eksport.</p>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:8px;">
+          <button class="kk-btn" id="bk-export">⬇ Eksportuj kopię (.json)</button>
+          <button class="kk-btn sec" id="bk-import">⬆ Wczytaj kopię</button>
+          <input type="file" id="bk-file" accept="application/json,.json" style="display:none;">
+        </div>
+        <div id="bk-msg" class="kk-note" style="margin-top:8px;min-height:16px;"></div>
+      </div>
     </div>`;
+    // ── Kopia zapasowa: eksport / import ──
+    const bkMsg=(t,ok)=>{ const m=document.getElementById("bk-msg"); if(m){ m.textContent=t; m.style.color=ok?"var(--herb,#1F8A6D)":"var(--tomato,#F0563F)"; } };
+    const bkExp=document.getElementById("bk-export");
+    if(bkExp) bkExp.addEventListener("click",()=>{
+      try{
+        const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement("a");
+        a.href=url; a.download="kuchnia-kopia-"+new Date().toISOString().slice(0,10)+".json";
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+        bkMsg("Zapisano kopię do pliku.",true);
+      }catch(e){ bkMsg("Nie udało się zapisać kopii.",false); }
+    });
+    const bkImp=document.getElementById("bk-import"), bkFile=document.getElementById("bk-file");
+    if(bkImp&&bkFile){
+      bkImp.addEventListener("click",()=> bkFile.click());
+      bkFile.addEventListener("change",e=>{
+        const f=e.target.files&&e.target.files[0]; if(!f) return;
+        const rd=new FileReader();
+        rd.onload=()=>{
+          let parsed=null;
+          try{ parsed=JSON.parse(rd.result); }catch(_){ bkMsg("To nie jest poprawny plik .json.",false); bkFile.value=""; return; }
+          if(!parsed || !Array.isArray(parsed.recipes) || !parsed.week){ bkMsg("Plik nie wygląda na kopię tej aplikacji.",false); bkFile.value=""; return; }
+          if(!confirm("Wczytać tę kopię? Nadpisze obecne dane u Ciebie i Magdy.")){ bkFile.value=""; return; }
+          state=parsed; queueSave();
+          bkMsg("Wczytano kopię. Odświeżam…",true);
+          setTimeout(()=>location.reload(),700);
+        };
+        rd.readAsText(f);
+      });
+    }
   }
 
   function renderMealTab(meal){
