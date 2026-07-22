@@ -1814,7 +1814,7 @@
     p.querySelectorAll(".kk-mplus").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-card").dataset.id; setMult(id,getMult(id)+1); renderMealTab(meal); }));
     p.querySelectorAll(".ed").forEach(b=> b.addEventListener("click",e=>{ editing=e.target.closest(".kk-card").dataset.id; renderEdit(meal); }));
     p.querySelectorAll(".del").forEach(b=> b.addEventListener("click",e=>{ const id=e.target.closest(".kk-card").dataset.id; if(confirm("Usunąć przepis?")){ state.recipes=state.recipes.filter(r=>r.id!==id); queueSave(); renderMealTab(meal); }}));
-    p.querySelector(".addr").addEventListener("click",()=>{ editing="__new__"; renderEdit(meal); });
+    p.querySelector(".addr").addEventListener("click",()=>{ editing="__new__"; pendingPaste=null; renderEdit(meal); });
     p.querySelector(".pastr").addEventListener("click",()=>{ renderPasteBox(meal); });
     bindStars(p);
   }
@@ -1924,6 +1924,15 @@
     const isNew=editing==="__new__";
     const defMT = meal==="breakfast" ? ["breakfast"] : meal==="shake" ? ["shake"] : ["lunch","dinner"];
     const r=isNew?{name:"",cuisine:CUISINES[0],mealTypes:defMT,ptype:meal==="breakfast"?"\u2014":"Dr\u00f3b",prepTime:30,proteinTotal:100,prepStyle:"fresh",note:"",ingredients:[],steps:[]}:findR(editing);
+    // Dane z „Wklej przepis z czatu" → wypełnij formularz (jednorazowo)
+    if(isNew && pendingPaste){
+      if(pendingPaste.name) r.name=pendingPaste.name;
+      if(pendingPaste.ingredients && pendingPaste.ingredients.length) r.ingredients=pendingPaste.ingredients.slice();
+      if(pendingPaste.steps && pendingPaste.steps.length) r.steps=pendingPaste.steps.slice();
+      if(pendingPaste.protein) r.proteinTotal=pendingPaste.protein;
+      if(pendingPaste.time) r.prepTime=pendingPaste.time;
+      pendingPaste=null;
+    }
     if(!r){ slot.innerHTML=""; return; }
     const PT=["Dr\u00f3b","Wo\u0142owina","Ryby i owoce morza","Wieprzowina","Ro\u015blinne","\u2014"];
     slot.innerHTML=`<div class="kk-form">
