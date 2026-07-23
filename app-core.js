@@ -592,31 +592,31 @@
       ["Krem. Wymieszaj ricottę z parmezanem, pieprzem i skórką z cytryny.", "Spód. Rozsmaruj krem na pinsie, dodaj połowę szpinaku.", "Pieczenie. Piecz 8–10 minut w 230°C.", "Wykończenie. Dodaj szynkę cotto, resztę szpinaku, kilka kropli oliwy i cytrynę."]),
     R("s1","Shake: izolat z wodą","Uniwersalna",["shake"],"—",3,52,"fresh",
       "Czyste podbicie białka, gdy kalorie z jedzenia są już wystarczające.",
-      ["Izolat: Ty 35 g / Magda 25 g","Woda 250–400 ml","Lód (opcjonalnie)","Opcjonalnie: kakao, espresso, cynamon, wanilia, szczypta soli"],
+      ["35 g Izolat (Magda 25 g)","Woda 250–400 ml","Lód (opcjonalnie)","Opcjonalnie: kakao, espresso, cynamon, wanilia, szczypta soli"],
       ["Wsyp izolat, dolej wodę i lód.","Wstrząśnij w shakerze lub krótko zblenduj."]),
     R("s2","Shake: izolat z mlekiem","Uniwersalna",["shake"],"—",3,67,"fresh",
       "Kompromis między czystym białkiem a normalnym shakiem — po treningu lub jako mała przekąska.",
-      ["Izolat: Ty 35 g / Magda 25 g","Mleko 2%: Ty 250 ml / Magda 200 ml","Woda lub lód wg konsystencji"],
+      ["35 g Izolat (Magda 25 g)","250 ml Mleko 2% (Magda 200 ml)","Woda lub lód wg konsystencji"],
       ["Połącz izolat z mlekiem.","Dolej wodę/lód wg gęstości i zblenduj."]),
     R("s3","Shake borówkowy (lekki)","Uniwersalna",["shake"],"—",5,73,"fresh",
       "Smak koktajlu przy niewielkich kaloriach. Mrożone owoce dają lepszą konsystencję niż świeże.",
-      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 150 g / Magda 100 g","Borówki mrożone: Ty 150 g / Magda 100 g","Woda 150–250 ml + lód","Sok z cytryny (opcjonalnie)"],
+      ["30 g Izolat (Magda 20 g)","150 g Skyr (Magda 100 g)","150 g Borówki mrożone (Magda 100 g)","Woda 150–250 ml + lód","Sok z cytryny (opcjonalnie)"],
       ["Wrzuć wszystko do blendera.","Zblenduj na gładko; dolej wody wg gęstości."]),
     R("s4","Shake śniadaniowy (pełny)","Uniwersalna",["shake"],"—",6,95,"fresh",
       "Może zastąpić śniadanie: białko, płatki, owoc i błonnik. Wariant borówkowy: zamiast banana 150/100 g borówek.",
-      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 200 g / Magda 150 g","Płatki owsiane: Ty 50 g / Magda 35 g","Banan: Ty 100 g / Magda 70 g","Woda lub mleko ≈ 200 ml","Cynamon i szczypta soli"],
+      ["30 g Izolat (Magda 20 g)","200 g Skyr (Magda 150 g)","50 g Płatki owsiane (Magda 35 g)","100 g Banan (Magda 70 g)","Woda lub mleko ≈ 200 ml","Cynamon i szczypta soli"],
       ["Wrzuć wszystko do blendera.","Zblenduj na gładko."]),
     R("s5","Shake na podbicie kalorii","Uniwersalna",["shake"],"—",6,82,"fresh",
       "Na dzień treningowy lub gdy do wieczora wychodzi za mało kalorii. To pełny posiłek, nie dodatek do obiadu.",
-      ["Izolat: Ty 30 g / Magda 20 g","Mleko 2%: Ty 300 ml / Magda 200 ml","Banan: Ty 120 g / Magda 80 g","Płatki owsiane: Ty 40 g / Magda 30 g","Masło orzechowe: Ty 25 g / Magda 15 g","Cynamon lub kakao + lód"],
+      ["30 g Izolat (Magda 20 g)","300 ml Mleko 2% (Magda 200 ml)","120 g Banan (Magda 80 g)","40 g Płatki owsiane (Magda 30 g)","25 g Masło orzechowe (Magda 15 g)","Cynamon lub kakao + lód"],
       ["Wrzuć wszystko do blendera.","Zblenduj na gładko; masło orzechowe mocno podnosi kalorie."]),
     R("s6","Shake wysokobiałkowy z błonnikiem","Uniwersalna",["shake"],"—",7,84,"fresh",
       "Na dni z małą ilością warzyw, owoców i strączków. Chia zostaw 5–10 min po zblendowaniu — zgęstnieje.",
-      ["Izolat: Ty 30 g / Magda 20 g","Skyr: Ty 150 g / Magda 100 g","Borówki lub maliny: Ty 150 g / Magda 100 g","Płatki owsiane: Ty 30 g / Magda 20 g","Chia: Ty 15 g / Magda 10 g","Woda ≈ 250 ml"],
+      ["30 g Izolat (Magda 20 g)","150 g Skyr (Magda 100 g)","150 g Borówki lub maliny (Magda 100 g)","30 g Płatki owsiane (Magda 20 g)","15 g Chia (Magda 10 g)","Woda ≈ 250 ml"],
       ["Zblenduj wszystko poza chią.","Dodaj chię i zostaw 5–10 min, aż zgęstnieje."]),
     R("s7","Shake kawowy","Uniwersalna",["shake"],"—",4,60,"fresh",
       "Szybkie śniadanie przed wyjściem albo przed treningiem. Espresso schłodź lub wlej na dużo lodu.",
-      ["Izolat waniliowy/czekoladowy: Ty 30 g / Magda 20 g","Mleko 2%: Ty 250 ml / Magda 200 ml","Espresso: Ty 1–2 porcje / Magda 1","Banan: Ty 80 g / Magda 60 g","Lód, kakao opcjonalnie"],
+      ["30 g Izolat waniliowy/czekoladowy (Magda 20 g)","250 ml Mleko 2% (Magda 200 ml)","Espresso: Ty 1–2 porcje / Magda 1","80 g Banan (Magda 60 g)","Lód, kakao opcjonalnie"],
       ["Schłodź espresso lub wlej na lód.","Zblenduj wszystko na gładko."])
   ];}
 
@@ -788,6 +788,40 @@
     [["sos"],[3,44,1]],
     [["sriracha"],[2,19,1]],
     [["za'atar"],[9,50,10]],
+    [["izolat","odżywka białkowa","białko serwatkowe","whey"],[88,4,1]],
+    [["orzo"],[71,2,1]],
+    [["pistacje","pistacji"],[20,28,45]],
+    [["nori","arkusz nori"],[35,5,4]],
+    [["chrzan tarty","chrzan"],[2,11,1]],
+    [["kapary","kaparów"],[2,5,1]],
+    [["musztarda dijon","musztarda","musztardy"],[5,6,4]],
+    [["myo-inozytol","inozytol"],[0,99,0]],
+    [["gochujang","pasty gochujang"],[6,45,2]],
+    [["hummus"],[8,14,10]],
+    [["syrop klonowy","syropu klonowego"],[0,67,0]],
+    [["masło orzechowe","masła orzechowego"],[25,20,50]],
+    [["chia","nasiona chia","nasion chia"],[17,42,31]],
+    [["edamame"],[11,10,5]],
+    [["tortilla","tortille","tortilli"],[8,50,7]],
+    [["ciecierzyca","ciecierzycy"],[9,27,3]],
+    [["passata","passaty"],[1,7,0]],
+    [["koncentrat pomidorowy","koncentratu pomidorowego"],[5,19,1]],
+    [["kolendra","kolendry"],[2,4,1]],
+    [["limonka","limonki","sok z limonki"],[1,8,0]],
+    [["batat","batatów","bataty"],[2,20,0]],
+    [["pieprz","pieprzu"],[0,0,0]],
+    [["sól","soli","szczypta soli"],[0,0,0]],
+    [["kumin","kminek"],[0,0,0]],
+    [["oregano"],[0,0,0]],
+    [["tymianek","tymianku"],[0,0,0]],
+    [["cynamon","cynamonu"],[0,0,0]],
+    [["kurkuma","kurkumy"],[0,0,0]],
+    [["wanilia","ekstrakt waniliowy","wanilii"],[0,0,0]],
+    [["woda","wody"],[0,0,0]],
+    [["sumak"],[0,0,0]],
+    [["pul biber","płatki chilli","chilli","chili"],[0,0,0]],
+    [["proszek do pieczenia"],[0,0,0]],
+    [["dymka","dymki","szczypiorek"],[0,2,0]],
   ];
   // przeliczniki jednostek na gramy
   const UNIT_G={ g:1, kg:1000, ml:1, l:1000 };
@@ -893,12 +927,19 @@
     if(/owoc|jagod|malin|banan|mango/.test(n)) return 100;
     return 0; // przyprawy, sól, pieprz itp.
   }
+  // Produkty dodane przez Was (state.myFoods) mają pierwszeństwo przed wbudowanymi
+  function myFoodList(){
+    return ((state&&state.myFoods)||[]).map(f=>[
+      String(f.n||"").toLowerCase().split("|").map(x=>x.trim()).filter(Boolean),
+      [+f.p||0,+f.c||0,+f.f||0]
+    ]).filter(e=>e[0].length);
+  }
   function lookupFood(name){
     const n=(name||"").toLowerCase();
     // wybierz produkt, którego nazwa pojawia się NAJWCZEŚNIEJ w linii
     // ("800 g ziemniaków na puree","1 łyżka masła","100 ml mleka" → ziemniaki, nie masło)
     let best=null, bestPos=Infinity, bestLen=0;
-    for(const [keys,vals] of FOOD){
+    for(const [keys,vals] of myFoodList().concat(FOOD)){
       for(const kk of keys){
         const p=n.indexOf(kk);
         if(p<0) continue;
@@ -933,7 +974,7 @@
     return out.map(x=>x.trim()).filter(Boolean);
   }
   function estimateMacros(r){
-    let P=0,C=0,F=0, matched=0;
+    let P=0,C=0,F=0, matched=0; const missing=[];
     (r.ingredients||[]).forEach(line=>{
       const parts=splitParts(line);
       // wiodąca ilość z początku linii (np. "350 g ugotowanego, wystudzonego ryżu")
@@ -942,7 +983,7 @@
       let leadUsed = false;
       parts.forEach(part=>{
         const food=lookupFood(part);
-        if(!food) return;
+        if(!food){ const t=part.trim(); if(t) missing.push(t); return; }
         let g=ingredientGrams(part);
         const partHasNum=/\d/.test(part);
         // człon bez własnej liczby → przypisz wiodącą ilość z linii (raz)
@@ -962,14 +1003,14 @@
     if(matched===0){
       // Żaden składnik się nie sparsował — ostatnia deska ratunku z deklarowanego białka.
       const p=+(r.proteinTotal||0);
-      return { kcal: Math.round((p*4+p*3.2+p*1.6*9)/10)*10, carbs: Math.round(p*0.8), fat: Math.round(p*0.4), protein: p, auto:true, lowConf:true };
+      return { kcal: Math.round((p*4+p*3.2+p*1.6*9)/10)*10, carbs: Math.round(p*0.8), fat: Math.round(p*0.4), protein: p, auto:true, lowConf:true, missing:missing, matched:0 };
     }
     // Białko, węgle, tłuszcz i kcal liczymy WYŁĄCZNIE ze składników — jedno źródło prawdy.
     // Deklarowane proteinTotal nie jest już używane do korekty (dawny clamp fs zaniżał kcal).
     // kcal = dokładnie 4P+4C+9F z zaokrąglonych makr, żeby przepis był wewnętrznie spójny.
     const Pr = Math.round(P), Cr = Math.round(C), Fr = Math.round(F);
     const kcal = Pr*4 + Cr*4 + Fr*9;
-    return { kcal, carbs: Cr, fat: Fr, protein: Pr, auto:true };
+    return { kcal, carbs: Cr, fat: Fr, protein: Pr, auto:true, missing:missing, matched:matched };
   }
   function estimateKcal(r){ return estimateMacros(r).kcal; }
 
@@ -1373,12 +1414,157 @@
   }
 
   let state=null, saveTimer=null, tab="week", editing=null;
+  // Spalone kalorie z Apple Health: { "2026-07-22": { ty:{a,r}, mg:{a,r} } }
+  let burnData={};
+  // Daty bieżącego tygodnia (poniedziałek → niedziela) w formacie YYYY-MM-DD
+  function weekDates(){
+    const now=new Date(); const idx=(now.getDay()+6)%7;
+    const mon=new Date(now); mon.setDate(now.getDate()-idx);
+    const p=n=>String(n).padStart(2,"0");
+    return DAYS.map((_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i);
+      return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); });
+  }
+  // Spalone (aktywne + spoczynkowe) dla dnia tygodnia i osoby
+  function burnFor(dayIdx, who){
+    const e=burnData[weekDates()[dayIdx]];
+    const v=e&&e[who]; if(!v) return null;
+    return (+v.a||0)+(+v.r||0);
+  }
+  function hasBurn(){ return weekDates().some(dt=>burnData[dt]); }
+  // ── Zakupy online: nazwa produktu → wyszukiwarka sklepu ──
+  // Ucina ilości i jednostki ("440 g Pierś z kurczaka" → "Pierś z kurczaka"),
+  // dopiski w nawiasach i wszystko po przecinku (sklepy źle znoszą długie frazy).
+  function searchTerm(name){
+    let s=String(name||"");
+    s=s.replace(/\([^)]*\)/g," ");                                  // (2 małe lub 1 duży)
+    s=s.replace(/^[\s•\-–—]*\d+\s*\/\s*\d+\s*/,"");                 // 1/2, 3/4
+    s=s.replace(/^[\s•\-–—]*[½¼¾⅓⅔]\s*/,"");                        // ułamki jednoznakowe
+    s=s.replace(/^[\s•\-–—]*\d+[.,]?\d*\s*(g|kg|ml|l|dag|szt\.?|sztuk\w*|opak\w*|puszk\w*|łyżk\w*|łyżeczk\w*|garść|garści|ząb\w*|ząbk\w*|kromk\w*|plaster\w*|plastr\w*|pęczk\w*|listk\w*|szklank\w*)?\s*/i,"");
+    s=s.replace(/^(garść|garści|szczypta|szczypty|opak\w*|puszka|puszki|pęczek|pęczka|ząbek|ząbki|łyżka|łyżki|łyżeczka|łyżeczki|szklanka|szklanki)\s+/i,""); // jednostka bez liczby
+    s=s.replace(/\b\d+[.,]?\d*\s*(g|kg|ml|l|dag)\b/gi," ");         // ilości w środku
+    s=s.split(",")[0];                                              // "sól, pieprz" → "sól"
+    s=s.replace(/^[\s\/\-–—]+/,"").replace(/\s{2,}/g," ").trim();
+    return s;
+  }
+  const SHOPS={
+    frisco:{ name:"Frisco", url:t=>"https://www.frisco.pl/q,"+encodeURIComponent(t)+"/stn,searchResults" }
+  };
+  function shopLink(name){
+    const t=searchTerm(name); if(!t) return "";
+    const shop=SHOPS[(state&&state.shop)||"frisco"]||SHOPS.frisco;
+    return `<a href="${shop.url(t)}" target="_blank" rel="noopener" title="Szukaj w ${shop.name}: ${esc(t)}" style="text-decoration:none;margin-left:6px;opacity:.65;">🛒</a>`;
+  }
+  // Lista jako czysty tekst (do skopiowania / wklejenia)
+  function shopPlainText(groups){
+    const out=[];
+    groups.forEach(g=>{ out.push(g.cat.toUpperCase()); g.items.forEach(n=>out.push("- "+n)); out.push(""); });
+    return out.join("\n").trim();
+  }
+  // ── Pudełko „Zakupy online" (eksport listy) ──
+  function exportBoxHTML(text, count){
+    if(!count) return "";
+    return `<div class="kk-sgroup" style="margin-top:14px;"><h4>🛒 Zakupy online</h4>
+      <div class="kk-note" style="margin:0 0 8px;">Ikona 🛒 przy pozycji otwiera wyszukiwarkę sklepu z wpisaną nazwą. Możesz też skopiować całą listę (${count} poz.) i wkleić ją sobie gdziekolwiek.
+      <br><b>Tip:</b> gdy raz złożysz zamówienie, zapisz je w sklepie jako listę — przy powtórce tygodnia odtworzysz je jednym kliknięciem.</div>
+      <textarea id="shop-exp" readonly style="width:100%;min-height:110px;font-family:inherit;font-size:12px;padding:8px;border:1px solid var(--line,#E4E5DC);border-radius:8px;background:#fff;box-sizing:border-box;">${esc(text)}</textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        <button class="kk-btn sec" id="shop-copy">Kopiuj listę</button>
+      </div></div>`;
+  }
+  function wireExportBox(p){
+    const b=p.querySelector("#shop-copy"), t=p.querySelector("#shop-exp");
+    if(b&&t) b.addEventListener("click",()=>copyToClipboard(t.value,b));
+  }
+  // ── „Co mam w lodówce": dopasowanie przepisów do posiadanych składników ──
+  // Produkty, których i tak zawsze macie — nie liczą się jako „brakujące".
+  const PANTRY=["sol","sól","pieprz","oliwa","olej","woda","cukier","maka","mąka","ocet","przyprawy","oregano","tymianek","kumin","papryka wedzona","papryka wędzona","cynamon","kurkuma","chilli","chili","sos sojowy","musztarda","szczypta"];
+  function normPl(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim(); }
+  function coreName(line){ return normPl(searchTerm(line)); }
+  function isPantry(n){ const x=normPl(n); return PANTRY.some(p=>x.includes(normPl(p))); }
+  // zwraca listę przepisów posortowaną: najmniej brakujących, potem najwięcej trafień
+  function fridgeMatch(termsRaw, limit){
+    const terms=String(termsRaw||"").split(/[,;\n]+/).map(t=>normPl(t)).filter(t=>t.length>2);
+    if(!terms.length) return [];
+    const out=[];
+    (state.recipes||[]).forEach(r=>{
+      const lines=(r.ingredients||[]);
+      if(!lines.length) return;
+      let have=0; const missing=[];
+      lines.forEach(line=>{
+        const core=coreName(line); if(!core) return;
+        const hit=terms.some(t=> core.includes(t) || t.includes(core));
+        if(hit) have++;
+        else if(!isPantry(core)) missing.push(searchTerm(line));
+      });
+      if(have>0) out.push({r, have, missing});
+    });
+    out.sort((a,b)=> (a.missing.length-b.missing.length) || (b.have-a.have));
+    return out.slice(0, limit||6);
+  }
+  // ── Zamrażalnik: ile leży ──
+  function freezerAge(x){ return x&&x.date ? Math.floor((Date.now()-new Date(x.date).getTime())/86400000) : null; }
+  // ── Podsumowanie tygodnia: wzorce, nie tylko średnie ──
+  function weekInsights(){
+    const MK=["breakfast","lunch","dinner"];
+    const LBL={breakfast:"śniadania",lunch:"obiady",dinner:"kolacje"};
+    let planned=0, eaten=0, out=0;
+    const byMeal={breakfast:{p:0,e:0},lunch:{p:0,e:0},dinner:{p:0,e:0}};
+    const byDay={}; DAYS.forEach(d=>byDay[d]={p:0,e:0});
+    DAYS.forEach(d=>{
+      MK.forEach(mk=>{
+        if(!(state.week[d]&&state.week[d][mk]&&state.week[d][mk].recipeId)) return;
+        ["ty","mg"].forEach(who=>{
+          planned++; byMeal[mk].p++; byDay[d].p++;
+          const s=eatStat(state.eaten&&state.eaten[d]&&state.eaten[d][who]&&state.eaten[d][who][mk]);
+          if(s==="y"){ eaten++; byMeal[mk].e++; byDay[d].e++; }
+          else if(s==="out") out++;
+        });
+      });
+    });
+    // dni, w których trafiliście w cel białka
+    let hitTy=0, hitMg=0, daysWithData=0;
+    DAYS.forEach(d=>{ const ed=eatenDay(d);
+      if(ed.ty.kcal>0||ed.mg.kcal>0) daysWithData++;
+      if(ed.ty.p >= (state.targets.p2||0)*0.9) hitTy++;
+      if(ed.mg.p >= (state.targets.p1||0)*0.9) hitMg++;
+    });
+    const tips=[];
+    const pct=planned?Math.round(eaten/planned*100):0;
+    // najsłabszy typ posiłku
+    const worst=MK.filter(mk=>byMeal[mk].p>=2).map(mk=>({mk, r:byMeal[mk].e/byMeal[mk].p}))
+                  .sort((a,b)=>a.r-b.r)[0];
+    if(worst && worst.r<0.6) tips.push(`Najsłabiej wychodzą <b>${LBL[worst.mk]}</b> (${Math.round(worst.r*100)}% odhaczeń). Może zaplanować tam coś prostszego albo świadomie wpisać jedzenie na mieście.`);
+    // najsłabszy dzień
+    const wd=DAYS.filter(d=>byDay[d].p>=2).map(d=>({d, r:byDay[d].e/byDay[d].p})).sort((a,b)=>a.r-b.r)[0];
+    if(wd && wd.r<0.5) tips.push(`<b>${wd.d}</b> wypada najsłabiej — to dobry kandydat na dzień „poza planem" albo na danie z zamrażalnika.`);
+    if(out>=4) tips.push(`Aż <b>${out}</b> posiłków oznaczonych „na mieście" — jeśli to stały wzorzec, warto wpisać je do planu zamiast gotować i nie zjeść.`);
+    if(daysWithData>=3 && hitTy<=Math.floor(daysWithData/2)) tips.push(`Cel białka trafiony tylko w <b>${hitTy}</b> dniach (Ty) — rozważ shake w dni, gdy obiad jest lekki.`);
+    if(pct>=85) tips.push(`Trzymacie plan w <b>${pct}%</b> — to bardzo dobry wynik, nic nie zmieniaj na siłę.`);
+    // zamrażalnik
+    const old=(state.freezer||[]).filter(x=>{ const a=freezerAge(x); return a!=null&&a>=56; });
+    if(old.length) tips.push(`W zamrażalniku <b>${old.length}</b> ${old.length===1?"pozycja leży":"pozycje leżą"} ponad 8 tygodni — zaplanuj je w tym tygodniu.`);
+    return {planned, eaten, out, pct, hitTy, hitMg, daysWithData, tips};
+  }
+  function copyToClipboard(txt, btn){
+    const done=()=>{ if(!btn) return; const o=btn.textContent; btn.textContent="✓ Skopiowano"; setTimeout(()=>btn.textContent=o,1500); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done).catch(()=>fallback()); }
+    else fallback();
+    function fallback(){
+      const ta=document.createElement("textarea"); ta.value=txt;
+      ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); done(); }catch(e){}
+      ta.remove();
+    }
+  }
   let fCuisine="Wszystkie", fProtein="Wszystkie", recipeMeal="breakfast";
   const PROTEIN_CATS=["Drób","Wołowina","Ryby i owoce morza","Wieprzowina","Roślinne"];
 
   async function load(){
     try{ const r=await window.storage.get(STORAGE_KEY,true); state=r&&r.value?JSON.parse(r.value):defaultState(); }
     catch(e){ state=defaultState(); }
+    // Spalone kalorie z Apple Health (osobny klucz, zapisywany przez Skrót na iPhonie)
+    try{ const b=await window.storage.get("kk_burn",true); burnData=(b&&b.value)?(typeof b.value==="string"?JSON.parse(b.value):b.value):{}; }
+    catch(e){ burnData={}; }
     DAYS.forEach(d=>{ if(!state.week[d]) state.week[d]={}; if(state.week[d].addP1==null) state.week[d].addP1=0; if(state.week[d].addP2==null) state.week[d].addP2=0; if(state.week[d].shakeId==null) state.week[d].shakeId=""; MEALS.forEach(([mk])=>{ if(!state.week[d][mk]) state.week[d][mk]={recipeId:""}; }); });
     // ═══ MIGRACJA: odśwież wbudowane przepisy i cele, zachowaj to, co Wasze ═══
     if(state.recipesVersion !== RECIPES_VERSION){
@@ -1656,6 +1842,20 @@
       <h3>Jak używać</h3>
       <div class="kk-rule"><b>Tygodniowy rytm.</b><p>1) W <b>Bazie przepisów</b> wybierzcie dania na tydzień (filtruj po kuchni). 2) W <b>Planie tygodnia</b> wpiszcie je w dni; licznik pokaże białko dla Ciebie i Magdy oraz balans drób/wołowina/ryba. 3) <b>Lista zakupów</b> generuje się z planu. 4) <b>Sesja prep</b> zbiera, co ugotować/zamarynować na zapas. Wszystko synchronizuje się między Waszymi kontami na żywo.</p></div>
 
+      <h3>Baza produktów</h3>
+      <div class="kk-rule" id="mf-box"><b>Własne produkty (na 100 g).</b><p>Aplikacja liczy makro przepisów z wbudowanej bazy ok. 140 produktów. Jeśli czegoś w niej nie ma, dodaj to tutaj — od razu zacznie być używane przy „≈ oszacuj". Kilka nazw na jeden produkt oddziel znakiem <b>|</b> (np. <i>komosa|quinoa</i>).</p>
+        <div id="mf-pending"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;margin-top:8px;">
+          <div style="flex:2 1 180px;"><label style="font-size:10.5px;text-transform:uppercase;color:#8A8D82;">Nazwa (lub nazwy przez |)</label><input id="mf-n" type="text" placeholder="np. komosa|quinoa" style="width:100%;padding:7px 9px;border:1px solid var(--line,#E4E5DC);border-radius:8px;font-family:inherit;box-sizing:border-box;"></div>
+          <div style="flex:0 1 80px;"><label style="font-size:10.5px;text-transform:uppercase;color:#8A8D82;">Białko</label><input id="mf-p" type="number" min="0" step="0.1" placeholder="g" style="width:100%;padding:7px 9px;border:1px solid var(--line,#E4E5DC);border-radius:8px;font-family:inherit;box-sizing:border-box;"></div>
+          <div style="flex:0 1 80px;"><label style="font-size:10.5px;text-transform:uppercase;color:#8A8D82;">Węgle</label><input id="mf-c" type="number" min="0" step="0.1" placeholder="g" style="width:100%;padding:7px 9px;border:1px solid var(--line,#E4E5DC);border-radius:8px;font-family:inherit;box-sizing:border-box;"></div>
+          <div style="flex:0 1 80px;"><label style="font-size:10.5px;text-transform:uppercase;color:#8A8D82;">Tłuszcz</label><input id="mf-f" type="number" min="0" step="0.1" placeholder="g" style="width:100%;padding:7px 9px;border:1px solid var(--line,#E4E5DC);border-radius:8px;font-family:inherit;box-sizing:border-box;"></div>
+          <button class="kk-btn" id="mf-add" style="padding:8px 14px;">Dodaj</button>
+        </div>
+        <div class="kk-note" style="margin-top:6px;">Wartości bierz z etykiety produktu (kolumna „w 100 g"). Kalorie liczą się same: 4×białko + 4×węgle + 9×tłuszcz.</div>
+        <div id="mf-list" style="margin-top:10px;"></div>
+      </div>
+
       <h3>Kopia zapasowa danych</h3>
       <div class="kk-rule"><b>Eksport / import.</b><p>Wszystkie dane (przepisy, plan, zakupy, prep, oceny) żyją w Supabase. Zrób kopię do pliku — na wypadek pomyłki, pauzy Supabase albo przenosin. Import <b>nadpisze</b> obecne dane u obojga, więc najpierw zrób eksport.</p>
         <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:8px;">
@@ -1666,6 +1866,45 @@
         <div id="bk-msg" class="kk-note" style="margin-top:8px;min-height:16px;"></div>
       </div>
     </div>`;
+    // ── Baza produktów: lista, dodawanie, usuwanie ──
+    (function(){
+      const listEl=document.getElementById("mf-list"); if(!listEl) return;
+      function draw(){
+        const fs=(state.myFoods||[]);
+        if(!fs.length){ listEl.innerHTML=`<div class="kk-note">Nie dodaliście jeszcze własnych produktów.</div>`; }
+        else{
+          listEl.innerHTML=`<div style="overflow-x:auto;"><table style="border-collapse:collapse;width:100%;min-width:380px;">
+            <tr><th style="text-align:left;padding:4px 6px;font-size:10px;text-transform:uppercase;color:#8A8D82;">Produkt</th><th style="padding:4px 6px;font-size:10px;color:#8A8D82;">B</th><th style="padding:4px 6px;font-size:10px;color:#8A8D82;">W</th><th style="padding:4px 6px;font-size:10px;color:#8A8D82;">T</th><th style="padding:4px 6px;font-size:10px;color:#8A8D82;">kcal</th><th></th></tr>`+
+            fs.map((f,i)=>{ const k=Math.round((+f.p||0)*4+(+f.c||0)*4+(+f.f||0)*9);
+              return `<tr><td style="padding:4px 6px;font-size:12.5px;">${esc(f.n)}</td><td style="padding:4px 6px;text-align:center;font-size:12px;">${f.p}</td><td style="padding:4px 6px;text-align:center;font-size:12px;">${f.c}</td><td style="padding:4px 6px;text-align:center;font-size:12px;">${f.f}</td><td style="padding:4px 6px;text-align:center;font-size:12px;color:#8A8D82;">${k}</td><td style="padding:4px 6px;text-align:right;"><button data-mfdel="${i}" style="border:none;background:none;cursor:pointer;color:var(--tomato,#C97B5A);font-weight:700;">✕</button></td></tr>`;
+            }).join("")+`</table></div>`;
+          listEl.querySelectorAll("[data-mfdel]").forEach(b=> b.addEventListener("click",()=>{ state.myFoods.splice(+b.dataset.mfdel,1); queueSave(); draw(); }));
+        }
+      }
+      // podpowiedzi z „nie znam" po szacowaniu
+      const pend=document.getElementById("mf-pending");
+      if(pend && pendingFoods && pendingFoods.length){
+        pend.innerHTML=`<div class="kk-note" style="margin:0;">Do uzupełnienia z ostatniego przepisu — kliknij, żeby wstawić nazwę: `+
+          pendingFoods.map(x=>`<span class="kk-fromtag" data-mfpick="${esc(x)}" style="cursor:pointer;">${esc(x)}</span>`).join(" ")+`</div>`;
+        pend.querySelectorAll("[data-mfpick]").forEach(el=> el.addEventListener("click",()=>{ const n=document.getElementById("mf-n"); n.value=el.dataset.mfpick; n.focus(); }));
+      }
+      const addBtn=document.getElementById("mf-add");
+      if(addBtn) addBtn.addEventListener("click",()=>{
+        const n=document.getElementById("mf-n").value.trim();
+        const p=+document.getElementById("mf-p").value||0;
+        const c=+document.getElementById("mf-c").value||0;
+        const f=+document.getElementById("mf-f").value||0;
+        if(!n){ alert("Podaj nazwę produktu."); return; }
+        if(!p && !c && !f){ alert("Podaj przynajmniej jedną wartość (białko, węgle lub tłuszcz)."); return; }
+        if(!Array.isArray(state.myFoods)) state.myFoods=[];
+        state.myFoods.push({n:n.toLowerCase(),p,c,f});
+        queueSave();
+        ["mf-n","mf-p","mf-c","mf-f"].forEach(id=>document.getElementById(id).value="");
+        draw();
+      });
+      draw();
+    })();
+
     // ── Kopia zapasowa: eksport / import ──
     const bkMsg=(t,ok)=>{ const m=document.getElementById("bk-msg"); if(m){ m.textContent=t; m.style.color=ok?"var(--herb,#6B8E6F)":"var(--tomato,#C97B5A)"; } };
     const bkExp=document.getElementById("bk-export");
@@ -1918,6 +2157,7 @@
     slot.scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   let pendingPaste=null;
+  let pendingFoods=null;
 
   function renderEdit(meal){
     const slot=document.querySelector('[data-panel="'+meal+'"] .edslot');
@@ -1957,6 +2197,9 @@
         <div><label>Kcal (2 porcje)</label><input id="f-kcal" type="number" value="${r.kcal||0}"></div>
         <div style="flex:0 0 auto; display:flex; align-items:flex-end;"><button class="kk-btn sec" id="f-kcalest" style="padding:7px 12px; white-space:nowrap;">≈ oszacuj</button></div>
       </div>
+      <div id="f-estinfo" class="kk-note" style="display:none;margin:6px 0 0;"></div>
+      <div style="display:none;">
+      </div>
       <label>Twoje notatki (modyfikacje, tipy)</label><textarea id="f-unotes" placeholder="np. dodać więcej chili, udka lepsze niż pierś...">${esc(r.unotes||"")}</textarea>
       <label>Sk\u0142adniki (linia = pozycja)</label><textarea id="f-ing">${esc((r.ingredients||[]).join("\n"))}</textarea>
       <label>Kroki (linia = krok)</label><textarea id="f-steps">${esc((r.steps||[]).join("\n"))}</textarea>
@@ -1988,6 +2231,20 @@
       document.getElementById("f-kcal").value=mm.kcal;
       document.getElementById("f-carbs").value=mm.carbs;
       document.getElementById("f-fat").value=mm.fat;
+      // raport: co rozpoznano, czego brakuje w bazie produktów
+      const box=document.getElementById("f-estinfo");
+      if(box){
+        const miss=[...new Set(mm.missing||[])].filter(x=>x.length>1);
+        let h=`<b>Rozpoznano ${mm.matched||0} składnik(ów)</b> z bazy produktów.`;
+        if(mm.lowConf) h=`<b style="color:var(--tomato,#C97B5A);">Nie rozpoznano żadnego składnika</b> — makro to zgrubny szacunek z deklarowanego białka.`;
+        if(miss.length){
+          h+=`<br>Nie znam: `+miss.map(x=>`<span class="kk-fromtag">${esc(x)}</span>`).join(" ");
+          h+=`<br><button class="kk-btn sec" id="f-addfoods" style="margin-top:6px;padding:5px 10px;font-size:12px;">+ Dodaj brakujące do bazy produktów</button>`;
+        } else if(!mm.lowConf){ h+=` Wszystkie składniki znane. 👌`; }
+        box.innerHTML=h; box.style.display="block";
+        const ab=document.getElementById("f-addfoods");
+        if(ab) ab.addEventListener("click",()=>{ pendingFoods=miss.slice(); tab="rules"; refreshTabs(); renderRules(); setTimeout(()=>{ const el=document.getElementById("mf-box"); if(el) el.scrollIntoView({behavior:"smooth",block:"center"}); },80); });
+      }
     });
     document.getElementById("canr").addEventListener("click",()=>{ editing=null; renderMealTab(meal); });
     slot.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -1999,7 +2256,16 @@
     const prev=new Set(state.prevWeekIds||[]);
     const _T=state.targets;
     const cele=`<div class="kk-sgroup" style="margin-bottom:10px;"><h4>Cele dzienne (na osobę)</h4><div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:12px;min-width:440px;"><thead><tr><th style="text-align:left;padding:4px 8px;"></th><th style="padding:4px 8px;">Kalorie</th><th style="padding:4px 8px;">Białko</th><th style="padding:4px 8px;">Tłuszcz</th><th style="padding:4px 8px;">Węgle</th><th style="padding:4px 8px;">Błonnik</th></tr></thead><tbody><tr><td style="text-align:left;padding:4px 8px;font-weight:700;">Ty</td><td style="padding:4px 8px;text-align:center;"><b>${_T.kcal2}</b> kcal</td><td style="padding:4px 8px;text-align:center;"><b>${_T.p2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fat2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.carb2}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fib2!=null?_T.fib2:"—"}</b> g</td></tr><tr><td style="text-align:left;padding:4px 8px;font-weight:700;">Magda</td><td style="padding:4px 8px;text-align:center;"><b>${_T.kcal1}</b> kcal</td><td style="padding:4px 8px;text-align:center;"><b>${_T.p1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fat1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.carb1}</b> g</td><td style="padding:4px 8px;text-align:center;"><b>${_T.fib1!=null?_T.fib1:"—"}</b> g</td></tr></tbody></table></div><div class="kk-note" style="margin-top:4px;">Cele po aktualizacji jadłospisu. Edycja — w nagłówku aplikacji.</div></div>`;
-    let html=cele+`<div class="kk-actions-row" style="align-items:center;">
+    let html=cele+`<details style="margin-bottom:10px;border:1px solid var(--line,#E4E5DC);border-radius:12px;overflow:hidden;">
+      <summary style="cursor:pointer;padding:11px 13px;font-weight:700;font-size:13px;background:#F6F7F2;list-style:none;">🧊 Co mam w lodówce?</summary>
+      <div style="padding:10px 13px 12px;">
+        <div class="kk-note" style="margin:0 0 8px;">Wpisz, co masz pod ręką (po przecinku). Pokażę dania z bazy, do których brakuje Ci najmniej. Przyprawy i oliwę pomijam — zakładam, że zawsze są.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <input id="fr-q" type="text" placeholder="np. kurczak, ryż, cukinia, jogurt" style="flex:1;min-width:200px;padding:8px 10px;border:1px solid var(--line,#E4E5DC);border-radius:8px;font-family:inherit;">
+          <button class="kk-btn" id="fr-go" style="padding:8px 14px;">Szukaj</button>
+        </div>
+        <div id="fr-res" style="margin-top:10px;"></div>
+      </div></details>` + `<div class="kk-actions-row" style="align-items:center;">
       <button class="kk-btn" id="gw">✨ Ułóż mi tydzień</button>
       <select id="gw-tempo" style="padding:8px; border:1px solid var(--line); border-radius:5px; font-size:12px;">
         <option value="mix" ${state.genTempo==="mix"?"selected":""}>Tempo: Mix</option>
@@ -2175,7 +2441,62 @@
       <div style="font-size:11px;font-weight:600;margin:8px 0 2px;">Białko / dzień (g)</div>${svgBars(dLbl,prTy,prMg,Tt.p2,Tt.p1)}
     </div>`;
 
-    // ── Trendy: tydzień po tygodniu (zapisane migawki) ──
+    // ── Spalone (Apple Health) i bilans ──
+    const bTy=DAYS.map((_,i)=>burnFor(i,"ty")), bMg=DAYS.map((_,i)=>burnFor(i,"mg"));
+    eHTML+=`<div class="kk-sgroup"><h4>🔥 Spalone i bilans</h4>`;
+    if(!hasBurn()){
+      eHTML+=`<div class="kk-note">Brak danych z Apple Health w tym tygodniu. Gdy Skrót na iPhonie zacznie wysyłać spalone kalorie, pojawi się tu wykres i bilans (zjedzone − spalone).</div>`;
+    } else {
+      eHTML+=`<div class="kk-note" style="margin:0 0 6px;">Spalone dziennie (aktywne + spoczynkowe) z Apple Health. <span style="color:var(--herb,#6B8E6F);font-weight:700;">■ Ty</span> · <span style="color:var(--plum,#7C5CD6);font-weight:700;">■ Magda</span></div>`;
+      eHTML+=svgBars(dLbl, bTy.map(v=>v||0), bMg.map(v=>v||0), 0, 0);
+      // tabela bilansu
+      const th2="padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#8A8D82;text-align:center;";
+      const td2="padding:4px 6px;font-size:12px;text-align:center;border-bottom:1px solid var(--line,#E4E5DC);";
+      const fmt=v=> v==null?"—":(v>0?"+":"")+Math.round(v);
+      const col=v=> v==null?"#8A8D82":(v>0?"var(--tomato,#C97B5A)":"var(--herb,#6B8E6F)");
+      let sumTy=0,nTy=0,sumMg=0,nMg=0;
+      let rows="";
+      DAYS.forEach((d,i)=>{
+        const eT=Math.round(eatenDay(d).ty.kcal), eM=Math.round(eatenDay(d).mg.kcal);
+        const balT = bTy[i]!=null ? eT-bTy[i] : null;
+        const balM = bMg[i]!=null ? eM-bMg[i] : null;
+        if(balT!=null){ sumTy+=balT; nTy++; }
+        if(balM!=null){ sumMg+=balM; nMg++; }
+        rows+=`<tr><td style="${td2}text-align:left;font-weight:600;">${dLbl[i]}</td>`+
+          `<td style="${td2}">${eT||"—"}</td><td style="${td2}">${bTy[i]!=null?bTy[i]:"—"}</td><td style="${td2}color:${col(balT)};font-weight:700;">${fmt(balT)}</td>`+
+          `<td style="${td2}">${eM||"—"}</td><td style="${td2}">${bMg[i]!=null?bMg[i]:"—"}</td><td style="${td2}color:${col(balM)};font-weight:700;">${fmt(balM)}</td></tr>`;
+      });
+      eHTML+=`<div style="overflow-x:auto;margin-top:10px;"><table style="border-collapse:collapse;width:100%;min-width:520px;">
+        <tr><th style="${th2}"></th><th style="${th2}" colspan="3">Ty</th><th style="${th2}" colspan="3">Magda</th></tr>
+        <tr><th style="${th2}text-align:left;">Dzień</th><th style="${th2}">zjedz.</th><th style="${th2}">spal.</th><th style="${th2}">bilans</th><th style="${th2}">zjedz.</th><th style="${th2}">spal.</th><th style="${th2}">bilans</th></tr>
+        ${rows}</table></div>`;
+      const avgT = nTy?Math.round(sumTy/nTy):null, avgM = nMg?Math.round(sumMg/nMg):null;
+      eHTML+=`<div class="kk-note" style="margin-top:8px;">Średni bilans dzienny — <b>Ty:</b> <span style="color:${col(avgT)};font-weight:700;">${fmt(avgT)} kcal</span> · <b>Magda:</b> <span style="color:${col(avgM)};font-weight:700;">${fmt(avgM)} kcal</span>. Ujemny = deficyt. <i>Uwaga: obie strony to szacunki (zegarek i makra jedzenia), więc traktujcie to jako trend, nie dokładny licznik.</i></div>`;
+    }
+    eHTML+=`</div>`;
+
+    // ── Podsumowanie tygodnia: wzorce i wnioski ──
+    {
+      const ins=weekInsights();
+      eHTML+=`<div class="kk-sgroup"><h4>🧭 Wnioski z tygodnia</h4>`;
+      if(!ins.planned){
+        eHTML+=`<div class="kk-note">Brak zaplanowanych posiłków — uzupełnij plan, a pojawi się tu analiza.</div>`;
+      } else {
+        const col = ins.pct>=80 ? "var(--herb,#6B8E6F)" : ins.pct>=50 ? "var(--mustard,#E0A458)" : "var(--tomato,#C97B5A)";
+        eHTML+=`<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;margin-bottom:8px;">
+          <div><span style="font-size:26px;font-weight:700;color:${col};">${ins.pct}%</span> <span style="font-size:12px;color:#8A8D82;">planu zjedzone</span></div>
+          <div style="font-size:12px;color:#8A8D82;">${ins.eaten}/${ins.planned} porcji${ins.out?` · ${ins.out} na mieście 🍴`:""}</div>
+          <div style="font-size:12px;color:#8A8D82;">Cel białka trafiony: Ty <b>${ins.hitTy}</b> dni · Magda <b>${ins.hitMg}</b> dni</div>
+        </div>`;
+        if(ins.tips.length){
+          eHTML+=`<div style="font-size:12.5px;line-height:1.6;">`+ins.tips.map(t=>`<div style="margin:5px 0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;">•</span>${t}</div>`).join("")+`</div>`;
+        } else {
+          eHTML+=`<div class="kk-note">Za mało odhaczeń, żeby wyciągać wnioski — wróć tu pod koniec tygodnia.</div>`;
+        }
+        eHTML+=`<div class="kk-note" style="margin-top:8px;"><i>Liczone z odhaczeń w tabeli powyżej — im rzetelniej odhaczacie, tym sensowniejsze wnioski.</i></div>`;
+      }
+      eHTML+=`</div>`;
+    }
     const mlog=state.macroLog||[];
     eHTML+=`<div class="kk-sgroup"><h4>📈 Tydzień po tygodniu</h4>
       <div class="kk-note" style="margin:0 0 6px;">Zapisz podsumowanie tygodnia (średnia dzienna), żeby widzieć trend między tygodniami.</div>
@@ -2236,6 +2557,26 @@
     }));
     document.getElementById("gw-tempo").addEventListener("change",e=>{ state.genTempo=e.target.value; queueSave(); });
     document.getElementById("gw").addEventListener("click",()=>{ generateWeek(document.getElementById("gw-tempo").value); });
+    // ── „Co mam w lodówce" ──
+    const frGo=document.getElementById("fr-go"), frQ=document.getElementById("fr-q"), frRes=document.getElementById("fr-res");
+    function fridgeRun(){
+      const res=fridgeMatch(frQ.value, 6);
+      if(!frQ.value.trim()){ frRes.innerHTML=`<div class="kk-note">Wpisz coś powyżej.</div>`; return; }
+      if(!res.length){ frRes.innerHTML=`<div class="kk-note">Nic nie pasuje. Spróbuj prostszych nazw (np. „kurczak" zamiast „pierś z kurczaka bio").</div>`; return; }
+      frRes.innerHTML=res.map(x=>{
+        const miss=x.missing.slice(0,5);
+        const badge = x.missing.length===0
+          ? `<span class="kk-badge" style="background:var(--herb,#6B8E6F);color:#fff;">masz wszystko!</span>`
+          : `<span class="kk-badge" style="background:var(--mustard,#E0A458);color:#3a2f00;">brakuje ${x.missing.length}</span>`;
+        return `<div class="kk-sitem" style="align-items:flex-start;"><span>
+          <b class="kk-goto" data-open="${x.r.id}" style="cursor:pointer;color:var(--tomato,#C97B5A);">${esc(x.r.name)}</b> ${badge}
+          <span class="kk-psub">Masz ${x.have} składnik(ów)${miss.length?` · brakuje: ${miss.map(esc).join(", ")}${x.missing.length>5?" …":""}`:""}</span>
+        </span></div>`;
+      }).join("");
+      frRes.querySelectorAll(".kk-goto[data-open]").forEach(el=> el.addEventListener("click",()=>openRecipe(el.dataset.open)));
+    }
+    if(frGo) frGo.addEventListener("click",fridgeRun);
+    if(frQ) frQ.addEventListener("keydown",e=>{ if(e.key==="Enter") fridgeRun(); });
     document.getElementById("closeweek").addEventListener("click",()=>{
       const ids=[]; DAYS.forEach(d=> MEALS.forEach(([mk])=>{ const id=state.week[d][mk].recipeId; if(id&&!SPECIAL[id]&&id.indexOf("frz_")!==0) ids.push(id); }));
       state.prevWeekIds=[...new Set(ids)]; queueSave(); renderWeek();
@@ -2548,11 +2889,14 @@
       ord.forEach(c=>{ html+=`<div class="kk-sgroup"><h4>${esc(c)}</h4>`;
         byC[c].forEach(it=>{ const key="i"+it.idx; const on=!!chk[key];
           const b=useBlocks(it.use); const shared=(b&&b.size>1);
-          html+=`<div class="kk-sitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${esc(it.name)}${it.qty?` — <b>${esc(it.qty)}</b>`:""}${shared?` <span class="kk-fromtag">wspólny</span>`:""}${it.use?` <span class="kk-fromtag">${esc(it.use)}</span>`:""}</span></div>`;
+          html+=`<div class="kk-sitem ${on?"checked":""}" data-key="${key}"><input type="checkbox" ${on?"checked":""}><span>${esc(it.name)}${it.qty?` — <b>${esc(it.qty)}</b>`:""}${shopLink(it.name)}${shared?` <span class="kk-fromtag">wspólny</span>`:""}${it.use?` <span class="kk-fromtag">${esc(it.use)}</span>`:""}</span></div>`;
         });
         html+=`</div>`;
       });
+      const expGroups=ord.map(c=>({cat:c, items:byC[c].filter(it=>!chk["i"+it.idx]).map(it=> it.name+(it.qty?" — "+it.qty:""))})).filter(g=>g.items.length);
+      html+=exportBoxHTML(shopPlainText(expGroups), expGroups.reduce((n,g)=>n+g.items.length,0));
       p.innerHTML=html+freezeHTML;
+      wireExportBox(p);
       p.querySelectorAll(".kk-sitem input").forEach(cb=> cb.addEventListener("change",e=>{ const key=e.target.closest(".kk-sitem").dataset.key; if(!state.presetChecked[wk]) state.presetChecked[wk]={}; state.presetChecked[wk][key]=e.target.checked; queueSave(); renderShop(); }));
     }
     const smE=document.getElementById("sm-eng"); if(smE) smE.addEventListener("click",()=>{ state.shopMode="engine"; queueSave(); renderShop(); });
@@ -2615,7 +2959,7 @@
         } else {
           byC[c].forEach(it=> html+=`<div class="kk-sitem ${it.checked?"checked":""}" data-id="${it.id}">
             <input type="checkbox" ${it.checked?"checked":""}>
-            <span>${esc(it.name)}
+            <span>${esc(it.name)}${shopLink(it.name)}
               <span class="kk-itemmeta">
                 ${it.meal?mealTagsHTML(it.meal):""}
                 ${it.days?`<span class="kk-daytag">${esc(it.days)}</span>`:""}
@@ -2627,7 +2971,14 @@
       });
     }
     html+=`<div class="kk-additem"><input type="text" id="ni" placeholder="np. oliwa, cytryny, ryż z irańskiego..."><button class="kk-btn" id="ai">Dodaj</button></div><div class="kk-sync">● Lista współdzielona — oboje widzicie odhaczenia na żywo. Zakupy na 4 dni? Odhaczaj/usuwaj dania, których nie robicie w tym okresie — etykieta posiłku pomaga wybrać.</div>`;
+    {
+      const eg={}, eo=[];
+      (state.shopping||[]).filter(it=>!it.checked).forEach(it=>{ const c=it.cat||"Inne"; if(!eg[c]){eg[c]=[];eo.push(c);} eg[c].push(it.name); });
+      const groups=eo.map(c=>({cat:c, items:eg[c]}));
+      html+=exportBoxHTML(shopPlainText(groups), groups.reduce((n,g)=>n+g.items.length,0));
+    }
     p.innerHTML=html;
+    wireExportBox(p);
     p.querySelectorAll(".kk-dayf").forEach(b=> b.addEventListener("click",()=>{
       const d=b.dataset.d;
       let sd=(state.shopDays||DAYS.slice());
@@ -2752,6 +3103,18 @@
       <div class="kk-note" style="margin-top:4px;">Białko podaj na 1 porcję (danie na 2 os.) — będzie dzielone jak zwykłe danie.</div></div>`;
     // lista
     const fz=(state.freezer||[]).slice().sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+    // ostrzeżenie: co leży najdłużej — do zjedzenia w pierwszej kolejności
+    {
+      const old=fz.filter(x=>{ const a=freezerAge(x); return a!=null && a>=56; });
+      if(old.length){
+        html+=`<div class="kk-sgroup" style="border-left:3px solid var(--mustard,#E0A458);"><h4>⏳ Zjedz w pierwszej kolejności</h4>
+          <div class="kk-note" style="margin:0 0 6px;">Te pozycje leżą <b>ponad 8 tygodni</b>. Mrożone dania nie psują się nagle, ale tracą smak i strukturę — wpiszcie je do planu tygodnia.</div>`+
+          old.map(x=>{ const a=freezerAge(x); const w=Math.floor(a/7);
+            const strong = a>=112;
+            return `<div class="kk-sitem"><span>❄ ${esc(x.name)} — <b style="color:${strong?"var(--tomato,#C97B5A)":"var(--mustard,#E0A458)"};">${w} tyg.</b> · ${x.portions||0} porc.${strong?" · ⚠ bardzo długo":""}</span></div>`;
+          }).join("")+`</div>`;
+      }
+    }
     if(fz.length===0) html+=`<div class="kk-note">Zamrażalnik pusty. Dodaj coś powyżej albo wygeneruj w „Sesji prep".</div>`;
     else {
       html+=`<div class="kk-sgroup"><h4>W zamrażalniku (${fz.length})</h4>`;
@@ -3082,23 +3445,59 @@
   function renderSupps(){
     const p=document.querySelector('[data-panel="supps"]'); if(!p) return;
     const SP=(typeof SUPP_PLAN!=="undefined")?SUPP_PLAN:null; if(!SP){ p.innerHTML=""; return; }
-    if(!state.supps) state.supps={};
-    const todayIdx=(new Date().getDay()+6)%7; // Pon=0 … Nd=6
-    const shortD=(d)=> d.replace("Pon","Pn").replace("Czw","Cz").replace("Sob","So");
-    const th="padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#8A8D82;text-align:center;";
+    if(!state.suppsD) state.suppsD={};
+    // ── jednorazowa migracja ze starego zapisu (po nazwie dnia) na daty ──
+    if(state.supps && !state.suppsMigrated){
+      const wd=weekDates();
+      DAYS.forEach((d,i)=>{ const src=state.supps[d]; if(!src) return;
+        ["ty","mg"].forEach(who=>{ if(!src[who]) return;
+          Object.keys(src[who]).forEach(id=>{ if(!src[who][id]) return;
+            if(!state.suppsD[wd[i]]) state.suppsD[wd[i]]={};
+            if(!state.suppsD[wd[i]][who]) state.suppsD[wd[i]][who]={};
+            state.suppsD[wd[i]][who][id]=true; });
+        });
+      });
+      state.suppsMigrated=true; queueSave();
+    }
+    const off=+(state.suppWeekOff||0);           // 0 = ten tydzień, -1 = poprzedni
+    const p2=n=>String(n).padStart(2,"0");
+    const iso=dt=>dt.getFullYear()+"-"+p2(dt.getMonth()+1)+"-"+p2(dt.getDate());
+    function datesFor(offset){
+      const now=new Date(); const idx=(now.getDay()+6)%7;
+      const mon=new Date(now); mon.setDate(now.getDate()-idx+offset*7);
+      return DAYS.map((_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
+    }
+    const dts=datesFor(off), keys=dts.map(iso), todayKey=iso(new Date());
+    const todayCol=keys.indexOf(todayKey);
+    const taken=(dk,who,id)=> !!(state.suppsD[dk]&&state.suppsD[dk][who]&&state.suppsD[dk][who][id]);
+    const itemsOf=w=> SP[w].groups.reduce((a,g)=>a.concat(g.items),[]);
+    const shortD=d=>["Pn","Wt","Śr","Cz","Pt","So","Nd"][d];
+    const th="padding:4px 3px;font-size:9.5px;text-transform:uppercase;letter-spacing:.2px;color:#8A8D82;text-align:center;";
+
     function personBlock(whoKey){
-      const P=SP[whoKey]; const color = whoKey==="ty" ? "var(--herb,#6B8E6F)" : "var(--plum,#8b5cf6)";
-      let doneToday=0, totToday=0; const tD=DAYS[todayIdx];
-      P.groups.forEach(g=>g.items.forEach(it=>{ totToday++; if(state.supps[tD]&&state.supps[tD][whoKey]&&state.supps[tD][whoKey][it.id]) doneToday++; }));
-      let h=`<div class="kk-sgroup"><h4 style="border-left:3px solid ${color};padding-left:8px;">${esc(P.name)} <span style="font-weight:500;color:#8A8D82;font-size:12px;">— dziś ${doneToday}/${totToday}</span></h4>`;
-      h+=`<div style="overflow-x:auto;"><table style="border-collapse:collapse;min-width:560px;width:100%;">`;
-      h+=`<tr><th style="${th}text-align:left;">Suplement</th>`+DAYS.map((d,i)=>`<th style="${th}${i===todayIdx?"background:#F6F7F2;color:"+color+";font-weight:700;":""}">${shortD(d)}</th>`).join("")+`</tr>`;
+      const P=SP[whoKey]; const color = whoKey==="ty" ? "var(--herb,#6B8E6F)" : "var(--plum,#7C5CD6)";
+      const items=itemsOf(whoKey);
+      // licznik na dziś (tylko gdy oglądamy bieżący tydzień)
+      let head="";
+      if(todayCol>=0){ const done=items.filter(it=>taken(todayKey,whoKey,it.id)).length;
+        head=` <span style="font-weight:500;color:#8A8D82;font-size:12px;">— dziś ${done}/${items.length}</span>`; }
+      // procent tygodnia
+      let cells=0, hit=0;
+      keys.forEach(k=> items.forEach(it=>{ cells++; if(taken(k,whoKey,it.id)) hit++; }));
+      const pct=cells?Math.round(hit/cells*100):0;
+      let h=`<div class="kk-sgroup"><h4 style="border-left:3px solid ${color};padding-left:8px;">${esc(P.name)}${head} <span style="font-weight:500;color:#8A8D82;font-size:12px;">· tydzień ${pct}%</span></h4>`;
+      h+=`<div style="overflow-x:auto;"><table style="border-collapse:collapse;min-width:560px;width:100%;table-layout:fixed;">
+        <colgroup><col style="width:44%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"></colgroup>`;
+      h+=`<tr><th style="${th}text-align:left;">Suplement</th>`+dts.map((dt,i)=>{
+        const isT=iso(dt)===todayKey;
+        return `<th style="${th}${isT?"background:#F6F7F2;color:"+color+";font-weight:700;":""}">${shortD(i)}<br><span style="font-size:9px;font-weight:400;">${p2(dt.getDate())}.${p2(dt.getMonth()+1)}</span></th>`;
+      }).join("")+`</tr>`;
       P.groups.forEach(g=>{
         h+=`<tr><td colspan="8" style="padding:9px 6px 2px;font-size:10.5px;font-weight:700;color:#55584F;text-transform:uppercase;letter-spacing:.4px;">${esc(g.when)}</td></tr>`;
         g.items.forEach(it=>{
           h+=`<tr><td style="padding:5px 6px;font-size:12.5px;"><b>${esc(it.name)}</b> <span style="color:#9ca3af;">${esc(it.dose)}</span></td>`;
-          DAYS.forEach((d,i)=>{ const on=!!(state.supps[d]&&state.supps[d][whoKey]&&state.supps[d][whoKey][it.id]);
-            h+=`<td style="text-align:center;padding:4px;${i===todayIdx?"background:#F6F7F2;":""}"><span data-supp="${d}|${whoKey}|${it.id}" title="odhacz" style="display:inline-block;width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid ${on?color:"var(--line,#E4E5DC)"};background:${on?color:"transparent"};"></span></td>`;
+          keys.forEach((k,i)=>{ const on=taken(k,whoKey,it.id); const isT=k===todayKey;
+            h+=`<td style="text-align:center;padding:4px 2px;${isT?"background:#F6F7F2;":""}"><span data-supp="${k}|${whoKey}|${it.id}" title="${k}" style="display:inline-block;width:19px;height:19px;border-radius:50%;cursor:pointer;border:2px solid ${on?color:"var(--line,#E4E5DC)"};background:${on?color:"transparent"};"></span></td>`;
           });
           h+=`</tr>`;
         });
@@ -3108,13 +3507,69 @@
       h+=`</div>`;
       return h;
     }
+
+    // ── Statystyki z ostatnich 30 dni ──
+    function statsBlock(){
+      const today=new Date(); const days=[];
+      for(let i=29;i>=0;i--){ const d=new Date(today); d.setDate(today.getDate()-i); days.push(iso(d)); }
+      let h=`<div class="kk-sgroup"><h4>📊 Statystyki (ostatnie 30 dni)</h4>`;
+      const any=days.some(k=>state.suppsD[k]);
+      if(!any){ h+=`<div class="kk-note">Brak danych — odhaczaj przez kilka dni, a pojawią się tu statystyki: regularność, seria dni z rzędu i który suplement wypada najczęściej.</div></div>`; return h; }
+      ["ty","mg"].forEach(whoKey=>{
+        const P=SP[whoKey]; const items=itemsOf(whoKey);
+        const color = whoKey==="ty" ? "var(--herb,#6B8E6F)" : "var(--plum,#7C5CD6)";
+        let cells=0, hit=0, fullDays=0, activeDays=0;
+        const perItem={}; items.forEach(it=>perItem[it.id]=0);
+        days.forEach(k=>{
+          const dayHit=items.filter(it=>taken(k,whoKey,it.id)).length;
+          if(dayHit>0) activeDays++;
+          if(dayHit===items.length) fullDays++;
+          items.forEach(it=>{ cells++; if(taken(k,whoKey,it.id)){ hit++; perItem[it.id]++; } });
+        });
+        const pct=cells?Math.round(hit/cells*100):0;
+        // seria: ile dni z rzędu wstecz z kompletem (licząc od wczoraj, bo dziś może być w toku)
+        let streak=0;
+        for(let i=1;i<=60;i++){ const d=new Date(today); d.setDate(today.getDate()-i); const k=iso(d);
+          if(items.every(it=>taken(k,whoKey,it.id))) streak++; else break; }
+        // najsłabszy suplement
+        const worst=items.slice().sort((a,b)=>perItem[a.id]-perItem[b.id])[0];
+        const worstPct=activeDays?Math.round(perItem[worst.id]/Math.max(1,activeDays)*100):0;
+        h+=`<div style="margin:8px 0;padding:9px 12px;background:#fff;border:1px solid var(--line,#E4E5DC);border-left:3px solid ${color};border-radius:10px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">${esc(P.name)}</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;">
+            <div><span style="font-size:20px;font-weight:700;color:${color};">${pct}%</span> <span style="color:#8A8D82;">wziętych dawek</span></div>
+            <div><b>${fullDays}</b> <span style="color:#8A8D82;">dni z kompletem</span></div>
+            <div><b>${streak}</b> <span style="color:#8A8D82;">dni serii</span></div>
+          </div>
+          ${activeDays?`<div class="kk-note" style="margin:6px 0 0;">Najczęściej wypada: <b>${esc(worst.name)}</b> (${worstPct}% dni, w których cokolwiek odhaczono).</div>`:""}
+        </div>`;
+      });
+      h+=`<div class="kk-note" style="margin-top:6px;"><i>Liczone z odhaczeń — dni bez żadnego kliknięcia traktowane są jako nieodhaczone, nie jako „pominięte".</i></div></div>`;
+      return h;
+    }
+
+    const lbl = off===0 ? "Ten tydzień" : off===-1 ? "Poprzedni tydzień" : `${Math.abs(off)} tyg. temu`;
+    const range = `${p2(dts[0].getDate())}.${p2(dts[0].getMonth()+1)} – ${p2(dts[6].getDate())}.${p2(dts[6].getMonth()+1)}`;
     let html=`<div class="kk-rules" style="margin-bottom:12px;"><h3>💊 Suplementacja</h3><div class="kk-rule"><p>Odhaczaj, co wzięte — wyróżniona kolumna to dziś. Zapis jest wspólny, ale kółka liczą się osobno dla Ciebie i Magdy. Dawki to plan wyjściowy, nie porada medyczna — przy zmianach czy wątpliwościach konsultujcie z lekarzem.</p></div></div>`;
-    html+=personBlock("ty")+personBlock("mg");
+    html+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+      <button class="kk-btn sec" id="sw-prev" style="padding:6px 12px;">← poprzedni</button>
+      <b style="font-size:13px;">${lbl}</b> <span style="color:#8A8D82;font-size:12px;">${range}</span>
+      <button class="kk-btn sec" id="sw-next" style="padding:6px 12px;${off>=0?"opacity:.4;pointer-events:none;":""}">następny →</button>
+    </div>`;
+    html+=personBlock("ty")+personBlock("mg")+statsBlock();
     p.innerHTML=html;
+    const pv=document.getElementById("sw-prev"); if(pv) pv.addEventListener("click",()=>{ state.suppWeekOff=off-1; queueSave(); renderSupps(); });
+    const nx=document.getElementById("sw-next"); if(nx) nx.addEventListener("click",()=>{ if(off<0){ state.suppWeekOff=off+1; queueSave(); renderSupps(); } });
     p.querySelectorAll("[data-supp]").forEach(el=> el.addEventListener("click",()=>{
-      const a=el.dataset.supp.split("|"); const d=a[0],who=a[1],id=a[2];
-      if(!state.supps) state.supps={}; if(!state.supps[d]) state.supps[d]={}; if(!state.supps[d][who]) state.supps[d][who]={};
-      state.supps[d][who][id]=!state.supps[d][who][id];
+      const a=el.dataset.supp.split("|"); const dk=a[0],who=a[1],id=a[2];
+      if(!state.suppsD) state.suppsD={};
+      if(!state.suppsD[dk]) state.suppsD[dk]={};
+      if(!state.suppsD[dk][who]) state.suppsD[dk][who]={};
+      state.suppsD[dk][who][id]=!state.suppsD[dk][who][id];
+      if(!state.suppsD[dk][who][id]) delete state.suppsD[dk][who][id];
+      // sprzątanie: trzymaj tylko ostatnie 180 dni
+      const ks=Object.keys(state.suppsD).sort();
+      if(ks.length>180) ks.slice(0,ks.length-180).forEach(k=>delete state.suppsD[k]);
       queueSave(); renderSupps();
     }));
   }

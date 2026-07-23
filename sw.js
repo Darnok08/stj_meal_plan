@@ -5,7 +5,7 @@
 //  a offline serwuje ostatnią zapisaną wersję z cache.
 //  Zapisów do Supabase (POST/PATCH) i API NIE dotykamy.
 // ═══════════════════════════════════════════════════════════
-const CACHE = "kuchnia-v1";
+const CACHE = "kuchnia-v2";
 const SHELL = [
   "./",
   "./index.html",
@@ -15,6 +15,9 @@ const SHELL = [
   "./sync.js",
   "./style.css",
   "./icon.png",
+  "./pwa/icon-192.png",
+  "./pwa/icon-512.png",
+  "./pwa/apple-touch-icon.png",
   "./manifest.json",
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 ];
